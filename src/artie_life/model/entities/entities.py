@@ -1,16 +1,7 @@
 """Module containing all entities implementations."""
-from enum import Enum
 from typing import Tuple
 from numpy.random import uniform
 from pygame import Rect
-
-class EntityType(Enum):
-    """Enumerative class listing all entity types."""
-    LIVING = 0
-    HEALING = 1
-    FEEDING = 2
-    RESTING = 3
-    PLAYGROUND = 4
 
 class Entity:
     """Base class for entities."""
@@ -88,17 +79,3 @@ class LivingBeing(Entity):
         #self.genome = genome
         #self.speed = genome.speed
         #self.brain = Brain(genome, world)
-
-    def update(self, elapsed_time: int) -> bool:
-        """Performs the living being's action, as decided by the brain, actuating the effect based
-        on how much time has elapsed.
-        
-        Arguments:  
-        `elapsed_time`: the elapsed time since last update
-        
-        Returns:  
-        a `bool` value representing whether the creature is still alive."""
-        #action = self.brain.get_action()
-        #perform action using elapsed time if necessary
-        #return self.brain.is_alive()
-        return True
