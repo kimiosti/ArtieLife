@@ -8,22 +8,22 @@ class World:
     """Implementation for the game world."""
     def __init__(self) -> None:
         """Instantiates the game world."""
-        INTERACTIVE_SPOT_WIDTH: float = 30.0
-        INTERACTIVE_SPOT_HEIGHT: float = 30.0
+        interactive_spot_width: float = 30.0
+        interactive_spot_height: float = 30.0
         self.dimension: Tuple[float, float] = (320.0, 200.0)
         self.playground: Playground = Playground(Rect(110.0, 68.75, 100.0, 62.5))
         self.interactive_spots: Dict[EntityType, List[InteractiveSpot]] = {
             EntityType.FEEDING: [
-                InteractiveSpot(Rect(30.0, 30.0, INTERACTIVE_SPOT_WIDTH, INTERACTIVE_SPOT_HEIGHT)),
-                InteractiveSpot(Rect(260.0, 140.0, INTERACTIVE_SPOT_WIDTH, INTERACTIVE_SPOT_HEIGHT))
+                InteractiveSpot(Rect(30.0, 30.0, interactive_spot_width, interactive_spot_height)),
+                InteractiveSpot(Rect(260.0, 140.0, interactive_spot_width, interactive_spot_height))
             ],
             EntityType.HEALING: [
-                InteractiveSpot(Rect(30.0, 85.0, INTERACTIVE_SPOT_WIDTH, INTERACTIVE_SPOT_HEIGHT)),
-                InteractiveSpot(Rect(260.0, 85.0, INTERACTIVE_SPOT_WIDTH, INTERACTIVE_SPOT_HEIGHT))
+                InteractiveSpot(Rect(30.0, 85.0, interactive_spot_width, interactive_spot_height)),
+                InteractiveSpot(Rect(260.0, 85.0, interactive_spot_width, interactive_spot_height))
             ],
             EntityType.RESTING: [
-                InteractiveSpot(Rect(30.0, 140.0, INTERACTIVE_SPOT_WIDTH, INTERACTIVE_SPOT_HEIGHT)),
-                InteractiveSpot(Rect(260.0, 30.0, INTERACTIVE_SPOT_WIDTH, INTERACTIVE_SPOT_HEIGHT))
+                InteractiveSpot(Rect(30.0, 140.0, interactive_spot_width, interactive_spot_height)),
+                InteractiveSpot(Rect(260.0, 30.0, interactive_spot_width, interactive_spot_height))
             ]
         }
         self.living: List[LivingBeing] = []
