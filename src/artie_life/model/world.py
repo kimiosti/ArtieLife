@@ -72,8 +72,13 @@ class World:
 
     def spawn_living(self) -> None:
         """Spawns a living being inside the playground."""
-        pos = self.playground.get_random_inner_spot()
-        living_being: LivingBeing = LivingBeing(
-            Rect(pos[0], pos[1], LIVING_WIDTH, LIVING_HEIGHT)
-        )
-        self.living.append(living_being)
+        colliding: bool = True
+        rect: Rect
+        while colliding:
+            colliding = False
+            pos = self.playground.get_random_inner_spot()
+            rect = Rect(pos[0], pos[1], LIVING_WIDTH, LIVING_HEIGHT)
+            for living in self.living:
+                if living.is_colliding(rect):
+                    colliding = True
+        self.living.append(LivingBeing(rect))
