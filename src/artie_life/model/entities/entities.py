@@ -2,8 +2,7 @@
 from enum import Enum
 from typing import Tuple
 from numpy.random import uniform
-from artie_life.model.entities.collisions import Hitbox
-from artie_life.model.world import World
+from pygame import Rect
 
 class EntityType(Enum):
     """Enumerative class listing all entity types."""
@@ -15,14 +14,14 @@ class EntityType(Enum):
 
 class Entity:
     """Base class for entities."""
-    def __init__(self, hitbox: Hitbox, walkable: bool, interactive: bool) -> None:
+    def __init__(self, hitbox: Rect, walkable: bool, interactive: bool) -> None:
         """Instantiates a generic entity.
         
         Arguments:  
         `hitbox`: the entity's hitbox.  
         `walkable`: whether living beings can walk on this entity.  
         `interactive`: whether living beings can interact with this entity."""
-        self.hitbox: Hitbox = hitbox
+        self.hitbox: Rect = hitbox
         self.walkable: bool = walkable
         self.interactive: bool = interactive
 
@@ -30,17 +29,17 @@ class Entity:
         """Returns a `Tuple` representing the current entity position."""
         return (self.hitbox.x, self.hitbox.y)
 
-    def is_colliding(self, hitbox: Hitbox) -> bool:
+    def is_colliding(self, hitbox: Rect) -> bool:
         """Checks if the entity is colliding with the given hitbox.
         
         Arguments:  
         `hitbox`: the hitbox to be checked for collision."""
-        return self.hitbox.is_colliding(hitbox)
+        return self.hitbox.colliderect(hitbox)
 
 
 class Playground(Entity):
     """Playground implementation."""
-    def __init__(self, hitbox:Hitbox) -> None:
+    def __init__(self, hitbox:Rect) -> None:
         """Instantiates a playground.
         
         Arguments:  
@@ -61,7 +60,7 @@ class Playground(Entity):
 
 class InteractiveSpot(Entity):
     """Interactive spot implementation."""
-    def __init__(self, hitbox: Hitbox):
+    def __init__(self, hitbox: Rect):
         """Instantiates an interactive spot.
         
         Arguments:  
@@ -75,7 +74,7 @@ class InteractiveSpot(Entity):
 
 class LivingBeing(Entity):
     """Living being implementation, for characters."""
-    def __init__(self, hitbox: Hitbox, world: World) -> None:
+    def __init__(self, hitbox: Rect) -> None:
         """Instantiates a living being.
         
         Arguments:  
@@ -85,7 +84,6 @@ class LivingBeing(Entity):
             walkable=False,
             interactive=True
         )
-        self.world = world
         self.speed: float = 1.0
         #self.genome = genome
         #self.speed = genome.speed
