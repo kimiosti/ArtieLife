@@ -6,6 +6,8 @@ from pygame.color import Color
 from pygame.display import flip
 from model.world import World
 from utils import EntityType
+from utils import BG_TO_SCREEN_HEIGHT_RATIO
+from utils import TOP_BLANK_TO_SCREEN_RATIO
 from utils import MAP_WTH_RATIO
 from utils import MAP_WIDTH
 from utils import MAP_HEIGHT
@@ -57,9 +59,9 @@ class GameView:
         screen_height: int = self.screen.get_height()
         screen_width: int = self.screen.get_width()
 
-        self.bg_height = screen_height / 8 * 5
+        self.bg_height = screen_height * BG_TO_SCREEN_HEIGHT_RATIO
         self.bg_width = self.bg_height * MAP_WTH_RATIO
-        self.bg_origin_y = screen_height / 9
+        self.bg_origin_y = screen_height * TOP_BLANK_TO_SCREEN_RATIO
         self.bg_origin_x = (screen_width - self.bg_width) / 2
 
         bg: Surface = Surface(size=(self.bg_width, self.bg_height))
