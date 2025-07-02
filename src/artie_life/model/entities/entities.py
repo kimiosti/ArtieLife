@@ -15,17 +15,14 @@ class EntityType(Enum):
 
 class Entity:
     """Base class for entities."""
-    def __init__(self, hitbox: Hitbox, entity_type: EntityType,
-                 walkable: bool, interactive: bool) -> None:
+    def __init__(self, hitbox: Hitbox, walkable: bool, interactive: bool) -> None:
         """Instantiates a generic entity.
         
         Arguments:  
         `hitbox`: the entity's hitbox.  
-        `entity_type`: the desired entity type.  
         `walkable`: whether living beings can walk on this entity.  
         `interactive`: whether living beings can interact with this entity."""
         self.hitbox: Hitbox = hitbox
-        self.entity_type: EntityType = entity_type
         self.walkable: bool = walkable
         self.interactive: bool = interactive
 
@@ -50,7 +47,6 @@ class Playground(Entity):
         `hitbox`: the desired playground hitbox."""
         super().__init__(
             hitbox=hitbox,
-            entity_type=EntityType.PLAYGROUND,
             walkable=True,
             interactive=False
         )
@@ -65,21 +61,13 @@ class Playground(Entity):
 
 class InteractiveSpot(Entity):
     """Interactive spot implementation."""
-    def __init__(self, hitbox: Hitbox, entity_type: EntityType):
+    def __init__(self, hitbox: Hitbox):
         """Instantiates an interactive spot.
         
         Arguments:  
-        `hitbox`: the interactive spot's hitbox.  
-        `entity_type`: the type of the interactive spot. Must be one between `EntityType.FEEDING`,
-        `EntityType.HEALING` or `EntityType.RESTING`, otherwise a `TypeError` is raised."""
-        if entity_type in [EntityType.LIVING, EntityType.PLAYGROUND]:
-            raise TypeError(
-                "Entity type cannot be LIVING nor PLAYGROUND."
-                + "Consider using the corresponding classes instead."
-            )
+        `hitbox`: the interactive spot's hitbox."""
         super().__init__(
             hitbox=hitbox,
-            entity_type=entity_type,
             walkable=True,
             interactive=True
         )
@@ -94,10 +82,10 @@ class LivingBeing(Entity):
         `hitbox`: the initial hitbox for the living being."""
         super().__init__(
             hitbox=hitbox,
-            entity_type=EntityType.LIVING,
             walkable=False,
             interactive=True
         )
+        self.world = world
         self.speed: float = 1.0
         #self.genome = genome
         #self.speed = genome.speed
