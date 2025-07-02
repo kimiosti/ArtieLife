@@ -2,6 +2,8 @@
 from typing import Tuple
 from numpy.random import uniform
 from pygame import Rect
+from utils import LIVING_WIDTH
+from utils import LIVING_HEIGHT
 
 class Entity:
     """Base class for entities."""
@@ -44,8 +46,8 @@ class Playground(Entity):
     def get_random_inner_spot(self) -> Tuple[float, float]:
         """Returns a random coordinate inside the playground."""
         return (
-            uniform(self.hitbox.x, self.hitbox.x + self.hitbox.width),
-            uniform(self.hitbox.y, self.hitbox.y + self.hitbox.height)
+            uniform(self.hitbox.x, self.hitbox.x + self.hitbox.width - LIVING_WIDTH),
+            uniform(self.hitbox.y, self.hitbox.y + self.hitbox.height - LIVING_HEIGHT)
         )
 
 
