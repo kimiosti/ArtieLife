@@ -1,8 +1,7 @@
 """Module containing all world controllers implementation."""
 from typing import TYPE_CHECKING
 from pygame.rect import Rect
-from utils import MAP_WIDTH
-from utils import MAP_HEIGHT
+from utils import InteractionType, MAP_WIDTH, MAP_HEIGHT
 
 if TYPE_CHECKING:
     from controller.game_controller import GameController
@@ -32,7 +31,7 @@ class ActionsController:
             return True
         return False
 
-    def can_interact(self, hitbox: "Rect", entity_id: "int") -> "bool":
+    def interact(self, hitbox: "Rect", entity_id: "int") -> "InteractionType":
         """Checks if a given living being can interact.
         
         Arguments:  
@@ -40,7 +39,6 @@ class ActionsController:
         `entity_id`: the living being's object ID, to avoid self-checking."""
         for entity_type, entity in self.controller.get_all_entities():
             if id(entity) != entity_id \
-                    and entity_type.interactive() \
                     and entity.is_colliding(hitbox):
-                return True
-        return False
+                return entity_type.get_interaction()
+        return InteractionType.NONE
