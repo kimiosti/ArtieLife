@@ -1,46 +1,12 @@
-"""Module containing all entities implementations."""
+"""Module containing living being's implementation."""
 from typing import TYPE_CHECKING
-from numpy.random import uniform, randint
-from utils import Action, LIVING_WIDTH, LIVING_HEIGHT, LIVING_BASE_SPEED
+from numpy.random import randint
+from model.entities.non_living import Entity
+from utils import Action, InteractionType, LIVING_BASE_SPEED
 
 if TYPE_CHECKING:
-    from typing import Tuple
     from pygame.rect import Rect
     from controller.world.world_controllers import ActionsController
-
-class Entity:
-    """Base class for entities."""
-    def __init__(self, hitbox: "Rect") -> "None":
-        """Instantiates a generic entity.
-        
-        Arguments:  
-        `hitbox`: the entity's hitbox.  
-        `walkable`: whether living beings can walk on this entity.  
-        `interactive`: whether living beings can interact with this entity."""
-        self.hitbox: "Rect" = hitbox
-
-    def is_colliding(self, hitbox: "Rect") -> "bool":
-        """Checks if the entity is colliding with the given hitbox.
-        
-        Arguments:  
-        `hitbox`: the hitbox to be checked for collision."""
-        return self.hitbox.colliderect(hitbox)
-
-
-class Playground(Entity):
-    """Playground implementation."""
-
-    def get_random_inner_spot(self) -> "Tuple[float, float]":
-        """Returns a random coordinate inside the playground."""
-        return (
-            uniform(self.hitbox.x, self.hitbox.x + self.hitbox.width - LIVING_WIDTH),
-            uniform(self.hitbox.y, self.hitbox.y + self.hitbox.height - LIVING_HEIGHT)
-        )
-
-
-class InteractiveSpot(Entity):
-    """Interactive spot implementation."""
-
 
 class LivingBeing(Entity):
     """Living being implementation, for characters."""
@@ -68,7 +34,7 @@ class LivingBeing(Entity):
         Arguments:  
         `elapsed_time`: the amount of time elapsed since last update."""
         action_idx = randint(5)
-        action: Action = Action.INTERACT
+        action: "Action" = Action.INTERACT
         for item in Action:
             if item.value == action_idx:
                 action = item
@@ -81,6 +47,7 @@ class LivingBeing(Entity):
             )
             if self.controller.can_move(moved_hitbox, id(self)):
                 self.hitbox = moved_hitbox
-        elif self.controller.can_interact(self.hitbox, id(self)):
+        else:
+            interaction: "InteractionType" = self.controller.interact(self.hitbox, id(self))
             # TODO - implement interaction
             pass
