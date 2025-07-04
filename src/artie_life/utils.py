@@ -50,6 +50,14 @@ class Action(Enum):
             -1 if self == Action.UP else 0
         )
         return (x, y)
+    
+class InteractionType(Enum):
+    """Enumerative class listing all possbile interaction results."""
+    MATE = 0
+    HEAL = 1
+    FEED = 2
+    REST = 3
+    NONE = 4
 
 class EntityType(Enum):
     """Enumerative class listing all entity types."""
@@ -63,6 +71,10 @@ class EntityType(Enum):
         """Checks if a living being can walk on the entity type."""
         return self != EntityType.LIVING
 
-    def interactive(self) -> "bool":
+    def get_interaction(self) -> "InteractionType":
         """Check if a living being can interact with the entity type."""
-        return self != EntityType.PLAYGROUND
+        for entity_type in EntityType:
+            for interaction_type in InteractionType:
+                if entity_type.value == interaction_type.value:
+                    return interaction_type
+        return InteractionType.NONE
