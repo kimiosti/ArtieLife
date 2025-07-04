@@ -7,6 +7,7 @@ from controller.world.world_controllers import ActionsController
 from utils import Action
 from utils import LIVING_WIDTH
 from utils import LIVING_HEIGHT
+from utils import LIVING_BASE_SPEED
 
 class Entity:
     """Base class for entities."""
@@ -51,7 +52,7 @@ class LivingBeing(Entity):
         `hitbox`: the initial hitbox for the living being."""
         super().__init__(hitbox)
         self.controller = controller
-        self.speed: float = 0.2
+        self.speed: float = LIVING_BASE_SPEED
 
     def compute_movement(self, movement: float, elapsed_time: int) -> float:
         return self.speed * elapsed_time * movement
