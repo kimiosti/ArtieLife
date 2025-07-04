@@ -2,6 +2,7 @@
 from typing import TYPE_CHECKING
 from numpy.random import randint
 from model.entities.non_living import Entity
+from model.entities.brain import Brain
 from utils import Action, InteractionType, LIVING_BASE_SPEED
 
 if TYPE_CHECKING:
@@ -18,6 +19,7 @@ class LivingBeing(Entity):
         super().__init__(hitbox)
         self.controller = controller
         self.speed: "float" = LIVING_BASE_SPEED
+        self.brain: "Brain" = Brain()
 
     def compute_movement(self, movement: "float", elapsed_time: "int") -> "float":
         """Computes the living being direction along one axis, given a movement and
@@ -49,5 +51,4 @@ class LivingBeing(Entity):
                 self.hitbox = moved_hitbox
         else:
             interaction: "InteractionType" = self.controller.interact(self.hitbox, id(self))
-            # TODO - implement interaction
-            pass
+            self.brain.actuate(interaction)
