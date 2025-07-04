@@ -28,6 +28,19 @@ LIVING_WIDTH: "float" = 12.0
 LIVING_HEIGHT: "float" = 20.0
 LIVING_BASE_SPEED: "float" = 0.1
 
+# Living being vital parameters constants
+BASE_HUNGER: "float" = 0
+BASE_LIFE: "float" = 100
+BASE_TIREDNESS: "float" = 0
+BASE_MATING_DRIVE: "float" = 0
+BASE_HUNGER_DECAY: "float" = 0.008
+BASE_LIFE_DECAY: "float" = -0.008
+BASE_TIREDNESS_DECAY: "float" = 0.008
+BASE_MATING_DRIVE_DECAY: "float" = 0.007
+MAX_HUNGER: "float" = 100
+MAX_TIREDNESS: "float" = 100
+MIN_LIFE: "float" = 0
+
 # Enumerative types
 class Action(Enum):
     """Enumerative class listing all possible actions."""
