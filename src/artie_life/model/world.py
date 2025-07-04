@@ -1,31 +1,26 @@
 """Module containing the game world's implementation."""
-from typing import Tuple, Dict, List
-from pygame import Rect
+from typing import TYPE_CHECKING
+from pygame.rect import Rect
 from model.entities.entities import Playground, InteractiveSpot, LivingBeing
-from controller.world.world_controllers import ActionsController
-from utils import EntityType
-from utils import MAP_WIDTH
-from utils import MAP_HEIGHT
-from utils import PLAYGROUND_WIDTH
-from utils import PLAYGROUND_HEIGHT
-from utils import SPOT_WIDTH
-from utils import SPOT_HEIGHT
-from utils import SPOT_TO_SIDE_OFFSET
-from utils import LIVING_WIDTH
-from utils import LIVING_HEIGHT
+from utils import EntityType, MAP_WIDTH, MAP_HEIGHT, PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT, \
+        SPOT_TO_SIDE_OFFSET, SPOT_WIDTH, SPOT_HEIGHT, LIVING_WIDTH, LIVING_HEIGHT
+
+if TYPE_CHECKING:
+    from typing import Tuple, Dict, List
+    from controller.world.world_controllers import ActionsController
 
 class World:
     """Implementation for the game world."""
-    def __init__(self) -> None:
+    def __init__(self) -> "None":
         """Instantiates the game world."""
-        self.dimension: Tuple[float, float] = (MAP_WIDTH, MAP_HEIGHT)
-        self.playground: Playground = Playground(Rect(
+        self.dimension: "Tuple[float, float]" = (MAP_WIDTH, MAP_HEIGHT)
+        self.playground: "Playground" = Playground(Rect(
             (MAP_WIDTH - PLAYGROUND_WIDTH) / 2,
             (MAP_HEIGHT - PLAYGROUND_HEIGHT) / 2,
             PLAYGROUND_WIDTH,
             PLAYGROUND_HEIGHT
         ))
-        self.interactive_spots: Dict[EntityType, List[InteractiveSpot]] = {
+        self.interactive_spots: "Dict[EntityType, List[InteractiveSpot]]" = {
             EntityType.FEEDING: [
                 InteractiveSpot(Rect(
                     SPOT_TO_SIDE_OFFSET,
@@ -69,15 +64,15 @@ class World:
                 ))
             ]
         }
-        self.living: List[LivingBeing] = []
+        self.living: "List[LivingBeing]" = []
 
-    def spawn_living(self, controller: ActionsController) -> None:
+    def spawn_living(self, controller: "ActionsController") -> "None":
         """Spawns a living being inside the playground.
         
         Arguments:  
         `controller`: the `ActionsController` monitoring the living being's actions."""
-        colliding: bool = True
-        rect: Rect
+        colliding: "bool" = True
+        rect: "Rect"
         while colliding:
             colliding = False
             pos = self.playground.get_random_inner_spot()
@@ -87,7 +82,7 @@ class World:
                     colliding = True
         self.living.append(LivingBeing(rect, controller))
 
-    def update(self, elapsed_time: int) -> None:
+    def update(self, elapsed_time: "int") -> "None":
         """Updates the game world.
         
         Arguments:  

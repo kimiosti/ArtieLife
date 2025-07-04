@@ -9,15 +9,15 @@ if TYPE_CHECKING:
 
 class ActionsController:
     """Implementation for the game's movement controller."""
-    def __init__(self, controller: "GameController") -> None:
+    def __init__(self, controller: "GameController") -> "None":
         """Instantiates a movement controller.
         
         Arguments:  
         `controller`: the `GameController` handling the world."""
         self.controller: "GameController" = controller
-        self.map: Rect = Rect(0, 0, MAP_WIDTH, MAP_HEIGHT)
+        self.map: "Rect" = Rect(0, 0, MAP_WIDTH, MAP_HEIGHT)
 
-    def can_move(self, hitbox: Rect, entity_id: int) -> bool:
+    def can_move(self, hitbox: "Rect", entity_id: "int") -> "bool":
         """Checks if a given living being can move.
         
         Arguments:  
@@ -32,7 +32,7 @@ class ActionsController:
             return True
         return False
 
-    def can_interact(self, hitbox: Rect, entity_id: int) -> bool:
+    def can_interact(self, hitbox: "Rect", entity_id: "int") -> "bool":
         """Checks if a given living being can interact.
         
         Arguments:  

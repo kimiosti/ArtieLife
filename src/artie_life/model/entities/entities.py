@@ -1,26 +1,25 @@
 """Module containing all entities implementations."""
-from typing import Tuple
-from numpy.random import uniform
-from numpy.random import randint
-from pygame import Rect
-from controller.world.world_controllers import ActionsController
-from utils import Action
-from utils import LIVING_WIDTH
-from utils import LIVING_HEIGHT
-from utils import LIVING_BASE_SPEED
+from typing import TYPE_CHECKING
+from numpy.random import uniform, randint
+from utils import Action, LIVING_WIDTH, LIVING_HEIGHT, LIVING_BASE_SPEED
+
+if TYPE_CHECKING:
+    from typing import Tuple
+    from pygame.rect import Rect
+    from controller.world.world_controllers import ActionsController
 
 class Entity:
     """Base class for entities."""
-    def __init__(self, hitbox: Rect) -> None:
+    def __init__(self, hitbox: "Rect") -> "None":
         """Instantiates a generic entity.
         
         Arguments:  
         `hitbox`: the entity's hitbox.  
         `walkable`: whether living beings can walk on this entity.  
         `interactive`: whether living beings can interact with this entity."""
-        self.hitbox: Rect = hitbox
+        self.hitbox: "Rect" = hitbox
 
-    def is_colliding(self, hitbox: Rect) -> bool:
+    def is_colliding(self, hitbox: "Rect") -> "bool":
         """Checks if the entity is colliding with the given hitbox.
         
         Arguments:  
@@ -31,7 +30,7 @@ class Entity:
 class Playground(Entity):
     """Playground implementation."""
 
-    def get_random_inner_spot(self) -> Tuple[float, float]:
+    def get_random_inner_spot(self) -> "Tuple[float, float]":
         """Returns a random coordinate inside the playground."""
         return (
             uniform(self.hitbox.x, self.hitbox.x + self.hitbox.width - LIVING_WIDTH),
@@ -45,16 +44,16 @@ class InteractiveSpot(Entity):
 
 class LivingBeing(Entity):
     """Living being implementation, for characters."""
-    def __init__(self, hitbox: Rect, controller: ActionsController) -> None:
+    def __init__(self, hitbox: "Rect", controller: "ActionsController") -> "None":
         """Instantiates a living being.
         
         Arguments:  
         `hitbox`: the initial hitbox for the living being."""
         super().__init__(hitbox)
         self.controller = controller
-        self.speed: float = LIVING_BASE_SPEED
+        self.speed: "float" = LIVING_BASE_SPEED
 
-    def compute_movement(self, movement: float, elapsed_time: int) -> float:
+    def compute_movement(self, movement: "float", elapsed_time: "int") -> "float":
         """Computes the living being direction along one axis, given a movement and
         the living being's speed multiplier.
         
@@ -63,7 +62,7 @@ class LivingBeing(Entity):
         `elapsed_time`: the amount of time elapsed since last update."""
         return self.speed * elapsed_time * movement
 
-    def update(self, elapsed_time: int) -> None:
+    def update(self, elapsed_time: "int") -> "None":
         """Updates the living being, performing the desired action.
         
         Arguments:  
@@ -73,7 +72,7 @@ class LivingBeing(Entity):
         for item in Action:
             if item.value == action_idx:
                 action = item
-        
+
         if action != Action.INTERACT:
             move_x, move_y = action.get_direction()
             moved_hitbox = self.hitbox.move(
