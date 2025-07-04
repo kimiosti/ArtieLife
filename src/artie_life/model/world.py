@@ -1,7 +1,8 @@
 """Module containing the game world's implementation."""
 from typing import TYPE_CHECKING
 from pygame.rect import Rect
-from model.entities.entities import Playground, InteractiveSpot, LivingBeing
+from model.entities.non_living import Playground, InteractiveSpot
+from model.entities.living import LivingBeing
 from utils import EntityType, MAP_WIDTH, MAP_HEIGHT, PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT, \
         SPOT_TO_SIDE_OFFSET, SPOT_WIDTH, SPOT_HEIGHT, LIVING_WIDTH, LIVING_HEIGHT
 

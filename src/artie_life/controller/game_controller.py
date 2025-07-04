@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from typing import List
     from typing import Tuple
     from pygame.rect import Rect
-    from model.entities.entities import Entity
+    from model.entities.non_living import Entity
 
 class GameController:
     """Implementation of the game controller."""
