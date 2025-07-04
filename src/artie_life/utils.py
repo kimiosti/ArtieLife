@@ -39,3 +39,11 @@ class EntityType(Enum):
     FEEDING = 2
     RESTING = 3
     PLAYGROUND = 4
+
+    def walkable(self) -> bool:
+        """Checks if a living being can walk on the entity type."""
+        return self != EntityType.LIVING
+
+    def interactive(self) -> bool:
+        """Check if a living being can interact with the entity type."""
+        return self != EntityType.PLAYGROUND

@@ -7,7 +7,7 @@ from utils import LIVING_HEIGHT
 
 class Entity:
     """Base class for entities."""
-    def __init__(self, hitbox: Rect, walkable: bool, interactive: bool) -> None:
+    def __init__(self, hitbox: Rect) -> None:
         """Instantiates a generic entity.
         
         Arguments:  
@@ -15,12 +15,6 @@ class Entity:
         `walkable`: whether living beings can walk on this entity.  
         `interactive`: whether living beings can interact with this entity."""
         self.hitbox: Rect = hitbox
-        self.walkable: bool = walkable
-        self.interactive: bool = interactive
-
-    def get_pos(self) -> Tuple[float, float]:
-        """Returns a `Tuple` representing the current entity position."""
-        return (self.hitbox.x, self.hitbox.y)
 
     def is_colliding(self, hitbox: Rect) -> bool:
         """Checks if the entity is colliding with the given hitbox.
@@ -32,16 +26,6 @@ class Entity:
 
 class Playground(Entity):
     """Playground implementation."""
-    def __init__(self, hitbox:Rect) -> None:
-        """Instantiates a playground.
-        
-        Arguments:  
-        `hitbox`: the desired playground hitbox."""
-        super().__init__(
-            hitbox=hitbox,
-            walkable=True,
-            interactive=False
-        )
 
     def get_random_inner_spot(self) -> Tuple[float, float]:
         """Returns a random coordinate inside the playground."""
@@ -53,16 +37,6 @@ class Playground(Entity):
 
 class InteractiveSpot(Entity):
     """Interactive spot implementation."""
-    def __init__(self, hitbox: Rect):
-        """Instantiates an interactive spot.
-        
-        Arguments:  
-        `hitbox`: the interactive spot's hitbox."""
-        super().__init__(
-            hitbox=hitbox,
-            walkable=True,
-            interactive=True
-        )
 
 
 class LivingBeing(Entity):
@@ -72,11 +46,7 @@ class LivingBeing(Entity):
         
         Arguments:  
         `hitbox`: the initial hitbox for the living being."""
-        super().__init__(
-            hitbox=hitbox,
-            walkable=False,
-            interactive=True
-        )
+        super().__init__(hitbox)
         self.speed: float = 1.0
         #self.genome = genome
         #self.speed = genome.speed
