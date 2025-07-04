@@ -2,6 +2,7 @@
 from typing import Tuple, Dict, List
 from pygame import Rect
 from model.entities.entities import Playground, InteractiveSpot, LivingBeing
+from controller.world.world_controllers import ActionsController
 from utils import EntityType
 from utils import MAP_WIDTH
 from utils import MAP_HEIGHT
@@ -70,8 +71,11 @@ class World:
         }
         self.living: List[LivingBeing] = []
 
-    def spawn_living(self) -> None:
-        """Spawns a living being inside the playground."""
+    def spawn_living(self, controller: ActionsController) -> None:
+        """Spawns a living being inside the playground.
+        
+        Arguments:  
+        `controller`: the `ActionsController` monitoring the living being's actions."""
         colliding: bool = True
         rect: Rect
         while colliding:
@@ -81,4 +85,8 @@ class World:
             for living in self.living:
                 if living.is_colliding(rect):
                     colliding = True
-        self.living.append(LivingBeing(rect))
+        self.living.append(LivingBeing(rect, controller))
+
+    def update(self, elapsed_time: int) -> None:
+        for living_being in self.living:
+            living_being.update(elapsed_time)
