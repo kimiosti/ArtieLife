@@ -1,5 +1,9 @@
 """Module containing enumeratives and other utility values."""
+from typing import TYPE_CHECKING
 from enum import Enum
+
+if TYPE_CHECKING:
+    from typing import Tuple
 
 # View-related constants
 BG_TO_SCREEN_HEIGHT_RATIO: float = 5 / 8
@@ -31,6 +35,15 @@ class Action(Enum):
     RIGHT = 2
     LEFT = 3
     INTERACT = 4
+
+    def get_direction(self) -> "Tuple[float, float]":
+        x: float = 1 if self == Action.RIGHT else (
+            -1 if self == Action.LEFT else 0
+        )
+        y: float = 1 if self == Action.DOWN else (
+            -1 if self == Action.UP else 0
+        )
+        return (x, y)
 
 class EntityType(Enum):
     """Enumerative class listing all entity types."""
