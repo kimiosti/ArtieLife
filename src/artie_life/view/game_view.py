@@ -1,10 +1,11 @@
 """Module containing the main game view implementation"""
+from typing import List
+from typing import Tuple
 from pygame import Surface
 from pygame import Rect
 from pygame.display import set_mode
 from pygame.color import Color
 from pygame.display import flip
-from model.world import World
 from utils import EntityType
 from utils import BG_TO_SCREEN_HEIGHT_RATIO
 from utils import TOP_BLANK_TO_SCREEN_RATIO
@@ -51,7 +52,7 @@ class GameView:
         surf.fill(color)
         self.screen.blit(surf, graphic_rect)
 
-    def render(self, world: World) -> None:
+    def render(self, sprites: List[Tuple[EntityType, Rect]]) -> None:
         """Renders a game scene.
         
         Arguments:  
@@ -68,19 +69,17 @@ class GameView:
         bg.fill(Color(255,255,255))
         self.screen.blit(bg, self.game_to_view_coordinates(Rect(0, 0, MAP_WIDTH, MAP_HEIGHT)))
 
-        self.render_sprite(world.playground.hitbox, Color(0,0,0))
-
-        for spot_type, spots in world.interactive_spots.items():
-            for spot in spots:
-                self.render_sprite(
-                    spot.hitbox,
-                    Color(255,0,0) if spot_type == EntityType.FEEDING else (
-                        Color(0,255,0) if spot_type == EntityType.HEALING \
-                        else Color(0,0,255)
+        for sprite_type, sprite in sprites:
+            self.render_sprite(
+                sprite,
+                Color(0, 0, 0) if sprite_type == EntityType.PLAYGROUND else (
+                    Color(255, 0, 0) if sprite_type == EntityType.FEEDING else (
+                        Color(0, 255, 0) if sprite_type == EntityType.HEALING else (
+                            Color(0, 0, 255) if sprite_type == EntityType.RESTING else \
+                            Color(255, 255, 0)
+                        )
                     )
                 )
-
-        for creature in world.living:
-            self.render_sprite(creature.hitbox, Color(255,255,0))
+            )
 
         flip()
