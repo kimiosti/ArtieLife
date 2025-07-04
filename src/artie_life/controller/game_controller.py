@@ -43,6 +43,10 @@ class GameController:
         A `List` of `Tuples` containing the `EntityType` and the `Rect` representing  
         each entity's hitbox."""
         return [(entity_type, entity.hitbox) for entity_type, entity in self.get_all_entities()]
-    
+
     def update_world(self, elapsed_time: int) -> None:
+        """Updates the current game world.
+        
+        Arguments:  
+        `elapsed_time`: the amount of time elapsed since the last model update."""
         self.world.update(elapsed_time)

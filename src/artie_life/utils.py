@@ -38,6 +38,11 @@ class Action(Enum):
     INTERACT = 4
 
     def get_direction(self) -> "Tuple[float, float]":
+        """Computes the action's corresponding movement direction.
+        
+        Returns:  
+        A `Tuple` containing two `float` values representing the movement along  
+        the two axes."""
         x: float = 1 if self == Action.RIGHT else (
             -1 if self == Action.LEFT else 0
         )

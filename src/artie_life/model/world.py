@@ -88,5 +88,9 @@ class World:
         self.living.append(LivingBeing(rect, controller))
 
     def update(self, elapsed_time: int) -> None:
+        """Updates the game world.
+        
+        Arguments:  
+        `elapsed_time`: the amount of time elapsed since the last model update."""
         for living_being in self.living:
             living_being.update(elapsed_time)

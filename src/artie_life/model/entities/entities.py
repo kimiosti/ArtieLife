@@ -55,13 +55,19 @@ class LivingBeing(Entity):
         self.speed: float = LIVING_BASE_SPEED
 
     def compute_movement(self, movement: float, elapsed_time: int) -> float:
+        """Computes the living being direction along one axis, given a movement and
+        the living being's speed multiplier.
+        
+        Arguments:  
+        `movement`: the base value of the desired movement along the axis.  
+        `elapsed_time`: the amount of time elapsed since last update."""
         return self.speed * elapsed_time * movement
 
     def update(self, elapsed_time: int) -> None:
         """Updates the living being, performing the desired action.
         
         Arguments:  
-        `elapsed_time`: the amount of time since last update."""
+        `elapsed_time`: the amount of time elapsed since last update."""
         action_idx = randint(5)
         action: Action = Action.INTERACT
         for item in Action:
