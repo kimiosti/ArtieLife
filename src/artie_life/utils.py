@@ -50,7 +50,8 @@ class Action(Enum):
             -1 if self == Action.UP else 0
         )
         return (x, y)
-    
+
+
 class InteractionType(Enum):
     """Enumerative class listing all possbile interaction results."""
     MATE = 0
@@ -58,6 +59,7 @@ class InteractionType(Enum):
     FEED = 2
     REST = 3
     NONE = 4
+
 
 class EntityType(Enum):
     """Enumerative class listing all entity types."""
