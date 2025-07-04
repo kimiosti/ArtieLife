@@ -1,13 +1,14 @@
 """Main application module."""
-from view.game_view import GameView
 
 if __name__=='__main__':
     import pygame
-    from model.world import World
+    from view.game_view import GameView
+    from controller.game_controller import GameController
 
-    world = World()
+    controller = GameController()
+    controller.create_world()
     for _ in range(3):
-        world.spawn_living()
+        controller.world.spawn_living()
 
     view = GameView()
 
@@ -21,6 +22,6 @@ if __name__=='__main__':
             if event.type == pygame.QUIT:
                 running = False
 
-        view.render(world)
+        view.render(controller.get_map_elems())
 
     pygame.quit()
