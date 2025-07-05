@@ -28,6 +28,7 @@ if __name__=='__main__':
             if event.type == pygame.QUIT:
                 running = False
 
+        click_controller.handle_living_selection(events)
         if click_controller.is_spawn_requested(events):
             game_controller.spawn_living()
 
