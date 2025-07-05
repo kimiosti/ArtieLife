@@ -18,7 +18,7 @@ class GameController:
 
     def create_world(self) -> "None":
         """Creates a new game world."""
-        self.world = World()
+        self.world = World(self)
 
     def spawn_living(self) -> "None":
         """Spawns a new living being in the current game world."""
