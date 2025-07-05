@@ -98,3 +98,18 @@ class World:
             if not alive:
                 self.living.remove(living_being)
                 self.controller.spawn_living()
+
+    def deselect(self) -> "None":
+        """Deselects the selected creature."""
+        for living_being in self.living:
+            living_being.selected = False
+        print("Deselected")
+
+    def select(self, living_being: "LivingBeing") -> "None":
+        """Selects a certain living being to inspect its state and to provide it with  
+        input.
+        
+        Arguments:  
+        `living_being`: the living being to be selected."""
+        living_being.selected = True
+        print("Selected")
