@@ -16,11 +16,8 @@ class GameView:
     def __init__(self) -> "None":
         """Instantiates the game view."""
         self.screen: "Surface"
-        self.bg_origin_x: "float"
-        self.bg_origin_y: "float"
-        self.bg_width: "float"
-        self.bg_height: "float"
-        self.button: "Rect"
+        self.map: "Rect" = Rect(0, 0, 0, 0)
+        self.spawn_button: "Rect"
         self.font: "Font" = Font("resources/font/game_font.ttf", 24)
 
     def show_screen(self) -> "None":
@@ -35,10 +32,10 @@ class GameView:
         
         Returns:  
         a `Rect` instance representing the new set of coordinates and dimensions."""
-        new_x = self.bg_origin_x + (rect.left / MAP_WIDTH * self.bg_width)
-        new_y = self.bg_origin_y + (rect.top / MAP_HEIGHT * self.bg_height)
-        new_width = rect.width / MAP_WIDTH * self.bg_width
-        new_height = rect.height / MAP_HEIGHT * self.bg_height
+        new_x = self.map.left + (rect.left / MAP_WIDTH * self.map.width)
+        new_y = self.map.top + (rect.top / MAP_HEIGHT * self.map.height)
+        new_width = rect.width / MAP_WIDTH * self.map.width
+        new_height = rect.height / MAP_HEIGHT * self.map.height
         return Rect(new_x, new_y, new_width, new_height)
 
     def render_sprite(self, rect: "Rect", color: "Color") -> "None":
@@ -60,18 +57,19 @@ class GameView:
         screen_height: "int" = self.screen.get_height()
         screen_width: "int" = self.screen.get_width()
 
-        self.bg_height = screen_height * BG_TO_SCREEN_HEIGHT_RATIO
-        self.bg_width = self.bg_height * MAP_WTH_RATIO
-        self.bg_origin_y = screen_height * TOP_BLANK_TO_SCREEN_RATIO
-        self.bg_origin_x = (screen_width - self.bg_width) / 2
+        bg_height = screen_height * BG_TO_SCREEN_HEIGHT_RATIO
+        bg_width = bg_height * MAP_WTH_RATIO
+        bg_y = screen_height * TOP_BLANK_TO_SCREEN_RATIO
+        bg_x = (screen_width - bg_width) / 2
+        self.map = Rect(bg_x, bg_y, bg_width, bg_height)
 
         button_surf = self.font.render("SPAWN NEW CREATURE", True, Color(255, 0, 0))
-        self.button = self.screen.blit(
+        self.spawn_button = self.screen.blit(
             button_surf,
-            (screen_width / 2 - button_surf.get_width() / 2, self.bg_origin_y / 2)
+            (screen_width / 2 - button_surf.get_width() / 2, self.map.top / 2)
         )
 
-        bg: "Surface" = Surface(size=(self.bg_width, self.bg_height))
+        bg: "Surface" = Surface(size=(self.map.width, self.map.height))
         bg.fill(Color(255,255,255))
         self.screen.blit(bg, self.game_to_view_coordinates(Rect(0, 0, MAP_WIDTH, MAP_HEIGHT)))
 
