@@ -5,15 +5,17 @@ if __name__=='__main__':
     from pygame.time import Clock
     from view.game_view import GameView
     from controller.game_controller import GameController
+    from controller.input import ClickController
 
-    controller: "GameController" = GameController()
-    controller.create_world()
-    for _ in range(3):
-        controller.spawn_living()
+    pygame.init()
+
+    game_controller: "GameController" = GameController()
+    game_controller.create_world()
 
     view: "GameView" = GameView()
 
-    pygame.init()
+    click_controller: "ClickController" = ClickController(game_controller.world, view)
+
     clock: "Clock" = Clock()
 
     view.show_screen()
@@ -21,12 +23,16 @@ if __name__=='__main__':
     dt: "int" = 0
     running: "bool" = True
     while running:
-        for event in pygame.event.get():
+        events = pygame.event.get()
+        for event in events:
             if event.type == pygame.QUIT:
                 running = False
 
-        controller.update_world(dt)
-        view.render(controller.get_map_elems())
+        if click_controller.is_spawn_requested(events):
+            game_controller.spawn_living()
+
+        game_controller.update_world(dt)
+        view.render(game_controller.get_map_elems())
 
         dt = clock.tick(30)
 
