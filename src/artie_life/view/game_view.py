@@ -4,6 +4,7 @@ from pygame.rect import Rect
 from pygame.display import set_mode, flip
 from pygame.surface import Surface
 from pygame.color import Color
+from pygame.font import Font
 from utils import EntityType, MAP_WIDTH, MAP_HEIGHT, BG_TO_SCREEN_HEIGHT_RATIO, \
         MAP_WTH_RATIO, TOP_BLANK_TO_SCREEN_RATIO
 
@@ -19,6 +20,8 @@ class GameView:
         self.bg_origin_y: "float"
         self.bg_width: "float"
         self.bg_height: "float"
+        self.button: "Rect"
+        self.font: "Font" = Font("resources/font/game_font.ttf", 24)
 
     def show_screen(self) -> "None":
         """Makes the screen visible."""
@@ -61,6 +64,12 @@ class GameView:
         self.bg_width = self.bg_height * MAP_WTH_RATIO
         self.bg_origin_y = screen_height * TOP_BLANK_TO_SCREEN_RATIO
         self.bg_origin_x = (screen_width - self.bg_width) / 2
+
+        button_surf = self.font.render("SPAWN NEW CREATURE", True, Color(255, 0, 0))
+        self.button = self.screen.blit(
+            button_surf,
+            (screen_width / 2 - button_surf.get_width() / 2, self.bg_origin_y / 2)
+        )
 
         bg: "Surface" = Surface(size=(self.bg_width, self.bg_height))
         bg.fill(Color(255,255,255))
