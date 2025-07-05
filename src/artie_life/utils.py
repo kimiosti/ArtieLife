@@ -40,6 +40,7 @@ BASE_MATING_DRIVE_DECAY: "float" = 0.007
 MAX_HUNGER: "float" = 100
 MAX_TIREDNESS: "float" = 100
 MIN_LIFE: "float" = 0
+BASE_DECISION_RATE: "int" = 100
 
 # Enumerative types
 class Action(Enum):
