@@ -29,12 +29,14 @@ class LivingBeing(Entity):
         `elapsed_time`: the amount of time elapsed since last update."""
         return self.speed * elapsed_time * movement
 
-    def update(self, elapsed_time: "int") -> "None":
+    def update(self, elapsed_time: "int") -> "bool":
         """Updates the living being, performing the desired action.
         
         Arguments:  
-        `elapsed_time`: the amount of time elapsed since last update."""
-        self.brain.update(elapsed_time)
+        `elapsed_time`: the amount of time elapsed since last update.
+        
+        Returns:  
+        A `bool` representing whether the living being is still alive."""
         action: "Action" = self.brain.get_action()
 
         if action != Action.INTERACT:
@@ -48,3 +50,4 @@ class LivingBeing(Entity):
         else:
             interaction: "InteractionType" = self.controller.interact(self.hitbox, id(self))
             self.brain.actuate(interaction)
+        return self.brain.update(elapsed_time)
