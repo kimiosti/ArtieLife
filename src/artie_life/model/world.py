@@ -8,12 +8,14 @@ from utils import EntityType, MAP_WIDTH, MAP_HEIGHT, PLAYGROUND_WIDTH, PLAYGROUN
 
 if TYPE_CHECKING:
     from typing import Tuple, Dict, List
+    from controller.game_controller import GameController
     from controller.world.world_controllers import ActionsController
 
 class World:
     """Implementation for the game world."""
-    def __init__(self) -> "None":
+    def __init__(self, controller: "GameController") -> "None":
         """Instantiates the game world."""
+        self.controller: "GameController" = controller
         self.dimension: "Tuple[float, float]" = (MAP_WIDTH, MAP_HEIGHT)
         self.playground: "Playground" = Playground(Rect(
             (MAP_WIDTH - PLAYGROUND_WIDTH) / 2,
@@ -66,6 +68,7 @@ class World:
             ]
         }
         self.living: "List[LivingBeing]" = []
+        self.population_size: "int" = 0
 
     def spawn_living(self, controller: "ActionsController") -> "None":
         """Spawns a living being inside the playground.
@@ -82,6 +85,8 @@ class World:
                 if living.is_colliding(rect):
                     colliding = True
         self.living.append(LivingBeing(rect, controller))
+        if len(self.living) > self.population_size:
+            self.population_size += 1
 
     def update(self, elapsed_time: "int") -> "None":
         """Updates the game world.
@@ -89,4 +94,7 @@ class World:
         Arguments:  
         `elapsed_time`: the amount of time elapsed since the last model update."""
         for living_being in self.living:
-            living_being.update(elapsed_time)
+            alive = living_being.update(elapsed_time)
+            if not alive:
+                self.living.remove(living_being)
+                self.controller.spawn_living()
