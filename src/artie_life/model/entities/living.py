@@ -19,6 +19,7 @@ class LivingBeing(Entity):
         self.controller = controller
         self.speed: "float" = LIVING_BASE_SPEED
         self.brain: "Brain" = Brain()
+        self.selected: "bool" = False
 
     def compute_movement(self, movement: "float", elapsed_time: "int") -> "float":
         """Computes the living being direction along one axis, given a movement and
