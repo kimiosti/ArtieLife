@@ -1,6 +1,5 @@
 """Module containing living being's implementation."""
 from typing import TYPE_CHECKING
-from numpy.random import randint
 from model.entities.non_living import Entity
 from model.entities.brain import Brain
 from utils import Action, InteractionType, LIVING_BASE_SPEED
@@ -35,11 +34,8 @@ class LivingBeing(Entity):
         
         Arguments:  
         `elapsed_time`: the amount of time elapsed since last update."""
-        action_idx = randint(5)
-        action: "Action" = Action.INTERACT
-        for item in Action:
-            if item.value == action_idx:
-                action = item
+        self.brain.update(elapsed_time)
+        action: "Action" = self.brain.get_action()
 
         if action != Action.INTERACT:
             move_x, move_y = action.get_direction()
