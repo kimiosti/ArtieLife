@@ -5,8 +5,8 @@ from pygame.display import set_mode, flip
 from pygame.surface import Surface
 from pygame.color import Color
 from pygame.font import Font
-from utils import EntityType, MAP_WIDTH, MAP_HEIGHT, BG_TO_SCREEN_HEIGHT_RATIO, \
-        MAP_WTH_RATIO, TOP_BLANK_TO_SCREEN_RATIO
+from utils import EntityType, FONT_PATH, MAP_WIDTH, MAP_HEIGHT, \
+        BG_TO_SCREEN_HEIGHT_RATIO, MAP_WTH_RATIO, TOP_BLANK_TO_SCREEN_RATIO
 
 if TYPE_CHECKING:
     from typing import List, Tuple
@@ -18,7 +18,7 @@ class GameView:
         self.screen: "Surface"
         self.map: "Rect" = Rect(0, 0, 0, 0)
         self.spawn_button: "Rect"
-        self.font: "Font" = Font("resources/font/game_font.ttf", 24)
+        self.font: "Font" = Font(FONT_PATH, 24)
 
     def show_screen(self) -> "None":
         """Makes the screen visible."""

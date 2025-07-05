@@ -8,6 +8,7 @@ if TYPE_CHECKING:
 # View-related constants
 BG_TO_SCREEN_HEIGHT_RATIO: "float" = 5 / 8
 TOP_BLANK_TO_SCREEN_RATIO: "float" = 1 / 9
+FONT_PATH: "str" = "resources/font/jupiteroid.ttf"
 
 # Map dimension constants
 MAP_WIDTH: "float" = 320.0
