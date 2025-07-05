@@ -103,7 +103,6 @@ class World:
         """Deselects the selected creature."""
         for living_being in self.living:
             living_being.selected = False
-        print("Deselected")
 
     def select(self, living_being: "LivingBeing") -> "None":
         """Selects a certain living being to inspect its state and to provide it with  
@@ -112,4 +111,3 @@ class World:
         Arguments:  
         `living_being`: the living being to be selected."""
         living_being.selected = True
-        print("Selected")
