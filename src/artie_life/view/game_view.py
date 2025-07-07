@@ -9,7 +9,7 @@ from utils import EntityType, FONT_PATH, MAP_WIDTH, MAP_HEIGHT, \
         BG_TO_SCREEN_HEIGHT_RATIO, MAP_WTH_RATIO, TOP_BLANK_TO_SCREEN_RATIO
 
 if TYPE_CHECKING:
-    from typing import List, Tuple
+    from typing import List, Tuple, Dict
 
 class GameView:
     """Implementation of the main Game View class"""
@@ -54,6 +54,7 @@ class GameView:
         
         Arguments:  
         `world`: instance of the game world. TEMPORARY"""
+        self.screen.fill(Color(0, 0, 0))
         screen_height: "int" = self.screen.get_height()
         screen_width: "int" = self.screen.get_width()
 
@@ -63,7 +64,7 @@ class GameView:
         bg_x = (screen_width - bg_width) / 2
         self.map = Rect(bg_x, bg_y, bg_width, bg_height)
 
-        button_surf = self.font.render("SPAWN NEW CREATURE", True, Color(255, 0, 0))
+        button_surf = self.font.render("SPAWN NEW CREATURE", False, Color(255, 0, 0))
         self.spawn_button = self.screen.blit(
             button_surf,
             (screen_width / 2 - button_surf.get_width() / 2, self.map.top / 2)
@@ -85,5 +86,27 @@ class GameView:
                     )
                 )
             )
+
+        flip()
+
+    def render_bottom_bar(self, params: "Dict[str, float]") -> "None":
+        """Renders the bottom part of the screen, to show a living being's
+        vital parameters when selected.
+        
+        Arguments:  
+        `params`: a dictionary of all the living being's vital parameters, with their name"""
+        param_height: int = 0
+        for param_name, param in params.items():
+            param_name_surf = self.font.render(param_name.upper(), False, Color(255, 255, 255))
+            self.screen.blit(
+                param_name_surf,
+                (self.map.left, self.map.bottom + param_height)
+            )
+            param_val_surf = self.font.render(str(param), False, Color(255, 255, 255))
+            self.screen.blit(
+                param_val_surf,
+                (self.map.left + self.map.width * 0.25, self.map.bottom + param_height)
+            )
+            param_height += param_name_surf.get_height()
 
         flip()
