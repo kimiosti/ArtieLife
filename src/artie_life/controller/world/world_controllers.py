@@ -1,9 +1,12 @@
 """Module containing all world controllers implementation."""
 from typing import TYPE_CHECKING
+from numpy import sqrt, abs
+from pygame import Vector2
 from pygame.rect import Rect
-from utils import InteractionType, MAP_WIDTH, MAP_HEIGHT
+from utils import EntityType, InteractionType, MAP_WIDTH, MAP_HEIGHT
 
 if TYPE_CHECKING:
+    from typing import Dict
     from controller.game_controller import GameController
 
 class ActionsController:
@@ -42,3 +45,35 @@ class ActionsController:
                     and entity.is_colliding(hitbox):
                 return entity_type.get_interaction()
         return InteractionType.NONE
+
+
+class DistanceController:
+    """Implementation for the distance controller."""
+    def __init__(self, controller: "GameController") -> "None":
+        """Instantiates a distance controller."""
+        self.controller = controller
+
+    def get_distance_by_type(self, hitbox: "Rect") -> "Dict[str, float]":
+        """Computes the distance of a given hitbox to the closest instance of
+        each type of entity on map.
+        
+        Arguments:  
+        `hitbox`: the hitbox used to compute the distances.
+        
+        Returns:  
+        A `Dict` containing `float` values described by `str` as identifiers."""
+        distances: "Dict[str, float]" = { }
+        for cur_entity_type in EntityType:
+            min_dist = sqrt(MAP_WIDTH**2 + MAP_HEIGHT**2)
+            min_x: "float" = MAP_WIDTH
+            min_y: "float" = MAP_HEIGHT
+            for entity_type, entity in self.controller.get_all_entities():
+                if entity_type == cur_entity_type:
+                    dist = Vector2(entity.hitbox.center).distance_to(hitbox.center)
+                    if dist < min_dist:
+                        min_dist = dist
+                        min_x = abs(entity.hitbox.centerx - hitbox.centerx)
+                        min_y = abs(entity.hitbox.centery - hitbox.centery)
+            distances[cur_entity_type.name + "_distx"] = min_x
+            distances[cur_entity_type.name + "_disty"] = min_y
+        return distances
