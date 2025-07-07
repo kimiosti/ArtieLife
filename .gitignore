@@ -1,3 +1,6 @@
+# Living being logs
+src/artie_life/logs/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
