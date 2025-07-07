@@ -9,7 +9,7 @@ from utils import EntityType, MAP_WIDTH, MAP_HEIGHT, PLAYGROUND_WIDTH, PLAYGROUN
 if TYPE_CHECKING:
     from typing import Tuple, Dict, List
     from controller.game_controller import GameController
-    from controller.world.world_controllers import ActionsController
+    from controller.world.world_controllers import ActionsController, DistanceController
 
 class World:
     """Implementation for the game world."""
@@ -71,7 +71,8 @@ class World:
         self.population_size: "int" = 0
         self.next_id: "int" = 0
 
-    def spawn_living(self, controller: "ActionsController") -> "None":
+    def spawn_living(self, action_controller: "ActionsController",
+                     distance_controller: "DistanceController") -> "None":
         """Spawns a living being inside the playground.
         
         Arguments:  
@@ -85,7 +86,7 @@ class World:
             for living in self.living:
                 if living.is_colliding(rect):
                     colliding = True
-        self.living.append(LivingBeing(rect, controller, self.next_id))
+        self.living.append(LivingBeing(rect, action_controller, distance_controller, self.next_id))
         self.next_id += 1
         if len(self.living) > self.population_size:
             self.population_size += 1

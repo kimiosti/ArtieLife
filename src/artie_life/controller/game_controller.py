@@ -1,7 +1,7 @@
 """Module containing the main game controller implementation."""
 from typing import TYPE_CHECKING
 from model.world import World
-from controller.world.world_controllers import ActionsController
+from controller.world.world_controllers import ActionsController, DistanceController
 from utils import EntityType
 
 if TYPE_CHECKING:
@@ -22,7 +22,7 @@ class GameController:
 
     def spawn_living(self) -> "None":
         """Spawns a new living being in the current game world."""
-        self.world.spawn_living(ActionsController(self))
+        self.world.spawn_living(ActionsController(self), DistanceController(self))
 
     def get_all_entities(self) -> "List[Tuple[EntityType, Entity]]":
         """Returns all map entities by type.
@@ -67,12 +67,7 @@ class GameController:
         for living in self.world.living:
             if living.selected:
                 selected = living
-        return {
-            "life": selected.brain.life,
-            "hunger": selected.brain.hunger,
-            "tiredness": selected.brain.tiredness,
-            "mating drive": selected.brain.mating_drive
-        }
+        return selected.brain.needs
 
 
     def update_world(self, elapsed_time: "int") -> "None":

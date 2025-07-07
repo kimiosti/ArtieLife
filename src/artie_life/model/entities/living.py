@@ -6,11 +6,12 @@ from utils import Action, InteractionType, LIVING_BASE_SPEED
 
 if TYPE_CHECKING:
     from pygame.rect import Rect
-    from controller.world.world_controllers import ActionsController
+    from controller.world.world_controllers import ActionsController, DistanceController
 
 class LivingBeing(Entity):
     """Living being implementation, for characters."""
-    def __init__(self, hitbox: "Rect", controller: "ActionsController", id: "int") -> "None":
+    def __init__(self, hitbox: "Rect", action_controller: "ActionsController",
+                 distance_controller: "DistanceController", living_id: "int") -> "None":
         """Instantiates a living being.
         
         Arguments:  
@@ -18,11 +19,10 @@ class LivingBeing(Entity):
         `controller`: the `ActionsController` for the living being's actions actuation.  
         `id`: the in-game living being identifier."""
         super().__init__(hitbox)
-        self.controller = controller
+        self.controller = action_controller
         self.speed: "float" = LIVING_BASE_SPEED
-        self.brain: "Brain" = Brain()
+        self.brain: "Brain" = Brain(distance_controller, living_id)
         self.selected: "bool" = False
-        self.id: "int" = id
 
     def compute_movement(self, movement: "float", elapsed_time: "int") -> "float":
         """Computes the living being direction along one axis, given a movement and
