@@ -54,4 +54,4 @@ class LivingBeing(Entity):
         else:
             interaction: "InteractionType" = self.controller.interact(self.hitbox, id(self))
             self.brain.actuate(interaction)
-        return self.brain.update(elapsed_time)
+        return self.brain.update(elapsed_time, self.hitbox)
