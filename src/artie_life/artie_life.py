@@ -35,6 +35,9 @@ if __name__=='__main__':
         game_controller.update_world(dt)
         view.render(game_controller.get_map_elems())
 
+        if game_controller.is_living_selected():
+            view.render_bottom_bar(game_controller.get_selected_info())
+
         dt = clock.tick(30)
 
     pygame.quit()
