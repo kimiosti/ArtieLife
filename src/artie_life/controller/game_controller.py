@@ -5,10 +5,10 @@ from controller.world.world_controllers import ActionsController
 from utils import EntityType
 
 if TYPE_CHECKING:
-    from typing import List
-    from typing import Tuple
+    from typing import List, Tuple, Dict
     from pygame.rect import Rect
     from model.entities.non_living import Entity
+    from model.entities.living import LivingBeing
 
 class GameController:
     """Implementation of the game controller."""
@@ -46,6 +46,34 @@ class GameController:
         A `List` of `Tuples` containing the `EntityType` and the `Rect` representing  
         each entity's hitbox."""
         return [(entity_type, entity.hitbox) for entity_type, entity in self.get_all_entities()]
+
+    def is_living_selected(self) -> "bool":
+        """Checks if a living being is seleceted.
+        
+        Returns:  
+        A `bool` representing if a living being was selected."""
+        for living in self.world.living:
+            if living.selected:
+                return True
+        return False
+
+    def get_selected_info(self) -> "Dict[str, float]":
+        """Returns the selected living being's vital parameters.
+        
+        Returns:  
+        A `Dict` containing a `float` value associated to each vital parameter description  
+        as a `str`."""
+        selected: "LivingBeing"
+        for living in self.world.living:
+            if living.selected:
+                selected = living
+        return {
+            "life": selected.brain.life,
+            "hunger": selected.brain.hunger,
+            "tiredness": selected.brain.tiredness,
+            "mating drive": selected.brain.mating_drive
+        }
+
 
     def update_world(self, elapsed_time: "int") -> "None":
         """Updates the current game world.
