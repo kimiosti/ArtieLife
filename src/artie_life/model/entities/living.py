@@ -10,16 +10,19 @@ if TYPE_CHECKING:
 
 class LivingBeing(Entity):
     """Living being implementation, for characters."""
-    def __init__(self, hitbox: "Rect", controller: "ActionsController") -> "None":
+    def __init__(self, hitbox: "Rect", controller: "ActionsController", id: "int") -> "None":
         """Instantiates a living being.
         
         Arguments:  
-        `hitbox`: the initial hitbox for the living being."""
+        `hitbox`: the initial hitbox for the living being.  
+        `controller`: the `ActionsController` for the living being's actions actuation.  
+        `id`: the in-game living being identifier."""
         super().__init__(hitbox)
         self.controller = controller
         self.speed: "float" = LIVING_BASE_SPEED
         self.brain: "Brain" = Brain()
         self.selected: "bool" = False
+        self.id: "int" = id
 
     def compute_movement(self, movement: "float", elapsed_time: "int") -> "float":
         """Computes the living being direction along one axis, given a movement and

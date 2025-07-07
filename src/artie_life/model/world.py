@@ -69,6 +69,7 @@ class World:
         }
         self.living: "List[LivingBeing]" = []
         self.population_size: "int" = 0
+        self.next_id: "int" = 0
 
     def spawn_living(self, controller: "ActionsController") -> "None":
         """Spawns a living being inside the playground.
@@ -84,7 +85,8 @@ class World:
             for living in self.living:
                 if living.is_colliding(rect):
                     colliding = True
-        self.living.append(LivingBeing(rect, controller))
+        self.living.append(LivingBeing(rect, controller, self.next_id))
+        self.next_id += 1
         if len(self.living) > self.population_size:
             self.population_size += 1
 
