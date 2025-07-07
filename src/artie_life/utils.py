@@ -90,8 +90,7 @@ class EntityType(Enum):
 
     def get_interaction(self) -> "InteractionType":
         """Check if a living being can interact with the entity type."""
-        for entity_type in EntityType:
-            for interaction_type in InteractionType:
-                if entity_type.value == interaction_type.value:
-                    return interaction_type
+        for interaction_type in InteractionType:
+            if self.value == interaction_type.value:
+                return interaction_type
         return InteractionType.NONE
