@@ -1,6 +1,6 @@
 """Module containing all world controllers implementation."""
 from typing import TYPE_CHECKING
-from numpy import sqrt, abs
+from numpy import sqrt
 from pygame import Vector2
 from pygame.rect import Rect
 from utils import EntityType, InteractionType, MAP_WIDTH, MAP_HEIGHT
@@ -70,7 +70,7 @@ class DistanceController:
             for entity_type, entity in self.controller.get_all_entities():
                 if entity_type == cur_entity_type:
                     dist = Vector2(entity.hitbox.center).distance_to(hitbox.center)
-                    if dist < min_dist:
+                    if dist != 0 and dist < min_dist:
                         min_dist = dist
                         min_x = abs(entity.hitbox.centerx - hitbox.centerx)
                         min_y = abs(entity.hitbox.centery - hitbox.centery)
