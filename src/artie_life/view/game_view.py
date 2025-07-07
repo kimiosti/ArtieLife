@@ -87,8 +87,6 @@ class GameView:
                 )
             )
 
-        flip()
-
     def render_bottom_bar(self, params: "Dict[str, float]") -> "None":
         """Renders the bottom part of the screen, to show a living being's
         vital parameters when selected.
@@ -109,4 +107,6 @@ class GameView:
             )
             param_height += param_name_surf.get_height()
 
+    def show_frame(self) -> "None":
+        """Displays the next frame, already rendered."""
         flip()

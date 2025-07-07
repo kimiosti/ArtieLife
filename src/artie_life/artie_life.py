@@ -38,6 +38,8 @@ if __name__=='__main__':
         if game_controller.is_living_selected():
             view.render_bottom_bar(game_controller.get_selected_info())
 
+        view.show_frame()
+
         dt = clock.tick(30)
 
     pygame.quit()
