@@ -3,11 +3,12 @@ from typing import TYPE_CHECKING
 from pygame.rect import Rect
 from model.entities.non_living import Playground, InteractiveSpot
 from model.entities.living import LivingBeing
+from controller.log import WorldLogger
 from utils import EntityType, MAP_WIDTH, MAP_HEIGHT, PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT, \
         SPOT_TO_SIDE_OFFSET, SPOT_WIDTH, SPOT_HEIGHT, LIVING_WIDTH, LIVING_HEIGHT
 
 if TYPE_CHECKING:
-    from typing import Tuple, Dict, List
+    from typing import Dict, List
     from controller.game_controller import GameController
     from controller.world.world_controllers import ActionsController, DistanceController
 
@@ -16,7 +17,6 @@ class World:
     def __init__(self, controller: "GameController") -> "None":
         """Instantiates the game world."""
         self.controller: "GameController" = controller
-        self.dimension: "Tuple[float, float]" = (MAP_WIDTH, MAP_HEIGHT)
         self.playground: "Playground" = Playground(Rect(
             (MAP_WIDTH - PLAYGROUND_WIDTH) / 2,
             (MAP_HEIGHT - PLAYGROUND_HEIGHT) / 2,
@@ -70,6 +70,7 @@ class World:
         self.living: "List[LivingBeing]" = []
         self.population_size: "int" = 0
         self.next_id: "int" = 0
+        self.logger: "WorldLogger" = WorldLogger()
 
     def spawn_living(self, action_controller: "ActionsController",
                      distance_controller: "DistanceController") -> "None":
@@ -86,10 +87,11 @@ class World:
             for living in self.living:
                 if living.is_colliding(rect):
                     colliding = True
-        self.living.append(LivingBeing(rect, action_controller, distance_controller, self.next_id))
         self.next_id += 1
+        self.living.append(LivingBeing(rect, action_controller, distance_controller, self.next_id))
         if len(self.living) > self.population_size:
             self.population_size += 1
+        self.logger.record_spawn(self.next_id, self.population_size)
 
     def update(self, elapsed_time: "int") -> "None":
         """Updates the game world.
@@ -100,7 +102,9 @@ class World:
             alive = living_being.update(elapsed_time)
             if not alive:
                 self.living.remove(living_being)
-                self.controller.spawn_living()
+                self.logger.record_death(living_being.game_id)
+                if len(self.living) < self.population_size:
+                    self.controller.spawn_living()
 
     def deselect(self) -> "None":
         """Deselects the selected creature."""
