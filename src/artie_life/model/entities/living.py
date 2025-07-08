@@ -23,6 +23,7 @@ class LivingBeing(Entity):
         self.speed: "float" = LIVING_BASE_SPEED
         self.brain: "Brain" = Brain(distance_controller, living_id)
         self.selected: "bool" = False
+        self.game_id = living_id
 
     def compute_movement(self, movement: "float", elapsed_time: "int") -> "float":
         """Computes the living being direction along one axis, given a movement and
