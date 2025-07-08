@@ -38,9 +38,8 @@ class ClickController:
         if self.view.map.collidepoint(get_mouse_pos()):
             for event in events:
                 if event.type == MOUSEBUTTONDOWN:
+                    self.world.deselect()
                     for living_being in self.world.living:
                         if self.view.game_to_view_coordinates(living_being.hitbox). \
                                 collidepoint(get_mouse_pos()):
                             self.world.select(living_being)
-                            return
-                    self.world.deselect()
