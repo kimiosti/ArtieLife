@@ -67,7 +67,7 @@ class GameController:
         for living in self.world.living:
             if living.selected:
                 selected = living
-        return selected.brain.needs
+        return selected.brain.needs_tracker.get_needs()
 
 
     def update_world(self, elapsed_time: "int") -> "None":
