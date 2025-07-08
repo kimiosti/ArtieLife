@@ -1,14 +1,11 @@
 """Module containing the brain implementation."""
 from typing import TYPE_CHECKING
 from numpy.random import randint
+from model.entities.living.needs import NeedsTracker
 from controller.log import LivingLogger
-from utils import Action, InteractionType, BASE_HUNGER_DECAY, BASE_LIFE_DECAY, \
-        BASE_TIREDNESS_DECAY, BASE_MATING_DRIVE_DECAY, BASE_HUNGER, BASE_LIFE, \
-        BASE_TIREDNESS, BASE_MATING_DRIVE, MAX_HUNGER, MAX_TIREDNESS, MIN_LIFE, \
-        BASE_DECISION_RATE
+from utils import Action, InteractionType, BASE_DECISION_RATE
 
 if TYPE_CHECKING:
-    from typing import Dict
     from pygame.rect import Rect
     from controller.world.world_controllers import DistanceController
 
@@ -20,12 +17,7 @@ class Brain:
         Arguments:  
         `distance_controller`: the `DistanceController` tracking the living being's
         perception of the world's space."""
-        self.needs: "Dict[str, float]" = {
-            "life": BASE_LIFE,
-            "hunger": BASE_HUNGER,
-            "tiredness": BASE_TIREDNESS,
-            "mating drive": BASE_MATING_DRIVE
-        }
+        self.needs_tracker = NeedsTracker()
         self.time_since_last_decision: "int" = 0
         self.action: "Action" = Action.INTERACT
         self.controller: "DistanceController" = distance_controller
@@ -37,7 +29,12 @@ class Brain:
         for action in Action:
             if action.value == action_idx:
                 self.action = action
-        self.logger.dump(self.needs, self.controller.get_distance_by_type(hitbox), self.action)
+        self.needs_tracker.record()
+        self.logger.dump(
+            self.needs_tracker.get_avgs(),
+            self.controller.get_distance_by_type(hitbox),
+            self.action
+        )
         self.time_since_last_decision = 0
 
     def update(self, elapsed_time: "int", hitbox: "Rect") -> "bool":
@@ -49,20 +46,10 @@ class Brain:
 
         Returns:  
         A `bool` representing whether the living being is still alive."""
-        self.needs["hunger"] += elapsed_time * BASE_HUNGER_DECAY
-        self.needs["tiredness"] += elapsed_time * BASE_TIREDNESS_DECAY
-        self.needs["mating drive"] += elapsed_time * BASE_MATING_DRIVE_DECAY
-        if self.needs["hunger"] >= MAX_HUNGER and self.needs["tiredness"] >= MAX_TIREDNESS:
-            self.needs["life"] += BASE_LIFE_DECAY
-
         self.time_since_last_decision += elapsed_time
         if self.time_since_last_decision >= BASE_DECISION_RATE:
             self.compute_new_action(hitbox)
-
-        if self.needs["life"] <= MIN_LIFE:
-            self.logger.record_death()
-            return False
-        return True
+        return self.needs_tracker.decay(elapsed_time)
 
     def get_action(self) -> "Action":
         """Gets the next action to be performed by the living being.
@@ -76,12 +63,4 @@ class Brain:
         
         Arguments:  
         `interaction`: the type of the interaction to be made effective."""
-        match interaction:
-            case InteractionType.HEAL:
-                self.needs["life"] = BASE_LIFE
-            case InteractionType.FEED:
-                self.needs["hunger"] = BASE_HUNGER
-            case InteractionType.REST:
-                self.needs["tiredness"] = BASE_TIREDNESS
-            case InteractionType.MATE:
-                self.needs["mating drive"] = BASE_MATING_DRIVE
+        self.needs_tracker.actuate(interaction.get_corresponding_need())
