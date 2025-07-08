@@ -2,7 +2,7 @@
 from typing import TYPE_CHECKING
 from pygame.rect import Rect
 from model.entities.non_living import Playground, InteractiveSpot
-from model.entities.living import LivingBeing
+from model.entities.living.living import LivingBeing
 from controller.log import WorldLogger
 from utils import EntityType, MAP_WIDTH, MAP_HEIGHT, PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT, \
         SPOT_TO_SIDE_OFFSET, SPOT_WIDTH, SPOT_HEIGHT, LIVING_WIDTH, LIVING_HEIGHT
