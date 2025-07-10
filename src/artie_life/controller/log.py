@@ -13,33 +13,41 @@ class LivingLogger:
         
         Arguments:  
         `living_id`: the living being's ID."""
-        self.id: "int" = living_id
-        self.log: "Path" = Path("logs/" + str(self.id) + "/log")
+        self.living_id: "int" = living_id
+        self.log: "Path" = Path("logs/" + str(self.living_id) + "/log")
         self.log.parent.mkdir(mode=666, parents=True, exist_ok=True)
-        with self.log.open("w", encoding="utf-8") as f:
-            f.write("Starting log of living being " + str(living_id) + "\n")
 
-    def dump(self, needs: "Dict[str, float]", dists: "Dict[str, float]",
-             action: "Action") -> "None":
-        """Writes a single log unit.
+    def record_spawn(self) -> "None":
+        """Logs the living being's spawn."""
+        with self.log.open("w", encoding="utf-8") as f:
+            f.write("Starting log of living being " + str(self.living_id) + "\n")
+
+    def dump_observation(self, observation: "Dict[str, float]") -> "None":
+        """Logs a single living being observation.
         
         Arguments:  
-        `needs`: the needs of the living being, as perceived by the brain.  
-        `dists`: the distances from the closest entities by type, as perceived by the brain.  
-        `action`: the action chosen by the brain to be performed next."""
+        `observation`: a `Dict` containing all observed `float` values with their `str` label."""
         with self.log.open("a", encoding="utf-8") as f:
             f.writelines([
-                need_name + ": " + str(need_val) + "\n" for need_name, need_val in needs.items()
+                need_name
+                + ": "
+                + str(need_val)
+                + "\n"
+                for need_name, need_val in observation.items()
             ])
-            f.writelines([
-                dist_name + ": " + str(dist_val) + "\n" for dist_name, dist_val in dists.items()
-            ])
-            f.write("action: " + action.name.lower() + "\n\n\n")
+
+    def dump_action(self, action: "Action") -> "None":
+        """Logs a single living being action.
+        
+        Arguments:  
+        `action`: the action to be logged."""
+        with self.log.open("a", encoding="utf-8") as f:
+            f.write("Action: " + action.name.lower() + "\n\n")
 
     def record_death(self) -> "None":
         """Logs a living being's death."""
         with self.log.open("w", encoding="utf-8") as f:
-            f.write("Living being " + str(self.id) + " died \nClosing log.\n")
+            f.write("Living being " + str(self.living_id) + " died \nClosing log.\n")
 
 
 class WorldLogger:
