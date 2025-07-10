@@ -46,7 +46,7 @@ class NeedsTracker:
                     new_value \
                     if new_value <= need.get_threshold() \
                     else need.get_threshold()
-        return self.needs[Need.LIFE] <= Need.LIFE.get_threshold()
+        return self.needs[Need.LIFE] < Need.LIFE.get_threshold()
 
     def actuate(self, need: "Need") -> "None":
         """Actuates a given action on the living being's needs.
