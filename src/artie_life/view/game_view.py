@@ -5,8 +5,8 @@ from pygame.display import set_mode, flip
 from pygame.surface import Surface
 from pygame.color import Color
 from view.resources import ResourceLoader
-from utils import EntityType, MAP_WIDTH, MAP_HEIGHT, \
-        BG_TO_SCREEN_HEIGHT_RATIO, MAP_WTH_RATIO, TOP_BLANK_TO_SCREEN_RATIO
+from utils import EntityType, MAP_WIDTH, MAP_HEIGHT, BACKGROUND_COLOR, BUTTON_TEXT_COLOR, \
+        BG_TO_SCREEN_HEIGHT_RATIO, MAP_WTH_RATIO, TOP_BLANK_TO_SCREEN_RATIO, BOTTOM_TEXT_COLOR
 
 if TYPE_CHECKING:
     from typing import List, Tuple, Dict
@@ -55,7 +55,7 @@ class GameView:
         
         Arguments:  
         `world`: instance of the game world. TEMPORARY"""
-        self.screen.fill(Color(0, 0, 0))
+        self.screen.fill(BACKGROUND_COLOR)
         screen_height: "int" = self.screen.get_height()
         screen_width: "int" = self.screen.get_width()
 
@@ -66,23 +66,23 @@ class GameView:
         self.map = Rect(bg_x, bg_y, bg_width, bg_height)
 
         font: "Font" = self.resource_loader.get_game_font()
-        button_surf = font.render("SPAWN NEW CREATURE", False, Color(255, 0, 0))
+        button_surf = font.render("SPAWN NEW CREATURE", False, BUTTON_TEXT_COLOR)
         self.spawn_button = self.screen.blit(
             button_surf,
             (screen_width / 2 - button_surf.get_width() / 2, self.map.top / 2)
         )
 
         bg: "Surface" = Surface(size=(self.map.width, self.map.height))
-        bg.fill(Color(255,255,255))
+        bg.fill(Color("white"))
         self.screen.blit(bg, self.game_to_view_coordinates(Rect(0, 0, MAP_WIDTH, MAP_HEIGHT)))
 
         for sprite_type, sprite in sprites:
             self.render_sprite(
                 sprite,
-                Color(0, 0, 0) if sprite_type == EntityType.PLAYGROUND else (
-                    Color(255, 0, 0) if sprite_type == EntityType.FEEDING else (
-                        Color(0, 255, 0) if sprite_type == EntityType.HEALING else (
-                            Color(0, 0, 255) if sprite_type == EntityType.RESTING else \
+                Color("black") if sprite_type == EntityType.PLAYGROUND else (
+                    Color("red") if sprite_type == EntityType.FEEDING else (
+                        Color("green") if sprite_type == EntityType.HEALING else (
+                            Color("blue") if sprite_type == EntityType.RESTING else \
                             Color(255, 255, 0)
                         )
                     )
@@ -98,7 +98,7 @@ class GameView:
         font: "Font" = self.resource_loader.get_game_font()
         param_height: int = (self.screen.get_height() - self.map.bottom) // 10
         for param_name, param in params.items():
-            param_name_surf = font.render(param_name.upper(), False, Color(255, 255, 255))
+            param_name_surf = font.render(param_name.upper(), False, BOTTOM_TEXT_COLOR)
             self.screen.blit(
                 param_name_surf,
                 (self.map.left, self.map.bottom + param_height)
