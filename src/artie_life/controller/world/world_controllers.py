@@ -6,7 +6,7 @@ from pygame.rect import Rect
 from utils import EntityType, InteractionType, MAP_WIDTH, MAP_HEIGHT
 
 if TYPE_CHECKING:
-    from typing import Dict
+    from typing import Dict, Tuple
     from controller.game_controller import GameController
 
 class ActionsController:
@@ -53,7 +53,7 @@ class DistanceController:
         """Instantiates a distance controller."""
         self.controller = controller
 
-    def get_distance_by_type(self, hitbox: "Rect") -> "Dict[str, float]":
+    def get_distance_by_type(self, hitbox: "Rect") -> "Dict[EntityType, Tuple[float, float]]":
         """Computes the distance of a given hitbox to the closest instance of
         each type of entity on map.
         
@@ -62,18 +62,22 @@ class DistanceController:
         
         Returns:  
         A `Dict` containing `float` values described by `str` as identifiers."""
-        distances: "Dict[str, float]" = { }
+        distances: "Dict[EntityType, Tuple[float, float]]" = { }
         for cur_entity_type in EntityType:
             min_dist = sqrt(MAP_WIDTH**2 + MAP_HEIGHT**2)
             min_x: "float" = MAP_WIDTH
             min_y: "float" = MAP_HEIGHT
             for entity_type, entity in self.controller.get_all_entities():
-                if entity_type == cur_entity_type:
-                    dist = Vector2(entity.hitbox.center).distance_to(hitbox.center)
-                    if dist != 0 and dist < min_dist:
-                        min_dist = dist
-                        min_x = abs(entity.hitbox.centerx - hitbox.centerx)
-                        min_y = abs(entity.hitbox.centery - hitbox.centery)
-            distances[cur_entity_type.name + "_distx"] = min_x
-            distances[cur_entity_type.name + "_disty"] = min_y
+                if entity_type == cur_entity_type and entity.hitbox is not hitbox:
+                    if entity.hitbox.colliderect(hitbox):
+                        min_x = 0
+                        min_y = 0
+                        min_dist = 0
+                    else:
+                        dist = Vector2(entity.hitbox.center).distance_to(hitbox.center)
+                        if dist < min_dist:
+                            min_x = entity.hitbox.centerx - hitbox.centerx
+                            min_y = entity.hitbox.centery - hitbox.centery
+                            min_dist = dist
+            distances[cur_entity_type] = (min_x, min_y)
         return distances
