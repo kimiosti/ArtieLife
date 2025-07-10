@@ -1,14 +1,25 @@
 """Module containing enumeratives and other utility values."""
 from typing import TYPE_CHECKING
+from os.path import join as join_path
 from enum import Enum
+from pygame.color import Color
 
 if TYPE_CHECKING:
-    from typing import Tuple
+    from typing import Dict, Tuple
 
 # View-related constants
 BG_TO_SCREEN_HEIGHT_RATIO: "float" = 5 / 8
 TOP_BLANK_TO_SCREEN_RATIO: "float" = 1 / 9
-FONT_PATH: "str" = "resources/font/jupiteroid.ttf"
+
+# Resource loading constants
+RESOURCES_FOLDER: "str" = "resources"
+FONT_PATH: "str" = join_path(RESOURCES_FOLDER, "font", "jupiteroid.ttf")
+BAR_COLORS: "Dict[str, Color]" = {
+    "mating_drive": Color(157, 24, 24),
+    "tiredness": Color(37, 24, 157),
+    "life": Color(23, 122, 12),
+    "hunger": Color(230, 210, 34)
+}
 
 # Map dimension constants
 MAP_WIDTH: "float" = 320.0
