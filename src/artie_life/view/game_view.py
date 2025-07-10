@@ -4,12 +4,13 @@ from pygame.rect import Rect
 from pygame.display import set_mode, flip
 from pygame.surface import Surface
 from pygame.color import Color
-from pygame.font import Font
-from utils import EntityType, FONT_PATH, MAP_WIDTH, MAP_HEIGHT, \
+from view.resources import ResourceLoader
+from utils import EntityType, MAP_WIDTH, MAP_HEIGHT, \
         BG_TO_SCREEN_HEIGHT_RATIO, MAP_WTH_RATIO, TOP_BLANK_TO_SCREEN_RATIO
 
 if TYPE_CHECKING:
     from typing import List, Tuple, Dict
+    from pygame.font import Font
 
 class GameView:
     """Implementation of the main Game View class"""
@@ -18,7 +19,7 @@ class GameView:
         self.screen: "Surface"
         self.map: "Rect" = Rect(0, 0, 0, 0)
         self.spawn_button: "Rect"
-        self.font: "Font" = Font(FONT_PATH, 24)
+        self.resource_loader: "ResourceLoader" = ResourceLoader()
 
     def show_screen(self) -> "None":
         """Makes the screen visible."""
@@ -64,7 +65,8 @@ class GameView:
         bg_x = (screen_width - bg_width) / 2
         self.map = Rect(bg_x, bg_y, bg_width, bg_height)
 
-        button_surf = self.font.render("SPAWN NEW CREATURE", False, Color(255, 0, 0))
+        font: "Font" = self.resource_loader.get_game_font()
+        button_surf = font.render("SPAWN NEW CREATURE", False, Color(255, 0, 0))
         self.spawn_button = self.screen.blit(
             button_surf,
             (screen_width / 2 - button_surf.get_width() / 2, self.map.top / 2)
@@ -93,19 +95,28 @@ class GameView:
         
         Arguments:  
         `params`: a dictionary of all the living being's vital parameters, with their name"""
-        param_height: int = 0
+        font: "Font" = self.resource_loader.get_game_font()
+        param_height: int = (self.screen.get_height() - self.map.bottom) // 10
         for param_name, param in params.items():
-            param_name_surf = self.font.render(param_name.upper(), False, Color(255, 255, 255))
+            param_name_surf = font.render(param_name.upper(), False, Color(255, 255, 255))
             self.screen.blit(
                 param_name_surf,
                 (self.map.left, self.map.bottom + param_height)
             )
-            param_val_surf = self.font.render(str(param), False, Color(255, 255, 255))
+            surf_height = param_name_surf.get_height()
+            param_val_surf = self.resource_loader.get_level_bar(
+                param_name,
+                param,
+                self.map.width * 0.25,
+                surf_height * 0.7
+            )
             self.screen.blit(
                 param_val_surf,
-                (self.map.left + self.map.width * 0.25, self.map.bottom + param_height)
+                (
+                    self.map.left + self.map.width * 0.25,
+                    self.map.bottom + param_height + surf_height * 0.15)
             )
-            param_height += param_name_surf.get_height()
+            param_height += surf_height
 
     def show_frame(self) -> "None":
         """Displays the next frame, already rendered."""
