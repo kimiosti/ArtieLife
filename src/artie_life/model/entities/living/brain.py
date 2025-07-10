@@ -1,7 +1,7 @@
 """Module containing the brain implementation."""
 from typing import TYPE_CHECKING
 from numpy.random import randint
-from model.entities.living.needs import NeedsTracker
+from model.entities.living.needs import NeedsTracker, PerceptionTracker
 from controller.log import LivingLogger
 from utils import Action, InteractionType, BASE_DECISION_RATE
 
@@ -17,11 +17,12 @@ class Brain:
         Arguments:  
         `distance_controller`: the `DistanceController` tracking the living being's
         perception of the world's space."""
-        self.needs_tracker = NeedsTracker()
+        self.needs_tracker = NeedsTracker(living_id)
+        self.perception_tracker = PerceptionTracker(distance_controller, living_id)
         self.time_since_last_decision: "int" = 0
         self.action: "Action" = Action.INTERACT
-        self.controller: "DistanceController" = distance_controller
         self.logger: "LivingLogger" = LivingLogger(living_id)
+        self.logger.record_spawn()
 
     def compute_new_action(self, hitbox: "Rect") -> "None":
         """Computes the next action to be performed."""
@@ -30,11 +31,8 @@ class Brain:
             if action.value == action_idx:
                 self.action = action
         self.needs_tracker.record()
-        self.logger.dump(
-            self.needs_tracker.get_avgs(),
-            self.controller.get_distance_by_type(hitbox),
-            self.action
-        )
+        self.perception_tracker.record(hitbox)
+        self.logger.dump_action(self.action)
         self.time_since_last_decision = 0
 
     def update(self, elapsed_time: "int", hitbox: "Rect") -> "bool":
