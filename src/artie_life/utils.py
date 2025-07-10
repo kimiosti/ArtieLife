@@ -15,11 +15,14 @@ TOP_BLANK_TO_SCREEN_RATIO: "float" = 1 / 9
 RESOURCES_FOLDER: "str" = "resources"
 FONT_PATH: "str" = join_path(RESOURCES_FOLDER, "font", "jupiteroid.ttf")
 BAR_COLORS: "Dict[str, Color]" = {
-    "mating_drive": Color(157, 24, 24),
+    "mating_drive": Color("firebrick2"),
     "tiredness": Color(37, 24, 157),
-    "life": Color(23, 122, 12),
+    "life": Color("green3"),
     "hunger": Color(230, 210, 34)
 }
+BACKGROUND_COLOR = Color("black")
+BUTTON_TEXT_COLOR = Color("firebrick2")
+BOTTOM_TEXT_COLOR = Color("white")
 
 # Map dimension constants
 MAP_WIDTH: "float" = 320.0
