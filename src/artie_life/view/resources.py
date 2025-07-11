@@ -1,16 +1,29 @@
 """Module containing resource loading helpers."""
+from typing import TYPE_CHECKING
+from os.path import join as join_path
+from pygame.image import load as load_image
+from pygame.transform import smoothscale
 from pygame.surface import Surface
 from pygame.font import Font
-from utils import FONT_PATH, BAR_COLORS
+from utils import FONT_PATH, BAR_COLORS, SPRITES_PATH, SPRITES_EXTENSION, \
+        BACKGROUND_SPRITE_NAME
+
+if TYPE_CHECKING:
+    from pygame.color import Color
+    from utils import EntityType
 
 class ResourceLoader:
     """Implementation for the game's resource loader."""
-    def get_game_font(self, size: "int" = 24) -> "Font":
+    def load_text_surface(self, color: "Color", text: "str",
+                          font_size: "int" = 24) -> "Surface":
         """Loads the game's font.
         
         Argumetns:  
+        `color`: the desired text color.  
+        `text`: the text to be rendered.
         `size`: the desired font size."""
-        return Font(FONT_PATH, size)
+        font: "Font" = Font(FONT_PATH, font_size)
+        return font.render(text, False, color)
 
     def get_level_bar(self, label: "str", percentage: "float",
                       width: "float", height: "float") -> "Surface":
@@ -29,3 +42,31 @@ class ResourceLoader:
         surf: "Surface" = Surface((bar_width, height))
         surf.fill(BAR_COLORS[label])
         return surf
+
+    def load_sprite(self, entity_type: "EntityType", width: "float",
+                    height: "float") -> "Surface":
+        """Loads the sprite corresponding to a given entity type.
+        
+        Arguments:  
+        `entity_type`: the type of the entity to be loaded.  
+        `width:  the desired resulting width.  
+        `height`: the desired resulting height."""
+        path = join_path(
+            SPRITES_PATH,
+            entity_type.name.lower() + SPRITES_EXTENSION
+        )
+        surf: "Surface" = load_image(path).convert_alpha()
+        return smoothscale(surf, (width, height))
+
+    def load_background(self, width: "float", height: "float") -> "Surface":
+        """Loads the background's asset.
+        
+        Arguments:  
+        `width`: the desired resulting width.  
+        `height`: the desired resulting height."""
+        path = join_path(
+            SPRITES_PATH,
+            BACKGROUND_SPRITE_NAME + SPRITES_EXTENSION
+        )
+        surf: "Surface" = load_image(path).convert()
+        return smoothscale(surf, (width, height))
