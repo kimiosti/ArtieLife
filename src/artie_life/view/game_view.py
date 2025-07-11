@@ -2,15 +2,15 @@
 from typing import TYPE_CHECKING
 from pygame.rect import Rect
 from pygame.display import set_mode, flip
-from pygame.surface import Surface
-from pygame.color import Color
 from view.resources import ResourceLoader
-from utils import EntityType, MAP_WIDTH, MAP_HEIGHT, BACKGROUND_COLOR, BUTTON_TEXT_COLOR, \
-        BG_TO_SCREEN_HEIGHT_RATIO, MAP_WTH_RATIO, TOP_BLANK_TO_SCREEN_RATIO, BOTTOM_TEXT_COLOR
+from utils import MAP_WIDTH, MAP_HEIGHT, BACKGROUND_COLOR, BUTTON_TEXT_COLOR, \
+        BG_TO_SCREEN_HEIGHT_RATIO, MAP_WTH_RATIO, TOP_BLANK_TO_SCREEN_RATIO, \
+        BOTTOM_TEXT_COLOR
 
 if TYPE_CHECKING:
     from typing import List, Tuple, Dict
-    from pygame.font import Font
+    from pygame.surface import Surface
+    from utils import EntityType
 
 class GameView:
     """Implementation of the main Game View class"""
@@ -39,22 +39,12 @@ class GameView:
         new_height = rect.height / MAP_HEIGHT * self.map.height
         return Rect(new_x, new_y, new_width, new_height)
 
-    def render_sprite(self, rect: "Rect", color: "Color") -> "None":
-        """Renders a single sprite, starting from its game coorinates.
-        
-        Arguments:  
-        `rect`: the game coordinates of the sprite to be rendered.
-        `color`: the color used to fill the sprite rectangle. TEMPORARY"""
-        graphic_rect: "Rect" = self.game_to_view_coordinates(rect)
-        surf: "Surface" = Surface(size=(graphic_rect.width, graphic_rect.height))
-        surf.fill(color)
-        self.screen.blit(surf, graphic_rect)
-
     def render(self, sprites: "List[Tuple[EntityType, Rect]]") -> "None":
         """Renders a game scene.
         
         Arguments:  
-        `world`: instance of the game world. TEMPORARY"""
+        `sprites`: a `List` of `Tuple` objects associating to each sprite type
+        its position in game coordinates."""
         self.screen.fill(BACKGROUND_COLOR)
         screen_height: "int" = self.screen.get_height()
         screen_width: "int" = self.screen.get_width()
@@ -65,28 +55,24 @@ class GameView:
         bg_x = (screen_width - bg_width) / 2
         self.map = Rect(bg_x, bg_y, bg_width, bg_height)
 
-        font: "Font" = self.resource_loader.get_game_font()
-        button_surf = font.render("SPAWN NEW CREATURE", False, BUTTON_TEXT_COLOR)
+        button_surf = self.resource_loader.load_text_surface(BUTTON_TEXT_COLOR, "SPAWN NEW CREATURE")
         self.spawn_button = self.screen.blit(
             button_surf,
             (screen_width / 2 - button_surf.get_width() / 2, self.map.top / 2)
         )
 
-        bg: "Surface" = Surface(size=(self.map.width, self.map.height))
-        bg.fill(Color("white"))
+        bg: "Surface" = self.resource_loader.load_background(self.map.width, self.map.height)
         self.screen.blit(bg, self.game_to_view_coordinates(Rect(0, 0, MAP_WIDTH, MAP_HEIGHT)))
 
         for sprite_type, sprite in sprites:
-            self.render_sprite(
-                sprite,
-                Color("black") if sprite_type == EntityType.PLAYGROUND else (
-                    Color("red") if sprite_type == EntityType.FEEDING else (
-                        Color("green") if sprite_type == EntityType.HEALING else (
-                            Color("blue") if sprite_type == EntityType.RESTING else \
-                            Color(255, 255, 0)
-                        )
-                    )
-                )
+            sprite_rect = self.game_to_view_coordinates(sprite)
+            self.screen.blit(
+                self.resource_loader.load_sprite(
+                    sprite_type,
+                    sprite_rect.width,
+                    sprite_rect.height
+                ),
+                (sprite_rect.left, sprite_rect.top)
             )
 
     def render_bottom_bar(self, params: "Dict[str, float]") -> "None":
@@ -95,10 +81,12 @@ class GameView:
         
         Arguments:  
         `params`: a dictionary of all the living being's vital parameters, with their name"""
-        font: "Font" = self.resource_loader.get_game_font()
         param_height: int = (self.screen.get_height() - self.map.bottom) // 10
         for param_name, param in params.items():
-            param_name_surf = font.render(param_name.upper(), False, BOTTOM_TEXT_COLOR)
+            param_name_surf = self.resource_loader.load_text_surface(
+                BOTTOM_TEXT_COLOR,
+                param_name.replace("_", " ").upper()
+            )
             self.screen.blit(
                 param_name_surf,
                 (self.map.left, self.map.bottom + param_height)
