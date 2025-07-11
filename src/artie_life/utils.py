@@ -23,6 +23,9 @@ BAR_COLORS: "Dict[str, Color]" = {
 BACKGROUND_COLOR = Color("black")
 BUTTON_TEXT_COLOR = Color("firebrick2")
 BOTTOM_TEXT_COLOR = Color("white")
+SPRITES_PATH: "str" = join_path(RESOURCES_FOLDER, "sprites")
+BACKGROUND_SPRITE_NAME: "str" = "background"
+SPRITES_EXTENSION: "str" = ".png"
 
 # Map dimension constants
 MAP_WIDTH: "float" = 320.0
