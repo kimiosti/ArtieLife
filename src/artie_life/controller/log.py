@@ -1,6 +1,8 @@
 """Module for log handlers implementation."""
 from typing import TYPE_CHECKING
+from shutil import rmtree
 from pathlib import Path
+from utils import LIVING_LOG, LOGS_FOLDER, WORLD_LOG
 
 if TYPE_CHECKING:
     from typing import Dict
@@ -14,7 +16,7 @@ class LivingLogger:
         Arguments:  
         `living_id`: the living being's ID."""
         self.living_id: "int" = living_id
-        self.log: "Path" = Path("logs/" + str(self.living_id) + "/log")
+        self.log: "Path" = Path(LIVING_LOG(living_id))
         self.log.parent.mkdir(mode=666, parents=True, exist_ok=True)
 
     def record_spawn(self) -> "None":
@@ -55,7 +57,8 @@ class WorldLogger:
     population size."""
     def __init__(self) -> "None":
         """Instantiates a world logger."""
-        self.log: "Path" = Path("logs/world/log")
+        rmtree(Path(LOGS_FOLDER))
+        self.log: "Path" = Path(WORLD_LOG)
         self.log.parent.mkdir(parents=True, exist_ok=True)
         with self.log.open("w", encoding="utf-8") as f:
             f.write("Starting game World log \n")
