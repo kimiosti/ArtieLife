@@ -1,9 +1,18 @@
 """Module containing enumeratives and other utility values."""
 from typing import TYPE_CHECKING
+from os.path import join as join_path
 from enum import Enum
 
 if TYPE_CHECKING:
-    from typing import Tuple
+    from typing import Callable, Tuple
+
+#Logs paths
+LOGS_FOLDER: "str" = "logs"
+WORLD_LOG: "str" = join_path(LOGS_FOLDER, "world", "log")
+LIVING_LOG: "Callable[[int], str]" = \
+        lambda living_id: join_path(LOGS_FOLDER, str(living_id), "log")
+GENOME_LOG: "Callable[[int], str]" = \
+        lambda living_id: join_path(LOGS_FOLDER, str(living_id), "genome")
 
 # View-related constants
 BG_TO_SCREEN_HEIGHT_RATIO: "float" = 5 / 8
