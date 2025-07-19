@@ -2,7 +2,8 @@
 from typing import TYPE_CHECKING
 from numpy import sqrt
 from controller.log import LivingLogger
-from utils import Need, EntityType
+from utils.living.needs import Need
+from utils.living.actions import EntityType
 
 if TYPE_CHECKING:
     from typing import Dict, Tuple

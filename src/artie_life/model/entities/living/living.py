@@ -2,7 +2,8 @@
 from typing import TYPE_CHECKING
 from model.entities.non_living import Entity
 from model.entities.living.brain import Brain
-from utils import Action, InteractionType, LIVING_BASE_SPEED
+from utils.map import LIVING_BASE_SPEED
+from utils.living.actions import Action, InteractionType
 
 if TYPE_CHECKING:
     from pygame.rect import Rect

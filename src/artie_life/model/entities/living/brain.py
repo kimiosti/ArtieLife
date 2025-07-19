@@ -3,7 +3,8 @@ from typing import TYPE_CHECKING
 from numpy.random import randint
 from model.entities.living.needs import NeedsTracker, PerceptionTracker
 from controller.log import LivingLogger
-from utils import Action, InteractionType, BASE_DECISION_RATE
+from utils.living.needs import BASE_DECISION_RATE
+from utils.living.actions import Action, InteractionType
 
 if TYPE_CHECKING:
     from pygame.rect import Rect

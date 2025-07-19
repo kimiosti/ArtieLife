@@ -2,7 +2,7 @@
 from typing import TYPE_CHECKING
 from model.world import World
 from controller.world.world_controllers import ActionsController, DistanceController
-from utils import EntityType
+from utils.living.actions import EntityType
 
 if TYPE_CHECKING:
     from typing import List, Tuple, Dict
