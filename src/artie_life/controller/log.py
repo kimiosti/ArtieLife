@@ -2,11 +2,11 @@
 from typing import TYPE_CHECKING
 from shutil import rmtree
 from pathlib import Path
-from utils import LIVING_LOG, LOGS_FOLDER, WORLD_LOG
+from utils.logs import LIVING_LOG, LOGS_FOLDER, WORLD_LOG
 
 if TYPE_CHECKING:
     from typing import Dict
-    from utils import Action
+    from utils.living.actions import Action
 
 class LivingLogger:
     """Implementation of a living being's logger."""

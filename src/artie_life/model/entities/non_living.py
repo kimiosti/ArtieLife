@@ -1,7 +1,7 @@
 """Module containing all non-living entities implementations."""
 from typing import TYPE_CHECKING
 from numpy.random import uniform
-from utils import LIVING_WIDTH, LIVING_HEIGHT
+from utils.map import LIVING_WIDTH, LIVING_HEIGHT
 
 if TYPE_CHECKING:
     from typing import Tuple
