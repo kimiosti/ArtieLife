@@ -3,14 +3,14 @@ from typing import TYPE_CHECKING
 from pygame.rect import Rect
 from pygame.display import set_mode, flip
 from view.resources import ResourceLoader
-from utils import MAP_WIDTH, MAP_HEIGHT, BACKGROUND_COLOR, BUTTON_TEXT_COLOR, \
-        BG_TO_SCREEN_HEIGHT_RATIO, MAP_WTH_RATIO, TOP_BLANK_TO_SCREEN_RATIO, \
-        BOTTOM_TEXT_COLOR
+from utils.map import MAP_WIDTH, MAP_HEIGHT, MAP_WTH_RATIO
+from utils.view import BACKGROUND_COLOR, BUTTON_TEXT_COLOR, BG_TO_SCREEN_HEIGHT_RATIO, \
+        TOP_BLANK_TO_SCREEN_RATIO, BOTTOM_TEXT_COLOR
 
 if TYPE_CHECKING:
     from typing import List, Tuple, Dict
     from pygame.surface import Surface
-    from utils import EntityType
+    from utils.living.actions import EntityType
 
 class GameView:
     """Implementation of the main Game View class"""

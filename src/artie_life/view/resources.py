@@ -5,12 +5,12 @@ from pygame.image import load as load_image
 from pygame.transform import smoothscale
 from pygame.surface import Surface
 from pygame.font import Font
-from utils import FONT_PATH, BAR_COLORS, SPRITES_PATH, SPRITES_EXTENSION, \
+from utils.view import FONT_PATH, BAR_COLORS, SPRITES_PATH, SPRITES_EXTENSION, \
         BACKGROUND_SPRITE_NAME
 
 if TYPE_CHECKING:
     from pygame.color import Color
-    from utils import EntityType
+    from utils.living.actions import EntityType
 
 class ResourceLoader:
     """Implementation for the game's resource loader."""
