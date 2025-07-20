@@ -38,10 +38,10 @@ class Need(Enum):
                 return 0
 
     def get_corresponding_gene(self) -> "Gene":
-        """Getter for the base decay rate of a need.
+        """Translates a need in the gene representing the corresponding decay rate.
         
         Returns:  
-        The need's base decay rate as a `float`."""
+        The gene representing the need's decay rate."""
         match self:
             case Need.MATING_DRIVE:
                 return Gene.MATING_DRIVE_DECAY
