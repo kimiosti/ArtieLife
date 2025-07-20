@@ -1,14 +1,11 @@
 """Module containing utilities for living being's needs."""
 from enum import Enum
+from utils.living.genome import Gene
 
 BASE_HUNGER: "float" = 0
 BASE_LIFE: "float" = 0
 BASE_TIREDNESS: "float" = 0
 BASE_MATING_DRIVE: "float" = 0
-BASE_HUNGER_DECAY: "float" = 0.008
-BASE_LIFE_DECAY: "float" = 0.008
-BASE_TIREDNESS_DECAY: "float" = 0.008
-BASE_MATING_DRIVE_DECAY: "float" = 0.007
 MAX_HUNGER: "float" = 100
 MAX_TIREDNESS: "float" = 100
 MAX_MATING_DRIVE: "float" = 100
@@ -40,22 +37,22 @@ class Need(Enum):
             case _:
                 return 0
 
-    def get_base_decay(self) -> "float":
+    def get_corresponding_gene(self) -> "Gene":
         """Getter for the base decay rate of a need.
         
         Returns:  
         The need's base decay rate as a `float`."""
         match self:
             case Need.MATING_DRIVE:
-                return BASE_MATING_DRIVE_DECAY
+                return Gene.MATING_DRIVE_DECAY
             case Need.LIFE:
-                return BASE_LIFE_DECAY
+                return Gene.LIFE_DECAY
             case Need.HUNGER:
-                return BASE_HUNGER_DECAY
+                return Gene.HUNGER_DECAY
             case Need.TIREDNESS:
-                return BASE_TIREDNESS_DECAY
+                return Gene.TIREDNESS_DECAY
             case _:
-                return 0
+                return Gene.LIFE_DECAY # default value that should never be accessed.
 
     def get_threshold(self) -> "float":
         """Getter for a need's limit value.
