@@ -21,14 +21,30 @@ class GameController:
         """Creates a new game world."""
         self.world = World(self)
 
-    def spawn_living(self) -> "None":
-        """Spawns a new living being in the current game world."""
+    def spawn_random_living(self) -> "None":
+        """Spawns a new living being in the current game world with a random genome."""
         self.world.spawn_living(
             ActionsController(self),
             DistanceController(self),
-            create_random_genome() if len(self.world.living) < 2 \
-                else compute_evolutionary_genome(self.world.living)
+            create_random_genome()
         )
+
+    def spawn_evolutionary_living(self) -> "None":
+        """Spawns a new living being in the current game world, applying the genetic
+        algorithm."""
+        self.world.spawn_living(
+            ActionsController(self),
+            DistanceController(self),
+            compute_evolutionary_genome(self.world.living)
+        )
+
+    def spawn_living(self) -> "None":
+        """Spawns a living being in the current game world, applying the genetic
+        algorithm if possible or computing a random genome otherwise."""
+        if len(self.world.living) < 2:
+            self.spawn_random_living()
+        else:
+            self.spawn_evolutionary_living()
 
     def get_all_entities(self) -> "List[Tuple[EntityType, Entity]]":
         """Returns all map entities by type.
