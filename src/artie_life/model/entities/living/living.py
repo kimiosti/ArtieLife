@@ -2,27 +2,32 @@
 from typing import TYPE_CHECKING
 from model.entities.non_living import Entity
 from model.entities.living.brain import Brain
-from utils.map import LIVING_BASE_SPEED
 from utils.living.actions import Action, InteractionType
+from utils.living.genome import Gene
 
 if TYPE_CHECKING:
+    from typing import Dict
     from pygame.rect import Rect
     from controller.world.world_controllers import ActionsController, DistanceController
 
 class LivingBeing(Entity):
     """Living being implementation, for characters."""
     def __init__(self, hitbox: "Rect", action_controller: "ActionsController",
-                 distance_controller: "DistanceController", living_id: "int") -> "None":
+                 genome: "Dict[Gene, float]", distance_controller: "DistanceController",
+                 living_id: "int") -> "None":
         """Instantiates a living being.
         
         Arguments:  
         `hitbox`: the initial hitbox for the living being.  
-        `controller`: the `ActionsController` for the living being's actions actuation.  
+        `action_controller`: the `ActionsController` for the living being's actions actuation.  
+        `genome`: the living being's genome.
+        `distance_controller`: the controller regulating the living being's perception of its
+        position relative to other game entities.
         `id`: the in-game living being identifier."""
         super().__init__(hitbox)
         self.controller = action_controller
-        self.speed: "float" = LIVING_BASE_SPEED
-        self.brain: "Brain" = Brain(distance_controller, living_id)
+        self.genome = genome
+        self.brain: "Brain" = Brain(distance_controller, living_id, self.genome)
         self.selected: "bool" = False
         self.game_id = living_id
 
@@ -33,7 +38,7 @@ class LivingBeing(Entity):
         Arguments:  
         `movement`: the base value of the desired movement along the axis.  
         `elapsed_time`: the amount of time elapsed since last update."""
-        return self.speed * elapsed_time * movement
+        return self.genome[Gene.SPEED] * elapsed_time * movement
 
     def update(self, elapsed_time: "float") -> "bool":
         """Updates the living being, performing the desired action.

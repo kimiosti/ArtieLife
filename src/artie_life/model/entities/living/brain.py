@@ -5,21 +5,27 @@ from model.entities.living.needs import NeedsTracker, PerceptionTracker
 from controller.log import LivingLogger
 from utils.living.needs import BASE_DECISION_RATE
 from utils.living.actions import Action, InteractionType
+from utils.living.genome import Gene
 
 if TYPE_CHECKING:
+    from typing import Dict
     from pygame.rect import Rect
     from controller.world.world_controllers import DistanceController
 
 class Brain:
     """Generic implementation for the living beings' brain."""
-    def __init__(self, distance_controller: "DistanceController", living_id: "int") -> "None":
+    def __init__(self, distance_controller: "DistanceController", living_id: "int",
+                 genome: "Dict[Gene, float]") -> "None":
         """Instantiates the living being's brain.
         
         Arguments:  
         `distance_controller`: the `DistanceController` tracking the living being's
-        perception of the world's space."""
-        self.needs_tracker = NeedsTracker(living_id)
+        perception of the world's space.
+        `living_id`: the living being's in-game ID.
+        `genome`: the living being's genome."""
         self.perception_tracker = PerceptionTracker(distance_controller, living_id)
+        self.genome = genome
+        self.needs_tracker = NeedsTracker(living_id, self.genome)
         self.time_since_last_decision: "float" = 0
         self.action: "Action" = Action.INTERACT
         self.logger: "LivingLogger" = LivingLogger(living_id)
