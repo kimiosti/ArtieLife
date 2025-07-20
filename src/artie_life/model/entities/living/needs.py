@@ -26,11 +26,11 @@ class NeedsTracker:
         self.observations: "int" = 0
         self.logger: "LivingLogger" = LivingLogger(living_id)
 
-    def decay(self, elapsed_time: "int") -> "bool":
+    def decay(self, elapsed_time: "float") -> "bool":
         """Actuates a single decay step in all needs.
         
         Arguments:  
-        `elapsed_time`: the amount of time elapsed since last step.
+        `elapsed_time`: the amount of time elapsed since last step, in seconds.
         
         Returns:  
         A `bool` representing if the living being is still alive."""

@@ -94,11 +94,11 @@ class World:
             self.population_size += 1
         self.logger.record_spawn(self.next_id, self.population_size)
 
-    def update(self, elapsed_time: "int") -> "None":
+    def update(self, elapsed_time: "float") -> "None":
         """Updates the game world.
         
         Arguments:  
-        `elapsed_time`: the amount of time elapsed since the last model update."""
+        `elapsed_time`: the amount of time elapsed since the last model update, in seconds."""
         for living_being in self.living:
             alive = living_being.update(elapsed_time)
             if not alive:

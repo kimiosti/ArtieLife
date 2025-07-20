@@ -26,7 +26,7 @@ class LivingBeing(Entity):
         self.selected: "bool" = False
         self.game_id = living_id
 
-    def compute_movement(self, movement: "float", elapsed_time: "int") -> "float":
+    def compute_movement(self, movement: "float", elapsed_time: "float") -> "float":
         """Computes the living being direction along one axis, given a movement and
         the living being's speed multiplier.
         
@@ -35,11 +35,11 @@ class LivingBeing(Entity):
         `elapsed_time`: the amount of time elapsed since last update."""
         return self.speed * elapsed_time * movement
 
-    def update(self, elapsed_time: "int") -> "bool":
+    def update(self, elapsed_time: "float") -> "bool":
         """Updates the living being, performing the desired action.
         
         Arguments:  
-        `elapsed_time`: the amount of time elapsed since last update.
+        `elapsed_time`: the amount of time elapsed since last update, in seconds.
         
         Returns:  
         A `bool` representing whether the living being is still alive."""

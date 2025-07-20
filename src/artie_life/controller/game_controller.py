@@ -70,9 +70,9 @@ class GameController:
         return selected.brain.needs_tracker.get_needs()
 
 
-    def update_world(self, elapsed_time: "int") -> "None":
+    def update_world(self, elapsed_time: "float") -> "None":
         """Updates the current game world.
         
         Arguments:  
-        `elapsed_time`: the amount of time elapsed since the last model update."""
+        `elapsed_time`: the amount of time elapsed since the last model update, in seconds."""
         self.world.update(elapsed_time)

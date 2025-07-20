@@ -20,7 +20,7 @@ class Brain:
         perception of the world's space."""
         self.needs_tracker = NeedsTracker(living_id)
         self.perception_tracker = PerceptionTracker(distance_controller, living_id)
-        self.time_since_last_decision: "int" = 0
+        self.time_since_last_decision: "float" = 0
         self.action: "Action" = Action.INTERACT
         self.logger: "LivingLogger" = LivingLogger(living_id)
         self.logger.record_spawn()
@@ -36,11 +36,11 @@ class Brain:
         self.logger.dump_action(self.action)
         self.time_since_last_decision = 0
 
-    def update(self, elapsed_time: "int", hitbox: "Rect") -> "bool":
+    def update(self, elapsed_time: "float", hitbox: "Rect") -> "bool":
         """Updates the brain, decaying vital parameters.
 
         Arguments:  
-        `elapsed_time`: the amount of time since last brain update.  
+        `elapsed_time`: the amount of time since last brain update, in seconds.  
         `hitbox`: the current position of the living being.
 
         Returns:  
