@@ -1,7 +1,7 @@
 """Module containing the main game controller implementation."""
 from typing import TYPE_CHECKING
 from model.world import World
-from controller.genetics import create_random_genome
+from controller.genetics import create_random_genome, compute_evolutionary_genome
 from controller.world.world_controllers import ActionsController, DistanceController
 from utils.living.actions import EntityType
 
@@ -26,7 +26,8 @@ class GameController:
         self.world.spawn_living(
             ActionsController(self),
             DistanceController(self),
-            create_random_genome()
+            create_random_genome() if len(self.world.living) < 2 \
+                else compute_evolutionary_genome(self.world.living)
         )
 
     def get_all_entities(self) -> "List[Tuple[EntityType, Entity]]":
