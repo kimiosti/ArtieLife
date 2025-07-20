@@ -29,7 +29,7 @@ class Brain:
         self.time_since_last_decision: "float" = 0
         self.action: "Action" = Action.INTERACT
         self.logger: "LivingLogger" = LivingLogger(living_id)
-        self.logger.record_spawn()
+        self.logger.record_spawn(self.genome)
 
     def compute_new_action(self, hitbox: "Rect") -> "None":
         """Computes the next action to be performed."""
