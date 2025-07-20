@@ -8,7 +8,6 @@ if TYPE_CHECKING:
 
 BG_TO_SCREEN_HEIGHT_RATIO: "float" = 5 / 8
 TOP_BLANK_TO_SCREEN_RATIO: "float" = 1 / 9
-FONT_PATH: "str" = "resources/font/jupiteroid.ttf"
 RESOURCES_FOLDER: "str" = "resources"
 FONT_PATH: "str" = join_path(RESOURCES_FOLDER, "font", "jupiteroid.ttf")
 BAR_COLORS: "Dict[str, Color]" = {
