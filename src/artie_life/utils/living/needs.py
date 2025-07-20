@@ -10,7 +10,7 @@ MAX_HUNGER: "float" = 100
 MAX_TIREDNESS: "float" = 100
 MAX_MATING_DRIVE: "float" = 100
 MAX_LIFE: "float" = 100
-BASE_DECISION_RATE: "int" = 100
+BASE_DECISION_RATE: "float" = 0.1
 
 class Need(Enum):
     """Enumerative class listing all living being needs."""
