@@ -14,13 +14,13 @@ class Gene(Enum):
         """Returns the minimum possible value for a given gene."""
         match self:
             case Gene.LIFE_DECAY:
-                return 0.06
+                return 5
             case Gene.HUNGER_DECAY:
-                return 0.08
+                return 7
             case Gene.TIREDNESS_DECAY:
-                return 0.08
+                return 7
             case Gene.MATING_DRIVE_DECAY:
-                return 0.06
+                return 5
             case Gene.SPEED:
                 return MAP_WIDTH / 7
 
@@ -28,12 +28,12 @@ class Gene(Enum):
         """Returns the maximum possible value for a given gene."""
         match self:
             case Gene.LIFE_DECAY:
-                return 0.17
+                return 2
             case Gene.HUNGER_DECAY:
-                return 0.22
+                return 3
             case Gene.TIREDNESS_DECAY:
-                return 0.22
+                return 3
             case Gene.MATING_DRIVE_DECAY:
-                return 0.17
+                return 2
             case Gene.SPEED:
                 return MAP_WIDTH / 4
