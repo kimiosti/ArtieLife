@@ -73,6 +73,8 @@ def compute_evolutionary_genome(population: "List[LivingBeing]") -> "Dict[Gene, 
     parents = select_parents(population)
     genome: "Dict[Gene, float]" = { }
     for gene in Gene:
-        genome[gene] = parents[randint(2)].genome[gene] \
+        gene_val = parents[randint(2)].genome[gene] \
             + mutation(gene.max() - gene.min())
+        genome[gene] = gene.min() if gene_val < gene.min() else \
+            gene.max() if gene_val > gene.max() else gene_val
     return genome
