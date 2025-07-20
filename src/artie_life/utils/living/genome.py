@@ -2,6 +2,8 @@
 from enum import Enum
 from utils.map import MAP_WIDTH
 
+MUTATION_RATE: "float" = 0.05
+
 class Gene(Enum):
     """Enumerative class listing all genes."""
     LIFE_DECAY = 0
@@ -14,13 +16,13 @@ class Gene(Enum):
         """Returns the minimum possible value for a given gene."""
         match self:
             case Gene.LIFE_DECAY:
-                return 5
+                return 2
             case Gene.HUNGER_DECAY:
-                return 7
+                return 3
             case Gene.TIREDNESS_DECAY:
-                return 7
+                return 3
             case Gene.MATING_DRIVE_DECAY:
-                return 5
+                return 2
             case Gene.SPEED:
                 return MAP_WIDTH / 7
 
@@ -28,12 +30,12 @@ class Gene(Enum):
         """Returns the maximum possible value for a given gene."""
         match self:
             case Gene.LIFE_DECAY:
-                return 2
+                return 5
             case Gene.HUNGER_DECAY:
-                return 3
+                return 7
             case Gene.TIREDNESS_DECAY:
-                return 3
+                return 7
             case Gene.MATING_DRIVE_DECAY:
-                return 2
+                return 5
             case Gene.SPEED:
                 return MAP_WIDTH / 4
