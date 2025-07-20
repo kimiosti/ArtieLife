@@ -17,4 +17,3 @@ SPOT_TO_SIDE_OFFSET: "float" = 30.0
 # Living being dimension and movement constants
 LIVING_WIDTH: "float" = 12.0
 LIVING_HEIGHT: "float" = 20.0
-LIVING_BASE_SPEED: "float" = 0.1
