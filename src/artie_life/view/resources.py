@@ -14,15 +14,22 @@ if TYPE_CHECKING:
 
 class ResourceLoader:
     """Implementation for the game's resource loader."""
+    def load_font(self, font_size: "int" = 24) -> "Font":
+        """Loads the game's font
+        
+        Arguments:  
+        `font_size`: the desired font size."""
+        return Font(FONT_PATH, font_size)
+
     def load_text_surface(self, color: "Color", text: "str",
                           font_size: "int" = 24) -> "Surface":
-        """Loads the game's font.
+        """Loads a surface showing the desired text in the game color.
         
         Argumetns:  
         `color`: the desired text color.  
         `text`: the text to be rendered.
         `size`: the desired font size."""
-        font: "Font" = Font(FONT_PATH, font_size)
+        font: "Font" = self.load_font(font_size)
         return font.render(text, False, color)
 
     def get_level_bar(self, label: "str", percentage: "float",
