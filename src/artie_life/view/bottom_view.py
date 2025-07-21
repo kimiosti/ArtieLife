@@ -3,7 +3,8 @@ from typing import TYPE_CHECKING
 from pygame.surface import Surface
 from pygame.rect import Rect
 from view.resources import ResourceLoader
-from utils.view import BOTTOM_TEXT_COLOR, REWARD_BUTTON_COLOR, PUNISH_BUTTON_COLOR
+from utils.view import BOTTOM_TEXT_COLOR, REWARD_BUTTON_COLOR, PUNISH_BUTTON_COLOR, \
+        INPUT_TEXT_BACKGROUND_COLOR, INPUT_TEXT_COLOR, INPUT_TEXT_SIZE
 
 if TYPE_CHECKING:
     from typing import Dict
@@ -64,7 +65,7 @@ class BottomBar:
         pos_text = self.resource_loader.load_text_surface(
             BOTTOM_TEXT_COLOR,
             "REWARD",
-            18
+            INPUT_TEXT_SIZE
         )
         pos_surf.blit(
             pos_text,
@@ -86,7 +87,7 @@ class BottomBar:
         neg_text = self.resource_loader.load_text_surface(
             BOTTOM_TEXT_COLOR,
             "PUNISH",
-            18
+            INPUT_TEXT_SIZE
         )
         neg_surf.blit(
             neg_text,
@@ -96,6 +97,22 @@ class BottomBar:
             )
         )
         inner_surf.blit(neg_surf, (width * 0.8, 0))
+
+        input_bg_surf = Surface((width * 0.25, acc_height / len(params)))
+        input_bg_surf.fill(INPUT_TEXT_BACKGROUND_COLOR)
+        input_surf = self.resource_loader.load_text_surface(
+            INPUT_TEXT_COLOR,
+            self.text,
+            INPUT_TEXT_SIZE
+        )
+        input_bg_surf.blit(
+            input_surf,
+            (
+                (input_bg_surf.get_width() - input_surf.get_width()) / 2,
+                (input_bg_surf.get_height() - input_surf.get_height()) / 2
+            )
+        )
+        inner_surf.blit(input_bg_surf, (width * 0.65, acc_height / len(params) + top_padding))
 
         surf.blit(inner_surf,(side_padding, top_padding))
         return surf
