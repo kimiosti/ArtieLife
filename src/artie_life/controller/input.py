@@ -1,7 +1,8 @@
 """Module for input controllers implementation."""
 from typing import TYPE_CHECKING
-from pygame import MOUSEBUTTONDOWN
+from pygame import MOUSEBUTTONDOWN, KEYDOWN, K_RETURN, K_BACKSPACE
 from pygame.mouse import get_pos as get_mouse_pos
+from utils.living.learning import MAX_INPUT_LENGTH
 
 if TYPE_CHECKING:
     from typing import List
@@ -58,4 +59,33 @@ class ClickController:
                 elif self.view.bottom_bar.neg_reward.collidepoint(get_mouse_pos()):
                     print("Negative reward applied")
                     # TODO - apply negative reward
-            
+
+class TextController:
+    """Implementation for the text input controller."""
+    def __init__(self, world: "World", view: "GameView"):
+        """Instantiates a text controller.
+        
+        Arguments:  
+        `world`: the game world.  
+        `view`: the game's view."""
+        self.world = world
+        self.view = view
+
+    def clear(self) -> "None":
+        """Clears the text input buffer."""
+        self.view.bottom_bar.text = ""
+
+    def update(self, events: "List[Event]") -> "None":
+        """Checks for user keyboard input and updates the recorded text.
+        
+        Arguments:  
+        `events`: the list of all events since last update."""
+        for event in events:
+            if event.type == KEYDOWN:
+                if event.key == K_BACKSPACE:
+                    self.view.bottom_bar.text = self.view.bottom_bar.text[:-1]
+                elif event.key == K_RETURN:
+                    self.clear()
+                    #TODO - implement input actuation
+                elif len(self.view.bottom_bar.text) < MAX_INPUT_LENGTH:
+                    self.view.bottom_bar.text += event.unicode
