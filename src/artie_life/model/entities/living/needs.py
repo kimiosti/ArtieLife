@@ -9,14 +9,16 @@ if TYPE_CHECKING:
     from typing import Dict, Tuple
     from pygame.rect import Rect
     from controller.world.world_controllers import DistanceController
+    from utils.living.genome import Gene
 
 class NeedsTracker:
     """Implementation for the needs tracker of each living being."""
-    def __init__(self, living_id: "int") -> "None":
+    def __init__(self, living_id: "int", genome: "Dict[Gene, float]") -> "None":
         """Instantiates a needs tracker.
         
         Arguments:  
-        `living_id`: the living being's in-game ID."""
+        `living_id`: the living being's in-game ID.
+        `genome`: the living being's genome."""
         self.needs: "Dict[Need, float]" = { }
         self.needs_avg: "Dict[Need, float]" = { }
         for need in Need:
@@ -25,12 +27,13 @@ class NeedsTracker:
                 self.needs_avg[need] = 0
         self.observations: "int" = 0
         self.logger: "LivingLogger" = LivingLogger(living_id)
+        self.genome = genome
 
-    def decay(self, elapsed_time: "int") -> "bool":
+    def decay(self, elapsed_time: "float") -> "bool":
         """Actuates a single decay step in all needs.
         
         Arguments:  
-        `elapsed_time`: the amount of time elapsed since last step.
+        `elapsed_time`: the amount of time elapsed since last step, in seconds.
         
         Returns:  
         A `bool` representing if the living being is still alive."""
@@ -42,7 +45,7 @@ class NeedsTracker:
                     and self.needs[Need.TIREDNESS] >= Need.TIREDNESS.get_threshold()
                 )
             ):
-                new_value = value + (need.get_base_decay() * elapsed_time)
+                new_value = value + (self.genome[need.get_corresponding_gene()] * elapsed_time)
                 self.needs[need] = \
                     new_value \
                     if new_value <= need.get_threshold() \

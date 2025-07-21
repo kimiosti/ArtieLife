@@ -1,6 +1,7 @@
 """Module containing the main game controller implementation."""
 from typing import TYPE_CHECKING
 from model.world import World
+from controller.genetics import create_random_genome, compute_evolutionary_genome
 from controller.world.world_controllers import ActionsController, DistanceController
 from utils.living.actions import EntityType
 
@@ -20,9 +21,30 @@ class GameController:
         """Creates a new game world."""
         self.world = World(self)
 
+    def spawn_random_living(self) -> "None":
+        """Spawns a new living being in the current game world with a random genome."""
+        self.world.spawn_living(
+            ActionsController(self),
+            DistanceController(self),
+            create_random_genome()
+        )
+
+    def spawn_evolutionary_living(self) -> "None":
+        """Spawns a new living being in the current game world, applying the genetic
+        algorithm."""
+        self.world.spawn_living(
+            ActionsController(self),
+            DistanceController(self),
+            compute_evolutionary_genome(self.world.living)
+        )
+
     def spawn_living(self) -> "None":
-        """Spawns a new living being in the current game world."""
-        self.world.spawn_living(ActionsController(self), DistanceController(self))
+        """Spawns a living being in the current game world, applying the genetic
+        algorithm if possible or computing a random genome otherwise."""
+        if len(self.world.living) < 2:
+            self.spawn_random_living()
+        else:
+            self.spawn_evolutionary_living()
 
     def get_all_entities(self) -> "List[Tuple[EntityType, Entity]]":
         """Returns all map entities by type.
@@ -70,9 +92,9 @@ class GameController:
         return selected.brain.needs_tracker.get_needs()
 
 
-    def update_world(self, elapsed_time: "int") -> "None":
+    def update_world(self, elapsed_time: "float") -> "None":
         """Updates the current game world.
         
         Arguments:  
-        `elapsed_time`: the amount of time elapsed since the last model update."""
+        `elapsed_time`: the amount of time elapsed since the last model update, in seconds."""
         self.world.update(elapsed_time)

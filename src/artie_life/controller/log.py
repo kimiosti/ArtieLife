@@ -2,11 +2,12 @@
 from typing import TYPE_CHECKING
 from shutil import rmtree
 from pathlib import Path
-from utils.logs import LIVING_LOG, LOGS_FOLDER, WORLD_LOG
+from utils.logs import LIVING_LOG, GENOME_LOG, LOGS_FOLDER, WORLD_LOG
 
 if TYPE_CHECKING:
     from typing import Dict
     from utils.living.actions import Action
+    from utils.living.genome import Gene
 
 class LivingLogger:
     """Implementation of a living being's logger."""
@@ -16,11 +17,20 @@ class LivingLogger:
         Arguments:  
         `living_id`: the living being's ID."""
         self.living_id: "int" = living_id
+        self.genome_log: "Path" = Path(GENOME_LOG(living_id))
         self.log: "Path" = Path(LIVING_LOG(living_id))
         self.log.parent.mkdir(mode=666, parents=True, exist_ok=True)
 
-    def record_spawn(self) -> "None":
+    def record_spawn(self, genome: "Dict[Gene, float]") -> "None":
         """Logs the living being's spawn."""
+        with self.genome_log.open("w", encoding="utf-8") as f:
+            f.writelines([
+                gene.name.lower()
+                + ": "
+                + str(value)
+                + "\n"
+                for gene, value in genome.items()
+            ])
         with self.log.open("w", encoding="utf-8") as f:
             f.write("Starting log of living being " + str(self.living_id) + "\n")
 

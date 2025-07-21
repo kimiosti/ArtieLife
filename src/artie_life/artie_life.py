@@ -30,9 +30,9 @@ if __name__=='__main__':
 
         click_controller.handle_living_selection(events)
         if click_controller.is_spawn_requested(events):
-            game_controller.spawn_living()
+            game_controller.spawn_random_living()
 
-        game_controller.update_world(dt)
+        game_controller.update_world(dt / 1000)
         view.render(game_controller.get_map_elems())
 
         if game_controller.is_living_selected():

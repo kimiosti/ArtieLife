@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from typing import Dict, List
     from controller.game_controller import GameController
     from controller.world.world_controllers import ActionsController, DistanceController
+    from utils.living.genome import Gene
 
 class World:
     """Implementation for the game world."""
@@ -74,11 +75,14 @@ class World:
         self.logger: "WorldLogger" = WorldLogger()
 
     def spawn_living(self, action_controller: "ActionsController",
-                     distance_controller: "DistanceController") -> "None":
+                     distance_controller: "DistanceController",
+                     genome: "Dict[Gene, float]") -> "None":
         """Spawns a living being inside the playground.
         
         Arguments:  
-        `controller`: the `ActionsController` monitoring the living being's actions."""
+        `action_controller`: the controller monitoring the living being's actions.
+        `distance_controller`: the controller monitoring the living being's perception of space.  
+        `genome`: the living being's desired genome."""
         colliding: "bool" = True
         rect: "Rect"
         while colliding:
@@ -89,16 +93,18 @@ class World:
                 if living.is_colliding(rect):
                     colliding = True
         self.next_id += 1
-        self.living.append(LivingBeing(rect, action_controller, distance_controller, self.next_id))
+        self.living.append(
+            LivingBeing(rect, action_controller, genome, distance_controller, self.next_id)
+        )
         if len(self.living) > self.population_size:
             self.population_size += 1
         self.logger.record_spawn(self.next_id, self.population_size)
 
-    def update(self, elapsed_time: "int") -> "None":
+    def update(self, elapsed_time: "float") -> "None":
         """Updates the game world.
         
         Arguments:  
-        `elapsed_time`: the amount of time elapsed since the last model update."""
+        `elapsed_time`: the amount of time elapsed since the last model update, in seconds."""
         for living_being in self.living:
             alive = living_being.update(elapsed_time)
             if not alive:

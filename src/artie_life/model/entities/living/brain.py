@@ -5,25 +5,31 @@ from model.entities.living.needs import NeedsTracker, PerceptionTracker
 from controller.log import LivingLogger
 from utils.living.needs import BASE_DECISION_RATE
 from utils.living.actions import Action, InteractionType
+from utils.living.genome import Gene
 
 if TYPE_CHECKING:
+    from typing import Dict
     from pygame.rect import Rect
     from controller.world.world_controllers import DistanceController
 
 class Brain:
     """Generic implementation for the living beings' brain."""
-    def __init__(self, distance_controller: "DistanceController", living_id: "int") -> "None":
+    def __init__(self, distance_controller: "DistanceController", living_id: "int",
+                 genome: "Dict[Gene, float]") -> "None":
         """Instantiates the living being's brain.
         
         Arguments:  
         `distance_controller`: the `DistanceController` tracking the living being's
-        perception of the world's space."""
-        self.needs_tracker = NeedsTracker(living_id)
+        perception of the world's space.
+        `living_id`: the living being's in-game ID.
+        `genome`: the living being's genome."""
         self.perception_tracker = PerceptionTracker(distance_controller, living_id)
-        self.time_since_last_decision: "int" = 0
+        self.genome = genome
+        self.needs_tracker = NeedsTracker(living_id, self.genome)
+        self.time_since_last_decision: "float" = 0
         self.action: "Action" = Action.INTERACT
         self.logger: "LivingLogger" = LivingLogger(living_id)
-        self.logger.record_spawn()
+        self.logger.record_spawn(self.genome)
 
     def compute_new_action(self, hitbox: "Rect") -> "None":
         """Computes the next action to be performed."""
@@ -36,11 +42,11 @@ class Brain:
         self.logger.dump_action(self.action)
         self.time_since_last_decision = 0
 
-    def update(self, elapsed_time: "int", hitbox: "Rect") -> "bool":
+    def update(self, elapsed_time: "float", hitbox: "Rect") -> "bool":
         """Updates the brain, decaying vital parameters.
 
         Arguments:  
-        `elapsed_time`: the amount of time since last brain update.  
+        `elapsed_time`: the amount of time since last brain update, in seconds.  
         `hitbox`: the current position of the living being.
 
         Returns:  
