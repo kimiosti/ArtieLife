@@ -1,15 +1,16 @@
 """Module containing the main game view implementation"""
 from typing import TYPE_CHECKING
 from pygame.rect import Rect
+from pygame.surface import Surface
 from pygame.display import set_mode, flip
 from view.resources import ResourceLoader
+from view.bottom_view import BottomBar
 from utils.map import MAP_WIDTH, MAP_HEIGHT, MAP_WTH_RATIO
 from utils.view import BACKGROUND_COLOR, BUTTON_TEXT_COLOR, BG_TO_SCREEN_HEIGHT_RATIO, \
-        TOP_BLANK_TO_SCREEN_RATIO, BOTTOM_TEXT_COLOR
+        TOP_BLANK_TO_SCREEN_RATIO
 
 if TYPE_CHECKING:
     from typing import List, Tuple, Dict
-    from pygame.surface import Surface
     from utils.living.actions import EntityType
 
 class GameView:
@@ -20,6 +21,7 @@ class GameView:
         self.map: "Rect" = Rect(0, 0, 0, 0)
         self.spawn_button: "Rect"
         self.resource_loader: "ResourceLoader" = ResourceLoader()
+        self.bottom_bar: "BottomBar" = BottomBar()
 
     def show_screen(self) -> "None":
         """Makes the screen visible."""
@@ -55,7 +57,10 @@ class GameView:
         bg_x = (screen_width - bg_width) / 2
         self.map = Rect(bg_x, bg_y, bg_width, bg_height)
 
-        button_surf = self.resource_loader.load_text_surface(BUTTON_TEXT_COLOR, "SPAWN NEW CREATURE")
+        button_surf = self.resource_loader.load_text_surface(
+            BUTTON_TEXT_COLOR,
+            "SPAWN NEW CREATURE"
+        )
         self.spawn_button = self.screen.blit(
             button_surf,
             (screen_width / 2 - button_surf.get_width() / 2, self.map.top / 2)
@@ -81,30 +86,16 @@ class GameView:
         
         Arguments:  
         `params`: a dictionary of all the living being's vital parameters, with their name"""
-        param_height: int = (self.screen.get_height() - self.map.bottom) // 10
-        for param_name, param in params.items():
-            param_name_surf = self.resource_loader.load_text_surface(
-                BOTTOM_TEXT_COLOR,
-                param_name.replace("_", " ").upper()
-            )
-            self.screen.blit(
-                param_name_surf,
-                (self.map.left, self.map.bottom + param_height)
-            )
-            surf_height = param_name_surf.get_height()
-            param_val_surf = self.resource_loader.get_level_bar(
-                param_name,
-                param,
-                self.map.width * 0.25,
-                surf_height * 0.7
-            )
-            self.screen.blit(
-                param_val_surf,
-                (
-                    self.map.left + self.map.width * 0.25,
-                    self.map.bottom + param_height + surf_height * 0.15)
-            )
-            param_height += surf_height
+        surf = self.bottom_bar.render(
+            Rect(
+                self.map.left,
+                self.map.bottom,
+                self.map.width,
+                self.screen.get_height() - self.map.bottom
+            ),
+            params
+        )
+        self.screen.blit(surf, (self.map.left, self.map.bottom))
 
     def show_frame(self) -> "None":
         """Displays the next frame, already rendered."""
