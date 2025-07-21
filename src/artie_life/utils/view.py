@@ -24,3 +24,6 @@ BACKGROUND_SPRITE_NAME: "str" = "background"
 SPRITES_EXTENSION: "str" = ".png"
 PUNISH_BUTTON_COLOR: "Color" = Color("darkred")
 REWARD_BUTTON_COLOR: "Color" = Color("green4")
+INPUT_TEXT_SIZE: "int" = 20
+INPUT_TEXT_BACKGROUND_COLOR: "Color" = Color("white")
+INPUT_TEXT_COLOR: "Color" = Color("black")
