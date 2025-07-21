@@ -43,3 +43,19 @@ class ClickController:
                         if self.view.game_to_view_coordinates(living_being.hitbox). \
                                 collidepoint(get_mouse_pos()):
                             self.world.select(living_being)
+
+    def handle_user_reward(self, events: "List[Event]") -> "None":
+        """
+        Checks and handles user-driven rewards.
+        
+        Arguments:  
+        `events`: the list of events recorded since last frame."""
+        for event in events:
+            if event.type == MOUSEBUTTONDOWN:
+                if self.view.bottom_bar.pos_reward.collidepoint(get_mouse_pos()):
+                    print("Positive reward applied")
+                    # TODO - apply positive reward
+                elif self.view.bottom_bar.neg_reward.collidepoint(get_mouse_pos()):
+                    print("Negative reward applied")
+                    # TODO - apply negative reward
+            
