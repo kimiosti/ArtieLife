@@ -22,3 +22,5 @@ BOTTOM_TEXT_COLOR = Color("white")
 SPRITES_PATH: "str" = join_path(RESOURCES_FOLDER, "sprites")
 BACKGROUND_SPRITE_NAME: "str" = "background"
 SPRITES_EXTENSION: "str" = ".png"
+PUNISH_BUTTON_COLOR: "Color" = Color("darkred")
+REWARD_BUTTON_COLOR: "Color" = Color("green4")
