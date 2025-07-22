@@ -1,6 +1,5 @@
 """Module containing utilities for genome."""
 from enum import Enum
-from utils.map import MAP_WIDTH
 
 MUTATION_RATE: "float" = 0.05
 
@@ -24,7 +23,7 @@ class Gene(Enum):
             case Gene.MATING_DRIVE_DECAY:
                 return 2
             case Gene.SPEED:
-                return MAP_WIDTH / 7
+                return 45
 
     def max(self) -> "float":
         """Returns the maximum possible value for a given gene."""
@@ -38,4 +37,4 @@ class Gene(Enum):
             case Gene.MATING_DRIVE_DECAY:
                 return 5
             case Gene.SPEED:
-                return MAP_WIDTH / 4
+                return 80
