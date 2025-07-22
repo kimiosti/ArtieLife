@@ -5,8 +5,9 @@ from model.entities.non_living import Playground, InteractiveSpot
 from model.entities.living.living import LivingBeing
 from controller.log import WorldLogger
 from utils.living.actions import EntityType
-from utils.map import MAP_WIDTH, MAP_HEIGHT, PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT, \
-        SPOT_TO_SIDE_OFFSET, SPOT_WIDTH, SPOT_HEIGHT, LIVING_WIDTH, LIVING_HEIGHT
+from utils.map.generation import init_playground, init_interactive_spots
+from utils.map.constants import LIVING_WIDTH, LIVING_HEIGHT
+from utils.living.learning.attention import MAX_INPUT_LENGTH
 
 if TYPE_CHECKING:
     from typing import Dict, List
@@ -19,56 +20,9 @@ class World:
     def __init__(self, controller: "GameController") -> "None":
         """Instantiates the game world."""
         self.controller: "GameController" = controller
-        self.playground: "Playground" = Playground(Rect(
-            (MAP_WIDTH - PLAYGROUND_WIDTH) / 2,
-            (MAP_HEIGHT - PLAYGROUND_HEIGHT) / 2,
-            PLAYGROUND_WIDTH,
-            PLAYGROUND_HEIGHT
-        ))
-        self.interactive_spots: "Dict[EntityType, List[InteractiveSpot]]" = {
-            EntityType.FEEDING: [
-                InteractiveSpot(Rect(
-                    SPOT_TO_SIDE_OFFSET,
-                    SPOT_TO_SIDE_OFFSET,
-                    SPOT_WIDTH,
-                    SPOT_HEIGHT
-                )),
-                InteractiveSpot(Rect(
-                    MAP_WIDTH - SPOT_TO_SIDE_OFFSET - SPOT_WIDTH,
-                    MAP_HEIGHT - SPOT_TO_SIDE_OFFSET - SPOT_HEIGHT,
-                    SPOT_WIDTH,
-                    SPOT_HEIGHT
-                ))
-            ],
-            EntityType.HEALING: [
-                InteractiveSpot(Rect(
-                    SPOT_TO_SIDE_OFFSET,
-                    (MAP_HEIGHT / 2) - (SPOT_HEIGHT / 2),
-                    SPOT_WIDTH,
-                    SPOT_HEIGHT
-                )),
-                InteractiveSpot(Rect(
-                    MAP_WIDTH - SPOT_TO_SIDE_OFFSET - SPOT_WIDTH,
-                    (MAP_HEIGHT / 2) - (SPOT_HEIGHT / 2),
-                    SPOT_WIDTH,
-                    SPOT_HEIGHT
-                ))
-            ],
-            EntityType.RESTING: [
-                InteractiveSpot(Rect(
-                    SPOT_TO_SIDE_OFFSET,
-                    MAP_HEIGHT - SPOT_TO_SIDE_OFFSET - SPOT_HEIGHT,
-                    SPOT_WIDTH,
-                    SPOT_HEIGHT
-                )),
-                InteractiveSpot(Rect(
-                    MAP_WIDTH - SPOT_TO_SIDE_OFFSET - SPOT_WIDTH,
-                    SPOT_TO_SIDE_OFFSET,
-                    SPOT_WIDTH,
-                    SPOT_HEIGHT
-                ))
-            ]
-        }
+        self.playground: "Playground" = init_playground()
+        self.interactive_spots: "Dict[EntityType, List[InteractiveSpot]]" = \
+                init_interactive_spots()
         self.living: "List[LivingBeing]" = []
         self.population_size: "int" = 0
         self.next_id: "int" = 0
@@ -125,3 +79,25 @@ class World:
         Arguments:  
         `living_being`: the living being to be selected."""
         living_being.selected = True
+
+    def send_input(self, text: "str") -> "None":
+        """Sends user input to the selected living being.
+        
+        Arguments:  
+        `text`: the user input text."""
+        for living_being in self.living:
+            if living_being.selected:
+                input = [byte for byte in text.encode("utf-8")]
+                while len(input) < MAX_INPUT_LENGTH:
+                    input.append(0)
+                # TODO - send input to living being
+
+    def apply_reward(self, reward: "float") -> "None":
+        """Applies the user-defined reward to the selected living being.
+        
+        Arguments:  
+        `reward`: the reward to be applied to the living being."""
+        for living_being in self.living:
+            if living_being.selected:
+                # TODO - apply user defined reward.
+                pass
