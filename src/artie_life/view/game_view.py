@@ -5,7 +5,7 @@ from pygame.surface import Surface
 from pygame.display import set_mode, flip
 from view.resources import ResourceLoader
 from view.bottom_view import BottomBar
-from utils.map import MAP_WIDTH, MAP_HEIGHT, MAP_WTH_RATIO
+from utils.map.constants import MAP_WIDTH, MAP_HEIGHT, MAP_WTH_RATIO
 from utils.view import BACKGROUND_COLOR, BUTTON_TEXT_COLOR, BG_TO_SCREEN_HEIGHT_RATIO, \
         TOP_BLANK_TO_SCREEN_RATIO
 

@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from numpy import sqrt
 from pygame import Vector2
 from pygame.rect import Rect
-from utils.map import MAP_WIDTH, MAP_HEIGHT
+from utils.map.constants import MAP_WIDTH, MAP_HEIGHT
 from utils.living.actions import EntityType, InteractionType
 
 if TYPE_CHECKING:
