@@ -1,4 +1,4 @@
-"""Module containing utilities for the map."""
+"""Module containing constants regarding the map."""
 
 # Map dimension constants
 MAP_WIDTH: "float" = 320.0
