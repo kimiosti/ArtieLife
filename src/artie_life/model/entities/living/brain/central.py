@@ -2,8 +2,8 @@
 from typing import TYPE_CHECKING
 from numpy import array
 from numpy.random import choice
-from model.entities.living.needs import NeedsTracker, PerceptionTracker
 from controller.log import LivingLogger
+from model.entities.living.needs import NeedsTracker, PerceptionTracker
 from model.entities.living.brain.attention import Attention
 from utils.living.actions import Action
 

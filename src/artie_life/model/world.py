@@ -7,13 +7,12 @@ from controller.log import WorldLogger
 from utils.living.actions import EntityType
 from utils.map.generation import init_playground, init_interactive_spots
 from utils.map.constants import LIVING_WIDTH, LIVING_HEIGHT
-from utils.living.learning.attention import MAX_INPUT_LENGTH
+from utils.living.genome import Gene
 
 if TYPE_CHECKING:
     from typing import Dict, List
     from controller.game_controller import GameController
     from controller.world.world_controllers import ActionsController, DistanceController
-    from utils.living.genome import Gene
 
 class World:
     """Implementation for the game world."""
