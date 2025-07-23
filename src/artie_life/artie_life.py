@@ -41,7 +41,10 @@ if __name__=='__main__':
         click_controller.handle_living_selection(events)
         if game_controller.is_living_selected():
             text_controller.update(events)
-            view.render_bottom_bar(game_controller.get_selected_info())
+            view.render_bottom_bar(
+                game_controller.get_selected_info(),
+                game_controller.get_focus_object()
+            )
             click_controller.handle_user_reward(events)
         else:
             text_controller.clear()
