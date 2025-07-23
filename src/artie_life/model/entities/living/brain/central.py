@@ -1,16 +1,18 @@
 """Module containing the brain implementation."""
 from typing import TYPE_CHECKING
-from numpy.random import randint
+from numpy import array
+from numpy.random import choice
 from model.entities.living.needs import NeedsTracker, PerceptionTracker
 from controller.log import LivingLogger
-from utils.living.needs import BASE_DECISION_RATE
-from utils.living.actions import Action, InteractionType
-from utils.living.genome import Gene
+from model.entities.living.brain.attention import Attention
+from utils.living.actions import Action
 
 if TYPE_CHECKING:
     from typing import Dict
     from pygame.rect import Rect
     from controller.world.world_controllers import DistanceController
+    from utils.living.genome import Gene
+    from utils.living.actions import InteractionType
 
 class Brain:
     """Generic implementation for the living beings' brain."""
@@ -26,21 +28,10 @@ class Brain:
         self.perception_tracker = PerceptionTracker(distance_controller, living_id)
         self.genome = genome
         self.needs_tracker = NeedsTracker(living_id, self.genome)
-        self.time_since_last_decision: "float" = 0
-        self.action: "Action" = Action.INTERACT
+        self.action: "Action" = choice(array(Action))
         self.logger: "LivingLogger" = LivingLogger(living_id)
         self.logger.record_spawn(self.genome)
-
-    def compute_new_action(self, hitbox: "Rect") -> "None":
-        """Computes the next action to be performed."""
-        action_idx = randint(5)
-        for action in Action:
-            if action.value == action_idx:
-                self.action = action
-        self.needs_tracker.record()
-        self.perception_tracker.record(hitbox)
-        self.logger.dump_action(self.action)
-        self.time_since_last_decision = 0
+        self.attention: "Attention" = Attention(self.genome)
 
     def update(self, elapsed_time: "float", hitbox: "Rect") -> "bool":
         """Updates the brain, decaying vital parameters.
@@ -51,17 +42,12 @@ class Brain:
 
         Returns:  
         A `bool` representing whether the living being is still alive."""
-        self.time_since_last_decision += elapsed_time
-        if self.time_since_last_decision >= BASE_DECISION_RATE:
-            self.compute_new_action(hitbox)
+        self.action: Action = choice(array(Action))
+        self.perception_tracker.record(hitbox)
+        self.attention.update(elapsed_time, self.perception_tracker.perception)
+        self.logger.dump_focus_object(self.attention.focus)
+        self.logger.dump_action(self.action)
         return self.needs_tracker.decay(elapsed_time)
-
-    def get_action(self) -> "Action":
-        """Gets the next action to be performed by the living being.
-        
-        Returns:  
-        An `Action` value representing the desired action."""
-        return self.action
 
     def actuate(self, interaction: "InteractionType") -> "None":
         """Actuates a given interaction on the living being's vital parameters.
