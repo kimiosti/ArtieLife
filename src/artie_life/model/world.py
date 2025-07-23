@@ -87,10 +87,7 @@ class World:
         `text`: the user input text."""
         for living_being in self.living:
             if living_being.selected:
-                input = [byte for byte in text.encode("utf-8")]
-                while len(input) < MAX_INPUT_LENGTH:
-                    input.append(0)
-                # TODO - send input to living being
+                living_being.brain.attention.input = text
 
     def apply_reward(self, reward: "float") -> "None":
         """Applies the user-defined reward to the selected living being.
@@ -99,5 +96,6 @@ class World:
         `reward`: the reward to be applied to the living being."""
         for living_being in self.living:
             if living_being.selected:
-                # TODO - apply user defined reward.
-                pass
+                living_being.brain.attention.reward += \
+                        living_being.genome[Gene.ATTENTION_USER_REWARD_MULTIPLIER] \
+                        * reward
