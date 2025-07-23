@@ -1,6 +1,6 @@
 """Module containing utilities for genome."""
 from typing import TYPE_CHECKING
-from enum import Enum
+from enum import Enum, auto
 
 if TYPE_CHECKING:
     from typing import Dict, Tuple
@@ -9,17 +9,15 @@ MUTATION_RATE: "float" = 0.05
 
 class Gene(Enum):
     """Enumerative class listing all genes."""
-    LIFE_DECAY = 0
-    HUNGER_DECAY = 1
-    TIREDNESS_DECAY = 2
-    MATING_DRIVE_DECAY = 3
-    SPEED = 4
-    ATTENTION_ALPHA = 5
-    ATTENTION_GAMMA = 6
-    ATTENTION_DECISION_PERIOD = 7
-    ATTENTION_TARGET_UPDATE_STEP = 8
-    ATTENTION_USER_REWARD_MULTIPLIER = 9
-    ATTENTION_SELF_REWARD_MULTIPLIER = 10
+    LIFE_DECAY = auto()
+    HUNGER_DECAY = auto()
+    TIREDNESS_DECAY = auto()
+    MATING_DRIVE_DECAY = auto()
+    SPEED = auto()
+    ATTENTION_ALPHA = auto()
+    ATTENTION_DECISION_PERIOD = auto()
+    ATTENTION_USER_REWARD_MULTIPLIER = auto()
+    ATTENTION_SELF_REWARD_MULTIPLIER = auto()
 
     def min(self) -> "float":
         """Returns the minimum possible value for a given gene."""
@@ -39,7 +37,6 @@ THRESHOLDS: "Dict[Gene, Tuple[float, float]]" = {
     Gene.ATTENTION_ALPHA: (1e-6, 1e-1),
     Gene.ATTENTION_GAMMA: (1e-2, 1),
     Gene.ATTENTION_DECISION_PERIOD: (1, 2),
-    Gene.ATTENTION_TARGET_UPDATE_STEP: (1, 1e2),
     Gene.ATTENTION_USER_REWARD_MULTIPLIER: (0.8, 3),
     Gene.ATTENTION_SELF_REWARD_MULTIPLIER: (0.2, 0.6)
 }
