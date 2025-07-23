@@ -92,7 +92,8 @@ class PerceptionTracker:
         self.perception: "Dict[EntityType, Tuple[float, float]]"
         self.perception_avg: "Dict[EntityType, Tuple[float, float]]" = { }
         for entity_type in EntityType:
-            self.perception_avg[entity_type] = (0, 0)
+            if entity_type != EntityType.PLAYGROUND:
+                self.perception_avg[entity_type] = (0, 0)
         self.observations: "int" = 0
         self.controller: "DistanceController" = controller
         self.logger: "LivingLogger" = LivingLogger(living_id)

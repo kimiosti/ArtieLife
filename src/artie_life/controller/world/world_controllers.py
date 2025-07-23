@@ -65,20 +65,21 @@ class DistanceController:
         A `Dict` containing `float` values described by `str` as identifiers."""
         distances: "Dict[EntityType, Tuple[float, float]]" = { }
         for cur_entity_type in EntityType:
-            min_dist = sqrt(MAP_WIDTH**2 + MAP_HEIGHT**2)
-            min_x: "float" = MAP_WIDTH
-            min_y: "float" = MAP_HEIGHT
-            for entity_type, entity in self.controller.get_all_entities():
-                if entity_type == cur_entity_type and entity.hitbox is not hitbox:
-                    if entity.hitbox.colliderect(hitbox):
-                        min_x = 0
-                        min_y = 0
-                        min_dist = 0
-                    else:
-                        dist = Vector2(entity.hitbox.center).distance_to(hitbox.center)
-                        if dist < min_dist:
-                            min_x = entity.hitbox.centerx - hitbox.centerx
-                            min_y = entity.hitbox.centery - hitbox.centery
-                            min_dist = dist
-            distances[cur_entity_type] = (min_x, min_y)
+            if cur_entity_type != EntityType.PLAYGROUND:
+                min_dist = sqrt(MAP_WIDTH**2 + MAP_HEIGHT**2)
+                min_x: "float" = MAP_WIDTH
+                min_y: "float" = MAP_HEIGHT
+                for entity_type, entity in self.controller.get_all_entities():
+                    if entity_type == cur_entity_type and entity.hitbox is not hitbox:
+                        if entity.hitbox.colliderect(hitbox):
+                            min_x = 0
+                            min_y = 0
+                            min_dist = 0
+                        else:
+                            dist = Vector2(entity.hitbox.center).distance_to(hitbox.center)
+                            if dist < min_dist:
+                                min_x = entity.hitbox.centerx - hitbox.centerx
+                                min_y = entity.hitbox.centery - hitbox.centery
+                                min_dist = dist
+                distances[cur_entity_type] = (min_x, min_y)
         return distances
