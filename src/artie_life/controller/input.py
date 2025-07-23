@@ -55,9 +55,9 @@ class ClickController:
         for event in events:
             if event.type == MOUSEBUTTONDOWN:
                 if self.view.bottom_bar.pos_reward.collidepoint(get_mouse_pos()):
-                    self.world.apply_reward(POSITIVE_REWARD)
+                    self.world.apply_user_reward(POSITIVE_REWARD)
                 elif self.view.bottom_bar.neg_reward.collidepoint(get_mouse_pos()):
-                    self.world.apply_reward(NEGATIVE_REWARD)
+                    self.world.apply_user_reward(NEGATIVE_REWARD)
 
 class TextController:
     """Implementation for the text input controller."""

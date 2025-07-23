@@ -88,13 +88,11 @@ class World:
             if living_being.selected:
                 living_being.brain.attention.input = text
 
-    def apply_reward(self, reward: "float") -> "None":
+    def apply_user_reward(self, reward: "float") -> "None":
         """Applies the user-defined reward to the selected living being.
         
         Arguments:  
         `reward`: the reward to be applied to the living being."""
         for living_being in self.living:
             if living_being.selected:
-                living_being.brain.attention.reward += \
-                        living_being.genome[Gene.ATTENTION_USER_REWARD_MULTIPLIER] \
-                        * reward
+                living_being.brain.attention.apply_user_reward(reward)
