@@ -1,7 +1,7 @@
 """Module containing living being's implementation."""
 from typing import TYPE_CHECKING
 from model.entities.non_living import Entity
-from model.entities.living.brain import Brain
+from model.entities.living.brain.central import Brain
 from utils.living.actions import Action, InteractionType
 from utils.living.genome import Gene
 
