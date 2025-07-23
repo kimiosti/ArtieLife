@@ -49,7 +49,7 @@ class LivingBeing(Entity):
         
         Returns:  
         A `bool` representing whether the living being is still alive."""
-        action: "Action" = self.brain.get_action()
+        action: "Action" = self.brain.action
         self.lifetime += elapsed_time
 
         if action != Action.INTERACT:
