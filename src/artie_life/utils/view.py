@@ -27,3 +27,4 @@ REWARD_BUTTON_COLOR: "Color" = Color("green4")
 INPUT_TEXT_SIZE: "int" = 20
 INPUT_TEXT_BACKGROUND_COLOR: "Color" = Color("white")
 INPUT_TEXT_COLOR: "Color" = Color("black")
+ATTENTION_LABEL: "str" = "ATTENTION"
