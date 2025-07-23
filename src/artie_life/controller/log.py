@@ -6,7 +6,7 @@ from utils.logs import LIVING_LOG, GENOME_LOG, LOGS_FOLDER, WORLD_LOG
 
 if TYPE_CHECKING:
     from typing import Dict
-    from utils.living.actions import Action
+    from utils.living.actions import Action, EntityType
     from utils.living.genome import Gene
 
 class LivingLogger:
@@ -47,6 +47,14 @@ class LivingLogger:
                 + "\n"
                 for need_name, need_val in observation.items()
             ])
+
+    def dump_focus_object(self, focus: "EntityType") -> "None":
+        """Logs a single attention object.
+        
+        Arguments:  
+        `focus`: the type of entity subject to the living being's attention."""
+        with self.log.open("a", encoding="utf-8") as f:
+            f.write("Focus: " + focus.name.lower() + "\n")
 
     def dump_action(self, action: "Action") -> "None":
         """Logs a single living being action.
