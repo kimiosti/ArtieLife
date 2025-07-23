@@ -57,7 +57,6 @@ class ClickController:
                 if self.view.bottom_bar.pos_reward.collidepoint(get_mouse_pos()):
                     self.world.apply_reward(POSITIVE_REWARD)
                 elif self.view.bottom_bar.neg_reward.collidepoint(get_mouse_pos()):
-                    print("Negative reward applied")
                     self.world.apply_reward(NEGATIVE_REWARD)
 
 class TextController:
