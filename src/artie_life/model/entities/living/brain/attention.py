@@ -37,13 +37,18 @@ class Attention:
         `genome`: the living being's genome."""
         self.genome = genome
         self.model = ATTENTION_MODEL
-        self.target_model = ATTENTION_MODEL
         self.prev_obs: "NDArray[float64]" = zeros((1, INPUT_LAYER_DIM), dtype=float64)
         self.focus: "EntityType" = EntityType.LIVING
         self.elapsed_time: "float" = 0
-        self.elapsed_steps: "float" = 0
         self.reward: "float" = 0
         self.input: "str" = ""
+
+    def apply_user_reward(self, reward: "float") -> "None":
+        """Applies the desired reward to the living being.
+        
+        Arguments:  
+        `reward`: the desired reward value to apply."""
+        self.reward += reward * self.genome[Gene.ATTENTION_USER_REWARD_MULTIPLIER]
 
     def update(self, elapsed_time: "float",
                perception: "Dict[EntityType, Tuple[float, float]]") -> "None":
@@ -74,7 +79,3 @@ class Attention:
             self.focus = next_focus
             self.input = ""
             self.reward = 0
-            self.elapsed_steps += 1
-            if self.elapsed_steps >= self.genome[Gene.ATTENTION_TARGET_UPDATE_STEP]:
-                self.target_model.set_weights(self.model.get_weights())
-                self.elapsed_steps = 0
