@@ -80,12 +80,13 @@ class GameView:
                 (sprite_rect.left, sprite_rect.top)
             )
 
-    def render_bottom_bar(self, params: "Dict[str, float]") -> "None":
+    def render_bottom_bar(self, params: "Dict[str, float]", attention: "str") -> "None":
         """Renders the bottom part of the screen, to show a living being's
         vital parameters when selected.
         
         Arguments:  
-        `params`: a dictionary of all the living being's vital parameters, with their name"""
+        `params`: a dictionary of all the living being's vital parameters, with their name.
+        `attention`: a string representing the object of the selected living being's attention."""
         surf = self.bottom_bar.render(
             Rect(
                 self.map.left,
@@ -93,7 +94,8 @@ class GameView:
                 self.map.width,
                 self.screen.get_height() - self.map.bottom
             ),
-            params
+            params,
+            attention
         )
         self.screen.blit(surf, (self.map.left, self.map.bottom))
 

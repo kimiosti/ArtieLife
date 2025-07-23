@@ -4,7 +4,7 @@ from pygame.surface import Surface
 from pygame.rect import Rect
 from view.resources import ResourceLoader
 from utils.view import BOTTOM_TEXT_COLOR, REWARD_BUTTON_COLOR, PUNISH_BUTTON_COLOR, \
-        INPUT_TEXT_BACKGROUND_COLOR, INPUT_TEXT_COLOR, INPUT_TEXT_SIZE
+        INPUT_TEXT_BACKGROUND_COLOR, INPUT_TEXT_COLOR, INPUT_TEXT_SIZE, ATTENTION_LABEL
 
 if TYPE_CHECKING:
     from typing import Dict
@@ -18,13 +18,14 @@ class BottomBar:
         self.pos_reward: "Rect"
         self.neg_reward: "Rect"
 
-    def render(self, area: "Rect", params: "Dict[str, float]") -> "Surface":
+    def render(self, area: "Rect", params: "Dict[str, float]", attention: "str") -> "Surface":
         """
         Renders a single frame for the bottom bar.
 
         Arguments:  
         `area`: the area containing the bottom bar on screen.
         `params`: the living being's vital parameters.
+        `attention`: a string representing the living being's object of attention.
 
         Returns:  
         the `Surface` representing the bottom bar to be rendered on screen.
@@ -53,6 +54,20 @@ class BottomBar:
                 (width * 0.25, acc_height + text_surf.get_height() * 0.15)
             )
             acc_height += text_surf.get_height()
+        inner_surf.blit(
+            self.resource_loader.load_text_surface(
+                BOTTOM_TEXT_COLOR,
+                ATTENTION_LABEL
+            ),
+            (0, acc_height)
+        )
+        inner_surf.blit(
+            self.resource_loader.load_text_surface(
+                BOTTOM_TEXT_COLOR,
+                attention
+            ),
+            (width * 0.25, acc_height)
+        )
 
         self.pos_reward = Rect(
             area.left + side_padding + width * 0.6,
