@@ -35,7 +35,6 @@ THRESHOLDS: "Dict[Gene, Tuple[float, float]]" = {
     Gene.MATING_DRIVE_DECAY: (2, 5),
     Gene.SPEED: (45, 80),
     Gene.ATTENTION_ALPHA: (1e-6, 1e-1),
-    Gene.ATTENTION_GAMMA: (1e-2, 1),
     Gene.ATTENTION_DECISION_PERIOD: (1, 2),
     Gene.ATTENTION_USER_REWARD_MULTIPLIER: (0.8, 3),
     Gene.ATTENTION_SELF_REWARD_MULTIPLIER: (0.2, 0.6)
