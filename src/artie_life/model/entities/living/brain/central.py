@@ -42,7 +42,7 @@ class Brain:
 
         Returns:  
         A `bool` representing whether the living being is still alive."""
-        self.action: Action = choice(array(Action))
+        self.action = choice(array(Action))
         self.perception_tracker.record(hitbox)
         self.attention.update(elapsed_time, self.perception_tracker.perception)
         self.logger.dump_focus_object(self.attention.focus)
