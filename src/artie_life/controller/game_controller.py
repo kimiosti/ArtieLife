@@ -85,11 +85,18 @@ class GameController:
         Returns:  
         A `Dict` containing a `float` value associated to each vital parameter description  
         as a `str`."""
-        selected: "LivingBeing"
         for living in self.world.living:
             if living.selected:
-                selected = living
-        return selected.brain.needs_tracker.get_needs()
+                return living.brain.needs_tracker.get_needs()
+
+    def get_focus_object(self) -> "str":
+        """Returns the selected living being's object of attention.
+        
+        Returns:  
+        a string representing the type of the object of the selected being's attention."""
+        for living in self.world.living:
+            if living.selected:
+                return living.brain.attention.focus.name
 
 
     def update_world(self, elapsed_time: "float") -> "None":
