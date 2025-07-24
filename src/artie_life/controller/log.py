@@ -32,7 +32,7 @@ class LivingLogger:
                 for gene, value in genome.items()
             ])
         with self.log.open("w", encoding="utf-8") as f:
-            f.write("Starting log of living being " + str(self.living_id) + "\n")
+            f.write("Starting log of living being " + str(self.living_id) + "\n\n")
 
     def dump_observation(self, observation: "Dict[str, float]") -> "None":
         """Logs a single living being observation.
@@ -54,7 +54,7 @@ class LivingLogger:
         Arguments:  
         `focus`: the type of entity subject to the living being's attention."""
         with self.log.open("a", encoding="utf-8") as f:
-            f.write("Focus: " + focus.name.lower() + "\n")
+            f.write("Focus: " + focus.name.lower() + "\n\n")
 
     def dump_action(self, action: "Action") -> "None":
         """Logs a single living being action.
