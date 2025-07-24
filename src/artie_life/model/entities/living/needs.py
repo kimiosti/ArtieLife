@@ -1,7 +1,5 @@
 """Module containing the needs tracker's implementation."""
 from typing import TYPE_CHECKING
-from numpy import sqrt
-from controller.log import LivingLogger
 from utils.living.needs import Need
 from utils.living.actions import EntityType
 
@@ -13,11 +11,10 @@ if TYPE_CHECKING:
 
 class NeedsTracker:
     """Implementation for the needs tracker of each living being."""
-    def __init__(self, living_id: "int", genome: "Dict[Gene, float]") -> "None":
+    def __init__(self, genome: "Dict[Gene, float]") -> "None":
         """Instantiates a needs tracker.
         
         Arguments:  
-        `living_id`: the living being's in-game ID.
         `genome`: the living being's genome."""
         self.needs: "Dict[Need, float]" = { }
         self.needs_avg: "Dict[Need, float]" = { }
@@ -26,7 +23,6 @@ class NeedsTracker:
                 self.needs[need] = need.get_base_value()
                 self.needs_avg[need] = 0
         self.observations: "int" = 0
-        self.logger: "LivingLogger" = LivingLogger(living_id)
         self.genome = genome
 
     def decay(self, elapsed_time: "float") -> "bool":
@@ -66,9 +62,6 @@ class NeedsTracker:
             self.needs_avg[need] = (self.needs_avg[need] * self.observations + value) \
                                    / (self.observations + 1)
         self.observations += 1
-        self.logger.dump_observation({
-            need.name.lower(): avg for need, avg in self.needs_avg.items()
-        })
 
     def get_needs(self) -> "Dict[str, float]":
         """Getter for the current needs measure.
@@ -82,13 +75,12 @@ class NeedsTracker:
 
 class PerceptionTracker:
     """Implementation for the living being's perception tracker."""
-    def __init__(self, controller: "DistanceController", living_id: "int") -> "None":
+    def __init__(self, controller: "DistanceController") -> "None":
         """Instantiates a perception tracker.
         
         Arguments:  
         `controller`: the distance controller, responsible of calculating the
-        perceived values.  
-        `living_id`: the living being's in-game ID."""
+        perceived values."""
         self.perception: "Dict[EntityType, Tuple[float, float]]"
         self.perception_avg: "Dict[EntityType, Tuple[float, float]]" = { }
         for entity_type in EntityType:
@@ -96,7 +88,6 @@ class PerceptionTracker:
                 self.perception_avg[entity_type] = (0, 0)
         self.observations: "int" = 0
         self.controller: "DistanceController" = controller
-        self.logger: "LivingLogger" = LivingLogger(living_id)
 
     def record(self, hitbox: "Rect") -> "None":
         """Records an observation of the environment.
@@ -112,8 +103,3 @@ class PerceptionTracker:
                     / (self.observations + 1)
             )
         self.observations += 1
-        self.logger.dump_observation({
-            entity_type.name.lower():
-            sqrt(dists[0]**2 + dists[1]**2)
-            for entity_type, dists in self.perception.items()
-        })
