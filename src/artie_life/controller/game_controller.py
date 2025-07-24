@@ -88,6 +88,7 @@ class GameController:
         for living in self.world.living:
             if living.selected:
                 return living.brain.needs_tracker.get_needs()
+        return { }
 
     def get_focus_object(self) -> "str":
         """Returns the selected living being's object of attention.
@@ -97,6 +98,7 @@ class GameController:
         for living in self.world.living:
             if living.selected:
                 return living.brain.attention.focus.name
+        return " "
 
 
     def update_world(self, elapsed_time: "float") -> "None":
