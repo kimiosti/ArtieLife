@@ -1,5 +1,6 @@
 """Module containing the needs tracker's implementation."""
 from typing import TYPE_CHECKING
+from controller.genetics import compute_fitness
 from utils.living.needs import Need
 from utils.living.actions import EntityType
 
@@ -23,6 +24,8 @@ class NeedsTracker:
                 self.needs[need] = need.get_base_value()
                 self.needs_avg[need] = 0
         self.observations: "int" = 0
+        self.lifetime: "float" = 0
+        self.fitness: "float" = 0
         self.genome = genome
 
     def decay(self, elapsed_time: "float") -> "bool":
@@ -46,6 +49,11 @@ class NeedsTracker:
                     new_value \
                     if new_value <= need.get_threshold() \
                     else need.get_threshold()
+            self.needs_avg[need] = (self.needs_avg[need] * self.observations + value) \
+                                   / (self.observations + 1)
+        self.observations += 1
+        self.lifetime += elapsed_time
+        self.fitness = compute_fitness(self.needs_avg)
         return self.needs[Need.LIFE] < Need.LIFE.get_threshold()
 
     def actuate(self, need: "Need") -> "None":
@@ -55,13 +63,6 @@ class NeedsTracker:
         `need`: the need fulfilled by the action to actuate."""
         if need != Need.NONE:
             self.needs[need] = need.get_base_value()
-
-    def record(self) -> "None":
-        """Updates the record of the average needs value."""
-        for need, value in self.needs.items():
-            self.needs_avg[need] = (self.needs_avg[need] * self.observations + value) \
-                                   / (self.observations + 1)
-        self.observations += 1
 
     def get_needs(self) -> "Dict[str, float]":
         """Getter for the current needs measure.
