@@ -45,7 +45,11 @@ class Brain:
         A `bool` representing whether the living being is still alive."""
         self.action = choice(array(Action))
         self.perception_tracker.record(hitbox)
-        if self.attention.update(elapsed_time, self.perception_tracker.perception):
+        if self.attention.update(
+            elapsed_time,
+            self.needs_tracker.fitness,
+            self.perception_tracker.perception
+        ):
             self.logger.dump_observation({
                 entity_type.name.lower(): norm(value).astype(float) \
                         for entity_type, value \
