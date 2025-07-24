@@ -17,7 +17,8 @@ class Gene(Enum):
     ATTENTION_ALPHA = auto()
     ATTENTION_DECISION_PERIOD = auto()
     ATTENTION_USER_REWARD_MULTIPLIER = auto()
-    ATTENTION_SELF_REWARD_MULTIPLIER = auto()
+    ATTENTION_FITNESS_REWARD_MULTIPLIER = auto()
+    ATTENTION_POSITIONAL_REWARD_MULTIPLIER = auto()
 
     def min(self) -> "float":
         """Returns the minimum possible value for a given gene."""
@@ -37,5 +38,6 @@ THRESHOLDS: "Dict[Gene, Tuple[float, float]]" = {
     Gene.ATTENTION_ALPHA: (1e-6, 1e-1),
     Gene.ATTENTION_DECISION_PERIOD: (1, 2),
     Gene.ATTENTION_USER_REWARD_MULTIPLIER: (0.8, 3),
-    Gene.ATTENTION_SELF_REWARD_MULTIPLIER: (0.2, 0.6)
+    Gene.ATTENTION_FITNESS_REWARD_MULTIPLIER: (0.2, 0.6),
+    Gene.ATTENTION_POSITIONAL_REWARD_MULTIPLIER: (0.01, 0.2)
 }
