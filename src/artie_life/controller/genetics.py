@@ -7,6 +7,7 @@ from utils.living.genome import Gene, MUTATION_RATE
 if TYPE_CHECKING:
     from typing import Dict, List, Tuple
     from model.entities.living.living import LivingBeing
+    from model.entities.living.brain.central import Brain
 
 def create_random_genome() -> "Dict[Gene, float]":
     """Creates a random genome, pulling from each gene's possbile
@@ -19,7 +20,7 @@ def create_random_genome() -> "Dict[Gene, float]":
         genome[gene] = uniform(gene.min(), gene.max())
     return genome
 
-def compute_fitness(living: "LivingBeing") -> "float":
+def compute_fitness(needs_avg: "Dict[Need, float]") -> "float":
     """Computes the fitness function of a given living being.
     
     Returns:  
@@ -27,9 +28,19 @@ def compute_fitness(living: "LivingBeing") -> "float":
     needs_avg_sum: "float" = 0
     for need in Need:
         if need not in [Need.LIFE, Need.NONE]:
-            needs_avg_sum += (100 - living.brain.needs_tracker.needs_avg[need])
-    needs_avg: "float" = needs_avg_sum / (len(Need) - 2)
-    return living.lifetime * (needs_avg + 100 - living.brain.needs_tracker.needs_avg[Need.LIFE]) / 2
+            needs_avg_sum += (100 - needs_avg[need])
+    no_life_avg: "float" = needs_avg_sum / (len(Need) - 2)
+    return (no_life_avg + 100 - needs_avg[Need.LIFE]) / 2
+
+def compute_whole_fitness(living: "LivingBeing") -> "float":
+    """Computes the whole fitness of a living being, wheighted by its lifetime.
+    
+    Arguments:  
+    `living`: the living being whose fitness is to be computed.
+    
+    Returns:  
+    a `float` representing the whole fitness of the living being."""
+    return living.brain.needs_tracker.lifetime * compute_fitness(living.brain.needs_tracker.needs_avg)
 
 def select_parents(population: "List[LivingBeing]") -> "Tuple[LivingBeing, LivingBeing]":
     """Selects two parents from a given population, applying the genetic algorithm.
@@ -39,7 +50,7 @@ def select_parents(population: "List[LivingBeing]") -> "Tuple[LivingBeing, Livin
     
     Returns:  
     a tuple of two `LivingBeing` instances, the two parents."""
-    fitnesses = [compute_fitness(living) for living in population]
+    fitnesses = [compute_whole_fitness(living) for living in population]
     max_fitness = max(fitnesses)
     selected_indices: "List[int]" = []
     selected: "int" = 0
