@@ -1,6 +1,7 @@
 """Module containing the brain implementation."""
 from typing import TYPE_CHECKING
 from numpy import array
+from numpy.linalg import norm
 from numpy.random import choice
 from controller.log import LivingLogger
 from model.entities.living.needs import NeedsTracker, PerceptionTracker
@@ -25,9 +26,9 @@ class Brain:
         perception of the world's space.
         `living_id`: the living being's in-game ID.
         `genome`: the living being's genome."""
-        self.perception_tracker = PerceptionTracker(distance_controller, living_id)
+        self.perception_tracker = PerceptionTracker(distance_controller)
         self.genome = genome
-        self.needs_tracker = NeedsTracker(living_id, self.genome)
+        self.needs_tracker = NeedsTracker(self.genome)
         self.action: "Action" = choice(array(Action))
         self.logger: "LivingLogger" = LivingLogger(living_id)
         self.logger.record_spawn(self.genome)
@@ -44,9 +45,13 @@ class Brain:
         A `bool` representing whether the living being is still alive."""
         self.action = choice(array(Action))
         self.perception_tracker.record(hitbox)
-        self.attention.update(elapsed_time, self.perception_tracker.perception)
-        self.logger.dump_focus_object(self.attention.focus)
-        self.logger.dump_action(self.action)
+        if self.attention.update(elapsed_time, self.perception_tracker.perception):
+            self.logger.dump_observation({
+                entity_type.name.lower(): norm(value).astype(float) \
+                        for entity_type, value \
+                        in self.perception_tracker.perception.items()
+            })
+            self.logger.dump_focus_object(self.attention.focus)
         return self.needs_tracker.decay(elapsed_time)
 
     def actuate(self, interaction: "InteractionType") -> "None":
