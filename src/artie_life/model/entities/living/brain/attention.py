@@ -1,6 +1,7 @@
 """Module containing the Attention lobe implementation."""
 from typing import TYPE_CHECKING
 from numpy import zeros, array, float64, argmax, copy
+from numpy.linalg import norm
 from keras.api.losses import Huber
 from keras.api.optimizers import RMSprop
 from tensorflow import GradientTape
@@ -27,7 +28,6 @@ def to_observation(text: "str",
         res.append(y)
     return array(res, dtype=float64).reshape((1, INPUT_LAYER_DIM))
 
-
 class Attention:
     """Implementation of the Attention lobe."""
     def __init__(self, genome: "Dict[Gene, float]") -> "None":
@@ -42,6 +42,7 @@ class Attention:
         self.elapsed_time: "float" = 0
         self.reward: "float" = 0
         self.input: "str" = ""
+        self.fitness: "float" = 100
 
     def apply_user_reward(self, reward: "float") -> "None":
         """Applies the desired reward to the living being.
@@ -50,7 +51,19 @@ class Attention:
         `reward`: the desired reward value to apply."""
         self.reward += reward * self.genome[Gene.ATTENTION_USER_REWARD_MULTIPLIER]
 
-    def update(self, elapsed_time: "float",
+    def delta_distance(self, observation: "NDArray[float64]") -> "float":
+        """Computes the delta distance since last observation, in the direction of  
+        the object of the living being's focus.
+        
+        Arguments:  
+        `observation`: the actual observation, used to compute the difference  
+        in distance since last observation."""
+        idx_x = MAX_INPUT_LENGTH + self.focus.value * 2
+        idx_y = idx_x + 1
+        return float(norm([observation[0, idx_x], observation[0, idx_y]]) \
+                - norm([self.prev_obs[0, idx_x], self.prev_obs[0, idx_y]]))
+
+    def update(self, elapsed_time: "float", fitness: "float",
                perception: "Dict[EntityType, Tuple[float, float]]") -> "bool":
         """Performs a single update step.
         
@@ -73,7 +86,14 @@ class Attention:
             with GradientTape() as tape:
                 prediction = self.model(self.prev_obs, training=True)
                 rewards = copy(prediction)
-                rewards[0, self.focus.value] = self.reward
+                rewards[0, self.focus.value] = self.reward + (
+                    self.genome[Gene.ATTENTION_FITNESS_REWARD_MULTIPLIER] * (
+                        fitness - self.fitness
+                    ) + (
+                        self.genome[Gene.ATTENTION_POSITIONAL_REWARD_MULTIPLIER]
+                        * self.delta_distance(observation)
+                    )
+                )
                 error = loss(rewards, prediction)
             gradients = tape.gradient(error, self.model.trainable_weights)
             optimizer.apply_gradients(zip(gradients, self.model.trainable_weights))
@@ -82,5 +102,6 @@ class Attention:
             self.focus = next_focus
             self.input = ""
             self.reward = 0
+            self.fitness = fitness
             return True
         return False
