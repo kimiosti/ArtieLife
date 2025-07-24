@@ -51,11 +51,14 @@ class Attention:
         self.reward += reward * self.genome[Gene.ATTENTION_USER_REWARD_MULTIPLIER]
 
     def update(self, elapsed_time: "float",
-               perception: "Dict[EntityType, Tuple[float, float]]") -> "None":
+               perception: "Dict[EntityType, Tuple[float, float]]") -> "bool":
         """Performs a single update step.
         
         Arguments:  
-        `elapsed_time`: the amount of time elapsed since last update step."""
+        `elapsed_time`: the amount of time elapsed since last update step.
+        
+        Returns:  
+        True if a new focus object is computed, false otherwise."""
         self.elapsed_time += elapsed_time
         if self.elapsed_time >= self.genome[Gene.ATTENTION_DECISION_PERIOD]:
             loss = Huber()
@@ -79,3 +82,5 @@ class Attention:
             self.focus = next_focus
             self.input = ""
             self.reward = 0
+            return True
+        return False
