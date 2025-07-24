@@ -25,7 +25,6 @@ class LivingBeing(Entity):
         position relative to other game entities.
         `id`: the in-game living being identifier."""
         super().__init__(hitbox)
-        self.lifetime: "float" = 0.0
         self.controller = action_controller
         self.genome = genome
         self.brain: "Brain" = Brain(distance_controller, living_id, self.genome)
@@ -50,7 +49,6 @@ class LivingBeing(Entity):
         Returns:  
         A `bool` representing whether the living being is still alive."""
         action: "Action" = self.brain.action
-        self.lifetime += elapsed_time
 
         if action != Action.INTERACT:
             move_x, move_y = action.get_direction()
