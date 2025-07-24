@@ -65,7 +65,7 @@ class Attention:
             optimizer = RMSprop(self.genome[Gene.ATTENTION_ALPHA])
             next_focus: "EntityType"
             observation = to_observation(self.input, perception)
-            next_focus_prediction: "NDArray[float64]" = self.model.predict(observation)
+            next_focus_prediction: "NDArray[float64]" = self.model(observation)
             next_focus_idx = argmax(next_focus_prediction)
             for entity_type in EntityType:
                 if entity_type.value == next_focus_idx:
