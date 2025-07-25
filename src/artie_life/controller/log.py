@@ -2,84 +2,112 @@
 from typing import TYPE_CHECKING
 from shutil import rmtree
 from pathlib import Path
-from utils.logs import LIVING_LOG, GENOME_LOG, LOGS_FOLDER, WORLD_LOG
+from utils.logs import GENOME_LOG, LOGS_FOLDER, WORLD_LOG, ATTENTION_LOG, REASON_LOG
 
 if TYPE_CHECKING:
-    from typing import Dict
+    from typing import Dict, Tuple
     from utils.living.actions import Action, EntityType
+    from utils.living.needs import Need
     from utils.living.genome import Gene
 
-class LivingLogger:
-    """Implementation of a living being's logger."""
+def log_genome(living_id: "int", genome: "Dict[Gene, float]") -> "None":
+    """Logs a living being's genome.
+    
+    Arguments:  
+    `living_id`: the living being's in-game ID.  
+    `genome`: the living being's genome."""
+    log = Path(GENOME_LOG(living_id))
+    log.parent.mkdir(parents=True, exist_ok=True)
+    with log.open("w", encoding="utf-8") as f:
+        f.writelines([
+            gene.name.lower()
+            + ": "
+            + str(value)
+            + "\n"
+            for gene, value in genome.items()
+        ])
+
+class AttentionLogger:
+    """Implementation for the Attention lobe's activity logger."""
     def __init__(self, living_id: "int") -> "None":
-        """Instantiates a living being's logger.
+        """Instantiates the attention logger for the desired living being.
         
         Arguments:  
-        `living_id`: the living being's ID."""
-        self.living_id: "int" = living_id
-        self.genome_log: "Path" = Path(GENOME_LOG(living_id))
-        self.log: "Path" = Path(LIVING_LOG(living_id))
-        self.log.parent.mkdir(mode=666, parents=True, exist_ok=True)
-
-    def record_spawn(self, genome: "Dict[Gene, float]") -> "None":
-        """Logs the living being's spawn."""
-        with self.genome_log.open("w", encoding="utf-8") as f:
-            f.writelines([
-                gene.name.lower()
-                + ": "
-                + str(value)
-                + "\n"
-                for gene, value in genome.items()
-            ])
+        `living_id`: the living being's in-game ID."""
+        self.log: "Path" = Path(ATTENTION_LOG(living_id))
+        self.log.parent.mkdir(parents=True, exist_ok=True)
         with self.log.open("w", encoding="utf-8") as f:
-            f.write("Starting log of living being " + str(self.living_id) + "\n\n")
+            f.write("Starting Attention log of living being " + str(living_id)+ "\n\n")
 
-    def dump_observation(self, observation: "Dict[str, float]") -> "None":
-        """Logs a single living being observation.
+    def log_step(self, user_reward: "float", delta_fitness: "float",
+                 delta_distance: "float", perception: "Dict[EntityType, Tuple[float, float]]",
+                 user_input: "str", next_focus: "EntityType") -> "None":
+        """Logs a single Attention lobe decision step.
         
         Arguments:  
-        `observation`: a `Dict` containing all observed `float` values with their `str` label."""
+        `user_reward`: the user-defined reward value.  
+        `delta_fitness`: the self-obtained delta fitness value.  
+        `perception`: the current living being's perception.  
+        `user_input`: the current value of user input.  
+        `next_focus`: the next computed focus of the living being."""
         with self.log.open("a", encoding="utf-8") as f:
+            f.write("user reward: " + str(user_reward) + "\n")
+            f.write("fitness gain: " + str(delta_fitness) + "\n")
+            f.write("distance gain: " + str(delta_distance) + "\n\n")
             f.writelines([
-                need_name
-                + ": "
-                + str(need_val)
-                + "\n"
-                for need_name, need_val in observation.items()
+                entity_type.name.lower() + ": "
+                + str(value[0]) + ", " + str(value[1]) + "\n"
+                for entity_type, value in perception.items()
             ])
+            f.write("user input: " + user_input + "\n")
+            f.write("attention: " + next_focus.name.lower() + "\n")
 
-    def dump_focus_object(self, focus: "EntityType") -> "None":
-        """Logs a single attention object.
+class ReasonLogger:
+    """Implementation for the Reason lobe's activity logger."""
+    def __init__(self, living_id: "int") -> "None":
+        """Instantiates the reason logger for the desired living being.
         
         Arguments:  
-        `focus`: the type of entity subject to the living being's attention."""
-        with self.log.open("a", encoding="utf-8") as f:
-            f.write("Focus: " + focus.name.lower() + "\n\n")
-
-    def dump_action(self, action: "Action") -> "None":
-        """Logs a single living being action.
-        
-        Arguments:  
-        `action`: the action to be logged."""
-        with self.log.open("a", encoding="utf-8") as f:
-            f.write("Action: " + action.name.lower() + "\n\n")
-
-    def record_death(self) -> "None":
-        """Logs a living being's death."""
+        `living_id`: the living being's in-game ID."""
+        self.log: "Path" = Path(REASON_LOG(living_id))
+        self.log.parent.mkdir(parents=True, exist_ok=True)
         with self.log.open("w", encoding="utf-8") as f:
-            f.write("Living being " + str(self.living_id) + " died \nClosing log.\n")
+            f.write("Starting Reason log for living being " + str(living_id) + "\n\n")
+
+    def log_step(self, user_reward: "float", delta_fitness: "float",
+                 delta_distance: "float", focus: "EntityType",
+                 needs: "Dict[Need, float]", next_action: "Action") -> "None":
+        """Logs a single Reason lobe decision step.
+        
+        Arguments:  
+        `user_reward`: the user-defined reward  
+        `delta_fitness`: the fitness gain since last decision.  
+        `delta_distance`: the distance gain relative to the focus object since last decision.  
+        `focus`: the actual object of the living being's focus.  
+        `needs`: the current vital parameters of the living being.  
+        `next_action`: the next action chosen by the lobe."""
+        with self.log.open("a", encoding="utf-8") as f:
+            f.write("user reward: " + str(user_reward) + "\n")
+            f.write("fitness gain: " + str(delta_fitness) + "\n")
+            f.write("distance gain: " + str(delta_distance) + "\n\n")
+            f.write("attention: " + focus.name.lower() + "\n")
+            f.writelines([
+                need.name.lower().replace("_", " ") + ": "
+                + str(value) + "\n" for need, value in needs.items()
+            ])
+            f.write("action: " + next_action.name.lower() + "\n")
 
 
 class WorldLogger:
-    """Implementation for the wolrd logger, responsible of tracking living being spawn, death and
+    """Implementation for the world logger, responsible of tracking living being spawn, death and
     population size."""
     def __init__(self) -> "None":
         """Instantiates a world logger."""
-        rmtree(Path(LOGS_FOLDER))
+        rmtree(Path(LOGS_FOLDER), ignore_errors=True)
         self.log: "Path" = Path(WORLD_LOG)
         self.log.parent.mkdir(parents=True, exist_ok=True)
         with self.log.open("w", encoding="utf-8") as f:
-            f.write("Starting game World log \n")
+            f.write("Starting game World log \n\n")
 
     def record_spawn(self, living_id: "int", population_size: "int") -> "None":
         """Logs the spawning of a livin being.
