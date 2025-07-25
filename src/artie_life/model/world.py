@@ -96,3 +96,4 @@ class World:
         for living_being in self.living:
             if living_being.selected:
                 living_being.brain.attention.apply_user_reward(reward)
+                living_being.brain.reason.apply_user_reward(reward)
