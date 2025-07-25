@@ -1,10 +1,10 @@
 """Module containing the brain implementation."""
 from typing import TYPE_CHECKING
 from numpy.linalg import norm
-from controller.log import LivingLogger
 from model.entities.living.needs import NeedsTracker, PerceptionTracker
 from model.entities.living.brain.attention import Attention
 from model.entities.living.brain.reason import Reason
+from controller.log import log_genome
 
 if TYPE_CHECKING:
     from typing import Dict
@@ -26,9 +26,10 @@ class Brain:
         `genome`: the living being's genome."""
         self.perception_tracker = PerceptionTracker(distance_controller)
         self.genome = genome
+        log_genome(living_id, self.genome)
         self.needs_tracker = NeedsTracker(self.genome)
-        self.reason: "Reason" = Reason(self.genome)
-        self.attention: "Attention" = Attention(self.genome)
+        self.reason: "Reason" = Reason(self.genome, living_id)
+        self.attention: "Attention" = Attention(self.genome, living_id)
 
     def update(self, elapsed_time: "float", hitbox: "Rect") -> "bool":
         """Updates the brain, decaying vital parameters.
