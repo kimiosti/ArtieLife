@@ -48,7 +48,7 @@ class LivingBeing(Entity):
         
         Returns:  
         A `bool` representing whether the living being is still alive."""
-        action: "Action" = self.brain.action
+        action: "Action" = self.brain.reason.action
 
         if action != Action.INTERACT:
             move_x, move_y = action.get_direction()
