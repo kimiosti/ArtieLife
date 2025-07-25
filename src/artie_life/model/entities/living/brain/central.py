@@ -1,12 +1,10 @@
 """Module containing the brain implementation."""
 from typing import TYPE_CHECKING
-from numpy import array
 from numpy.linalg import norm
-from numpy.random import choice
 from controller.log import LivingLogger
 from model.entities.living.needs import NeedsTracker, PerceptionTracker
 from model.entities.living.brain.attention import Attention
-from utils.living.actions import Action
+from model.entities.living.brain.reason import Reason
 
 if TYPE_CHECKING:
     from typing import Dict
@@ -29,9 +27,7 @@ class Brain:
         self.perception_tracker = PerceptionTracker(distance_controller)
         self.genome = genome
         self.needs_tracker = NeedsTracker(self.genome)
-        self.action: "Action" = choice(array(Action))
-        self.logger: "LivingLogger" = LivingLogger(living_id)
-        self.logger.record_spawn(self.genome)
+        self.reason: "Reason" = Reason(self.genome)
         self.attention: "Attention" = Attention(self.genome)
 
     def update(self, elapsed_time: "float", hitbox: "Rect") -> "bool":
@@ -43,19 +39,19 @@ class Brain:
 
         Returns:  
         A `bool` representing whether the living being is still alive."""
-        self.action = choice(array(Action))
         self.perception_tracker.record(hitbox)
-        if self.attention.update(
+        self.attention.update(
             elapsed_time,
             self.needs_tracker.fitness,
             self.perception_tracker.perception
-        ):
-            self.logger.dump_observation({
-                entity_type.name.lower(): norm(value).astype(float) \
-                        for entity_type, value \
-                        in self.perception_tracker.perception.items()
-            })
-            self.logger.dump_focus_object(self.attention.focus)
+        )
+        self.reason.update(
+            self.attention.focus,
+            self.needs_tracker.needs,
+            self.needs_tracker.fitness,
+            {entity_type: norm(value) for entity_type, value in self.perception_tracker.perception.items()},
+            elapsed_time
+        )
         return self.needs_tracker.decay(elapsed_time)
 
     def actuate(self, interaction: "InteractionType") -> "None":
