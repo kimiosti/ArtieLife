@@ -7,7 +7,9 @@ if TYPE_CHECKING:
 
 LOGS_FOLDER: "str" = "logs"
 WORLD_LOG: "str" = join_path(LOGS_FOLDER, "world", "log")
-LIVING_LOG: "Callable[[int], str]" = \
-        lambda living_id: join_path(LOGS_FOLDER, str(living_id), "log")
+ATTENTION_LOG: "Callable[[int], str]" = \
+        lambda living_id: join_path(LOGS_FOLDER, str(living_id), "attention")
+REASON_LOG: "Callable[[int], str]" = \
+        lambda living_id: join_path(LOGS_FOLDER, str(living_id), "reason")
 GENOME_LOG: "Callable[[int], str]" = \
         lambda living_id: join_path(LOGS_FOLDER, str(living_id), "genome")
