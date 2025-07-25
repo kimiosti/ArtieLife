@@ -89,7 +89,7 @@ class Attention:
                 rewards[0, self.focus.value] = self.reward + (
                     self.genome[Gene.ATTENTION_FITNESS_REWARD_MULTIPLIER] * (
                         fitness - self.fitness
-                    ) + (
+                    ) - (
                         self.genome[Gene.ATTENTION_POSITIONAL_REWARD_MULTIPLIER]
                         * self.delta_distance(observation)
                     )

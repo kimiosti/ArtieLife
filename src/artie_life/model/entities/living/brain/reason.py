@@ -94,7 +94,7 @@ class Reason:
                             fitness - self.fitness
                         )
                     )
-                    + (
+                    - (
                         self.genome[Gene.REASON_POSITIONAL_REWARD_MULTIPLIER] * (
                             perception[self.focus] - self.last_perception[self.focus]
                         )
