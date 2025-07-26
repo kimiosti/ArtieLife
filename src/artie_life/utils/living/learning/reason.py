@@ -7,11 +7,12 @@ from utils.living.actions import Action, EntityType
 INPUT_LAYER_DIM: "int" = len(Need) + len(EntityType) - 1
 OUTPUT_LAYER_DIM: "int" = len(Action)
 
-REASON_MODEL = Sequential([
-    layers.Input(shape=(INPUT_LAYER_DIM,)),
-    layers.Dense(16, activation="relu", kernel_initializer="random_uniform"),
-    layers.Dense(32, activation="relu", kernel_initializer="random_uniform"),
-    layers.Dense(16, activation="relu", kernel_initializer="random_uniform"),
-    layers.Dense(8, activation="relu", kernel_initializer="random_uniform"),
-    layers.Dense(OUTPUT_LAYER_DIM)
-])
+def create_reason_model() -> "Sequential":
+    """Instantiates the model underlying the Reason lobe."""
+    return Sequential([
+        layers.Input(shape=(INPUT_LAYER_DIM,)),
+        layers.Dense(16, activation="relu", kernel_initializer="random_uniform"),
+        layers.Dense(32, activation="relu", kernel_initializer="random_uniform"),
+        layers.Dense(16, activation="relu", kernel_initializer="random_uniform"),
+        layers.Dense(OUTPUT_LAYER_DIM)
+    ])
