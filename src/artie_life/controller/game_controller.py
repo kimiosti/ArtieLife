@@ -107,3 +107,7 @@ class GameController:
         Arguments:  
         `elapsed_time`: the amount of time elapsed since the last model update, in seconds."""
         self.world.update(elapsed_time)
+
+    def dump_current_state(self) -> "None":
+        """Logs the world's current state."""
+        self.world.dump_current_state()
