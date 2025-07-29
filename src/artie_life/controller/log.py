@@ -46,7 +46,8 @@ class AttentionLogger:
         
         Arguments:  
         `user_reward`: the user-defined reward value.  
-        `delta_fitness`: the self-obtained delta fitness value.  
+        `needs_reward`: the self-obtained needs reward value.  
+        `positional_reward`: the self-obtained positional reward value.  
         `perception`: the current living being's perception.  
         `user_input`: the current value of user input.  
         `next_focus`: the next computed focus of the living being."""
@@ -119,10 +120,22 @@ class WorldLogger:
             f.write("Spawning living being " + str(living_id) + "\n")
             f.write("Current population size: " + str(population_size) + "\n\n")
 
-    def record_death(self, living_id: "int") -> "None":
+    def record_death(self, living_id: "int", lifetime: "float") -> "None":
         """Logs the death of a living being.
         
         Arguments:  
-        `living_id`: the ID of the dead living being."""
+        `living_id`: the ID of the dead living being.  
+        `lifetime`: the living being's lifetime."""
         with self.log.open("a", encoding="utf-8") as f:
-            f.write("Living being " + str(living_id) + " died \n\n")
+            f.write("Living being " + str(living_id) + " died \n")
+            f.write("Lifetime: " + str(lifetime) + "\n\n")
+
+    def dump_lifetime(self, living_id: "int", lifetime: "float") -> "None":
+        """Dumps a living being's lifetime.
+        
+        Arguments:  
+        `living_id`: the living being's in-game ID.  
+        `lifetime`: the living being's lifetime."""
+        with self.log.open("a", encoding="utf-8") as f:
+            f.write("Living being " + str(living_id) + " still alive \n")
+            f.write("Lifetime: " + str(lifetime) + "\n\n")
