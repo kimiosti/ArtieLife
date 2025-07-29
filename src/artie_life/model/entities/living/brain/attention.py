@@ -115,7 +115,7 @@ class Attention:
                         if self.delta_distance(observation) > 0 \
                         else NEGATIVE_DISTANCE_REWARD)
                 needs_reward = self.compute_needs_reward(needs)
-                rewards[0, self.focus.value] = self.user_reward \
+                rewards[0, self.focus.value] += self.user_reward \
                             + distance_reward \
                             + needs_reward
                 error = loss(rewards, prediction)
