@@ -7,7 +7,7 @@ from utils.living.actions import Action, EntityType
 INPUT_LAYER_DIM: "int" = len(Need) + len(EntityType) - 1
 OUTPUT_LAYER_DIM: "int" = len(Action)
 
-def create_reason_model() -> "Sequential":
+def create_reason_model() -> "Sequential": #type: ignore[no-any-unimported]
     """Instantiates the model underlying the Reason lobe."""
     return Sequential([
         layers.Input(shape=(INPUT_LAYER_DIM,)),
