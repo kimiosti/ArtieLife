@@ -53,4 +53,5 @@ if __name__=='__main__':
 
         dt = clock.tick(30)
 
+    game_controller.dump_current_state()
     quit_game()
