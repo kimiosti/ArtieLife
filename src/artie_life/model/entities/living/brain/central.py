@@ -43,14 +43,18 @@ class Brain:
         self.perception_tracker.record(hitbox)
         self.attention.update(
             elapsed_time,
-            self.needs_tracker.fitness,
+            self.needs_tracker.needs,
             self.perception_tracker.perception
         )
         self.reason.update(
             self.attention.focus,
             self.needs_tracker.needs,
             self.needs_tracker.fitness,
-            {entity_type: norm(value) for entity_type, value in self.perception_tracker.perception.items()},
+            {
+                entity_type: norm(value)
+                for entity_type, value
+                in self.perception_tracker.perception.items()
+            },
             elapsed_time
         )
         return self.needs_tracker.decay(elapsed_time)
