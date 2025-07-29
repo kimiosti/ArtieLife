@@ -2,8 +2,8 @@
 from typing import TYPE_CHECKING
 from pygame import MOUSEBUTTONDOWN, KEYDOWN, K_RETURN, K_BACKSPACE
 from pygame.mouse import get_pos as get_mouse_pos
-from utils.living.learning.attention import MAX_INPUT_LENGTH, POSITIVE_REWARD, \
-        NEGATIVE_REWARD
+from utils.living.learning.attention import MAX_INPUT_LENGTH, POSITIVE_USER_REWARD, \
+        NEGATIVE_USER_REWARD
 
 if TYPE_CHECKING:
     from typing import List
@@ -55,9 +55,9 @@ class ClickController:
         for event in events:
             if event.type == MOUSEBUTTONDOWN:
                 if self.view.bottom_bar.pos_reward.collidepoint(get_mouse_pos()):
-                    self.world.apply_user_reward(POSITIVE_REWARD)
+                    self.world.apply_user_reward(POSITIVE_USER_REWARD)
                 elif self.view.bottom_bar.neg_reward.collidepoint(get_mouse_pos()):
-                    self.world.apply_user_reward(NEGATIVE_REWARD)
+                    self.world.apply_user_reward(NEGATIVE_USER_REWARD)
 
 class TextController:
     """Implementation for the text input controller."""
