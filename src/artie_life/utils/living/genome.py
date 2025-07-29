@@ -12,7 +12,6 @@ class Gene(Enum):
     LIFE_DECAY = auto()
     HUNGER_DECAY = auto()
     TIREDNESS_DECAY = auto()
-    MATING_DRIVE_DECAY = auto()
     SPEED = auto()
     ATTENTION_ALPHA = auto()
     ATTENTION_DECISION_PERIOD = auto()
@@ -38,20 +37,19 @@ class Gene(Enum):
 
 
 THRESHOLDS: "Dict[Gene, Tuple[float, float]]" = {
-    Gene.LIFE_DECAY: (2, 5),
-    Gene.HUNGER_DECAY: (3, 7),
-    Gene.TIREDNESS_DECAY: (3, 7),
-    Gene.MATING_DRIVE_DECAY: (2, 5),
+    Gene.LIFE_DECAY: (0.5, 3),
+    Gene.HUNGER_DECAY: (0.8, 4),
+    Gene.TIREDNESS_DECAY: (0.8, 4),
     Gene.SPEED: (45, 80),
-    Gene.ATTENTION_ALPHA: (1e-6, 1e-1),
+    Gene.ATTENTION_ALPHA: (1e-4, 0.3),
     Gene.ATTENTION_DECISION_PERIOD: (1, 2),
     Gene.ATTENTION_USER_REWARD_MULTIPLIER: (0.8, 3),
     Gene.ATTENTION_FITNESS_REWARD_MULTIPLIER: (0.2, 0.6),
     Gene.ATTENTION_POSITIONAL_REWARD_MULTIPLIER: (0.01, 0.2),
-    Gene.REASON_ALPHA: (1e-6, 1e-1),
+    Gene.REASON_ALPHA: (1e-4, 0.3),
     Gene.REASON_DECISION_PERIOD: (0.01, 0.2),
     Gene.REASON_USER_REWARD_MULTIPLIER: (0.3, 0.6),
-    Gene.REASON_FITNESS_REWARD_MULTIPLIER: (0.8, 5),
+    Gene.REASON_FITNESS_REWARD_MULTIPLIER: (0.8, 10),
     Gene.REASON_POSITIONAL_REWARD_MULTIPLIER: (0.1, 1),
     Gene.REASON_STARTING_EPSILON: (0.1, 1),
     Gene.REASON_MIN_EPSILON: (1e-4, 1e-2),
