@@ -62,7 +62,10 @@ class World:
             alive = living_being.update(elapsed_time)
             if not alive:
                 self.living.remove(living_being)
-                self.logger.record_death(living_being.game_id)
+                self.logger.record_death(
+                    living_being.game_id,
+                    living_being.brain.needs_tracker.lifetime
+                )
                 if len(self.living) < self.population_size:
                     self.controller.spawn_living()
 
@@ -97,3 +100,11 @@ class World:
             if living_being.selected:
                 living_being.brain.attention.apply_user_reward(reward)
                 living_being.brain.reason.apply_user_reward(reward)
+
+    def dump_current_state(self) -> "None":
+        """Dumps the current state of the world."""
+        for living_being in self.living:
+            self.logger.dump_lifetime(
+                living_being.game_id,
+                living_being.brain.needs_tracker.lifetime
+            )
