@@ -39,8 +39,8 @@ class AttentionLogger:
         with self.log.open("w", encoding="utf-8") as f:
             f.write("Starting Attention log of living being " + str(living_id)+ "\n\n")
 
-    def log_step(self, user_reward: "float", delta_fitness: "float",
-                 delta_distance: "float", perception: "Dict[EntityType, Tuple[float, float]]",
+    def log_step(self, user_reward: "float", needs_reward: "float",
+                 positional_reward: "float", perception: "Dict[EntityType, Tuple[float, float]]",
                  user_input: "str", next_focus: "EntityType") -> "None":
         """Logs a single Attention lobe decision step.
         
@@ -52,8 +52,8 @@ class AttentionLogger:
         `next_focus`: the next computed focus of the living being."""
         with self.log.open("a", encoding="utf-8") as f:
             f.write("user reward: " + str(user_reward) + "\n")
-            f.write("fitness gain: " + str(delta_fitness) + "\n")
-            f.write("distance gain: " + str(delta_distance) + "\n\n")
+            f.write("needs reward: " + str(needs_reward) + "\n")
+            f.write("positional reward: " + str(positional_reward) + "\n\n")
             f.writelines([
                 entity_type.name.lower() + ": "
                 + str(value[0]) + ", " + str(value[1]) + "\n"
