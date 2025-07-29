@@ -7,8 +7,11 @@ from keras.api.optimizers import RMSprop
 from tensorflow import GradientTape
 from controller.log import AttentionLogger
 from utils.living.genome import Gene
+from utils.living.needs import Need
 from utils.living.actions import EntityType
-from utils.living.learning.attention import create_attention_model, INPUT_LAYER_DIM, MAX_INPUT_LENGTH
+from utils.living.learning.attention import create_attention_model, INPUT_LAYER_DIM, \
+        MAX_INPUT_LENGTH, POSITIVE_DISTANCE_REWARD, NEGATIVE_DISTANCE_REWARD, \
+        POSITIVE_NEEDS_REWARD, NEGATIVE_NEEDS_REWARD
 
 if TYPE_CHECKING:
     from typing import List, Dict, Tuple
@@ -40,11 +43,13 @@ class Attention:
         self.genome = genome
         self.model = create_attention_model()
         self.prev_obs: "NDArray[float64]" = zeros((1, INPUT_LAYER_DIM), dtype=float64)
-        self.focus: "EntityType" = EntityType.LIVING
+        self.prev_needs: "Dict[Need, float]" = {
+            need: 0 for need in Need
+        }
+        self.focus: "EntityType" = EntityType.HEALING
         self.elapsed_time: "float" = 0
-        self.reward: "float" = 0
+        self.user_reward: "float" = 0
         self.input: "str" = ""
-        self.fitness: "float" = 100
         self.logger = AttentionLogger(living_id)
 
     def apply_user_reward(self, reward: "float") -> "None":
@@ -52,7 +57,23 @@ class Attention:
         
         Arguments:  
         `reward`: the desired reward value to apply."""
-        self.reward += reward * self.genome[Gene.ATTENTION_USER_REWARD_MULTIPLIER]
+        self.user_reward += reward * self.genome[Gene.ATTENTION_USER_REWARD_MULTIPLIER]
+
+    def compute_needs_reward(self, needs: "Dict[Need, float]") -> "float":
+        """Computes the self-derived reward from a needs observation.
+        
+        Arguments:  
+        `needs`: the actual needs observation.
+        
+        Returns:  
+        A `float` representing the reward value."""
+        if needs[Need.LIFE] >= self.prev_needs[Need.LIFE]:
+            return NEGATIVE_NEEDS_REWARD * self.genome[Gene.ATTENTION_NEEDS_REWARD_MULTIPLIER]
+        for need, value in needs.items():
+            if value < self.prev_needs[need]:
+                return POSITIVE_NEEDS_REWARD \
+                        * self.genome[Gene.ATTENTION_NEEDS_REWARD_MULTIPLIER]
+        return NEGATIVE_NEEDS_REWARD * self.genome[Gene.ATTENTION_NEEDS_REWARD_MULTIPLIER]
 
     def delta_distance(self, observation: "NDArray[float64]") -> "float":
         """Computes the delta distance since last observation, in the direction of  
@@ -66,7 +87,7 @@ class Attention:
         return float(norm([self.prev_obs[0, idx_x], self.prev_obs[0, idx_y]]) \
                 - norm([observation[0, idx_x], observation[0, idx_y]]))
 
-    def update(self, elapsed_time: "float", fitness: "float",
+    def update(self, elapsed_time: "float", needs: "Dict[Need, float]",
                perception: "Dict[EntityType, Tuple[float, float]]") -> "bool":
         """Performs a single update step.
         
@@ -89,23 +110,21 @@ class Attention:
             with GradientTape() as tape:
                 prediction = self.model(self.prev_obs, training=True)
                 rewards = copy(prediction)
-                fitness_gain = fitness - self.fitness
-                distance_gain = self.delta_distance(observation)
-                rewards[0, self.focus.value] = self.reward + (
-                    self.genome[Gene.ATTENTION_FITNESS_REWARD_MULTIPLIER] * (
-                        fitness_gain
-                    ) + (
-                        self.genome[Gene.ATTENTION_POSITIONAL_REWARD_MULTIPLIER]
-                        * distance_gain
-                    )
-                )
+                distance_reward = self.genome[Gene.ATTENTION_POSITIONAL_REWARD_MULTIPLIER] \
+                        * (POSITIVE_DISTANCE_REWARD \
+                        if self.delta_distance(observation) > 0 \
+                        else NEGATIVE_DISTANCE_REWARD)
+                needs_reward = self.compute_needs_reward(needs)
+                rewards[0, self.focus.value] = self.user_reward \
+                            + distance_reward \
+                            + needs_reward
                 error = loss(rewards, prediction)
             gradients = tape.gradient(error, self.model.trainable_weights)
             optimizer.apply_gradients(zip(gradients, self.model.trainable_weights))
             self.logger.log_step(
-                self.reward,
-                fitness_gain,
-                distance_gain,
+                self.user_reward,
+                needs_reward,
+                self.genome[Gene.ATTENTION_POSITIONAL_REWARD_MULTIPLIER] * distance_reward,
                 perception,
                 self.input,
                 next_focus
@@ -114,7 +133,6 @@ class Attention:
             self.prev_obs = observation
             self.focus = next_focus
             self.input = ""
-            self.reward = 0
-            self.fitness = fitness
+            self.user_reward = 0
             return True
         return False
