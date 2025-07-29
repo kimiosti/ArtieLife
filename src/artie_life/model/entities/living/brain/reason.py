@@ -6,6 +6,7 @@ from keras.api.losses import Huber
 from keras.api.optimizers import RMSprop
 from tensorflow import GradientTape
 from controller.log import ReasonLogger
+from utils.living.needs import Need
 from utils.living.genome import Gene
 from utils.living.actions import Action, EntityType
 from utils.living.learning.reason import create_reason_model, INPUT_LAYER_DIM
@@ -13,7 +14,6 @@ from utils.living.learning.reason import create_reason_model, INPUT_LAYER_DIM
 if TYPE_CHECKING:
     from typing import Dict, List
     from numpy.typing import NDArray
-    from utils.living.needs import Need
 
 def to_observation(focus: "EntityType", needs: "Dict[Need, float]") -> "NDArray[float64]":
     """Transforms the entity type's focus and the entity's needs into an observation.
@@ -43,6 +43,7 @@ class Reason:
         self.genome = genome
         self.epsilon: "float" = self.genome[Gene.REASON_STARTING_EPSILON]
         self.prev_obs = zeros((1, INPUT_LAYER_DIM), dtype=float64)
+        self.prev_needs = {need: 0 for need in Need}
         self.action: "Action" = Action.INTERACT
         self.focus: "EntityType" = EntityType.LIVING
         self.fitness: "float" = 100
@@ -114,8 +115,8 @@ class Reason:
             ])
             self.logger.log_step(
                 self.user_reward,
-                fitness_gain,
-                distance_gain,
+                fitness_gain * self.genome[Gene.REASON_FITNESS_REWARD_MULTIPLIER],
+                distance_gain * self.genome[Gene.REASON_POSITIONAL_REWARD_MULTIPLIER],
                 self.focus,
                 needs,
                 next_action
