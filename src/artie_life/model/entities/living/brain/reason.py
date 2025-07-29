@@ -8,7 +8,7 @@ from tensorflow import GradientTape
 from controller.log import ReasonLogger
 from utils.living.genome import Gene
 from utils.living.actions import Action, EntityType
-from utils.living.learning.reason import REASON_MODEL, INPUT_LAYER_DIM
+from utils.living.learning.reason import create_reason_model, INPUT_LAYER_DIM
 
 if TYPE_CHECKING:
     from typing import Dict, List
@@ -39,7 +39,7 @@ class Reason:
         Arguments:  
         `genome`: the living being's genome.
         `living_id`: the living being's in-game ID."""
-        self.model = REASON_MODEL
+        self.model = create_reason_model()
         self.genome = genome
         self.epsilon: "float" = self.genome[Gene.REASON_STARTING_EPSILON]
         self.prev_obs = zeros((1, INPUT_LAYER_DIM), dtype=float64)

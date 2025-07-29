@@ -8,7 +8,7 @@ from tensorflow import GradientTape
 from controller.log import AttentionLogger
 from utils.living.genome import Gene
 from utils.living.actions import EntityType
-from utils.living.learning.attention import ATTENTION_MODEL, INPUT_LAYER_DIM, MAX_INPUT_LENGTH
+from utils.living.learning.attention import create_attention_model, INPUT_LAYER_DIM, MAX_INPUT_LENGTH
 
 if TYPE_CHECKING:
     from typing import List, Dict, Tuple
@@ -38,7 +38,7 @@ class Attention:
         `genome`: the living being's genome.  
         `living_id`: the living being's in-game ID."""
         self.genome = genome
-        self.model = ATTENTION_MODEL
+        self.model = create_attention_model()
         self.prev_obs: "NDArray[float64]" = zeros((1, INPUT_LAYER_DIM), dtype=float64)
         self.focus: "EntityType" = EntityType.LIVING
         self.elapsed_time: "float" = 0
