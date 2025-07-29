@@ -32,7 +32,7 @@ def compute_fitness(needs_avg: "Dict[Need, float]") -> "float":
     no_life_avg: "float" = needs_avg_sum / (len(Need) - 2)
     return (no_life_avg + 100 - needs_avg[Need.LIFE]) / 2
 
-def compute_whole_fitness(living: "LivingBeing") -> "float":
+def compute_whole_fitness(brain: "Brain") -> "float":
     """Computes the whole fitness of a living being, wheighted by its lifetime.
     
     Arguments:  
@@ -40,7 +40,7 @@ def compute_whole_fitness(living: "LivingBeing") -> "float":
     
     Returns:  
     a `float` representing the whole fitness of the living being."""
-    return living.brain.needs_tracker.lifetime * compute_fitness(living.brain.needs_tracker.needs_avg)
+    return brain.needs_tracker.lifetime * compute_fitness(brain.needs_tracker.needs_avg)
 
 def select_parents(population: "List[LivingBeing]") -> "Tuple[LivingBeing, LivingBeing]":
     """Selects two parents from a given population, applying the genetic algorithm.
@@ -50,7 +50,7 @@ def select_parents(population: "List[LivingBeing]") -> "Tuple[LivingBeing, Livin
     
     Returns:  
     a tuple of two `LivingBeing` instances, the two parents."""
-    fitnesses = [compute_whole_fitness(living) for living in population]
+    fitnesses = [compute_whole_fitness(living.brain) for living in population]
     max_fitness = max(fitnesses)
     selected_indices: "List[int]" = []
     selected: "int" = 0
