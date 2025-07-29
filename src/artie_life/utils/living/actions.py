@@ -30,11 +30,10 @@ class Action(Enum):
 
 class InteractionType(Enum):
     """Enumerative class listing all possbile interaction results."""
-    MATE = 0
-    HEAL = 1
-    FEED = 2
-    REST = 3
-    NONE = 4
+    HEAL = 0
+    FEED = 1
+    REST = 2
+    NONE = 3
 
     def get_corresponding_need(self) -> "Need":
         """Translates an interaction type in the need that it fulfills.
@@ -49,10 +48,10 @@ class InteractionType(Enum):
 
 class EntityType(Enum):
     """Enumerative class listing all entity types."""
-    LIVING = 0
-    HEALING = 1
-    FEEDING = 2
-    RESTING = 3
+    HEALING = 0
+    FEEDING = 1
+    RESTING = 2
+    LIVING = 3
     PLAYGROUND = 4
 
     def walkable(self) -> "bool":
