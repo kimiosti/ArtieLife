@@ -19,21 +19,23 @@ if __name__ == '__main__':
 
     parser.add_argument(
         "--gui",
-        action="store_false",
+        choices=["true", "false"],
+        default="true",
         help="true/false argument indicating whether a graphical rendering of the game world"
             + " is requested. To be used carefully when n != 1, since unexpected behavior"
-            + " might occur. If omitted, it defaults to false."
+            + " might occur. If omitted, it defaults to true."
     )
 
     parser.add_argument(
         "-l", "--learning",
-        action="store_true",
+        choices=["true", "false"],
+        default="true",
         help="true/false argument indicating if the game agents must learn their behavior, or"
-            + " if they should act randomly. If omitted, it defaults to true"
+            + " if they should act randomly. If omitted, it defaults to true."
     )
 
     parser.add_argument(
-        "-g", "--genetic-algo",
+        "--genetic-algo",
         default="none",
         choices=["none", "params"],
         help="indicates what type of genetic algorithm has to be applied to the game agents'"
