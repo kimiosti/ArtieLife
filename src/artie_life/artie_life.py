@@ -1,57 +1,45 @@
 """Main application module."""
 
-if __name__=='__main__':
-    from pygame import QUIT, quit as quit_game, init as init_game
-    from pygame.event import get as get_all_events
-    from pygame.time import Clock
-    from pygame.key import set_repeat as set_key_repeat
-    from view.game_view import GameView
-    from controller.game_controller import GameController
-    from controller.input import ClickController, TextController
+if __name__ == '__main__':
+    from argparse import ArgumentParser
 
-    init_game()
-    set_key_repeat(200, 75)
+    parser = ArgumentParser(
+        description = "Artificial Life simulator combining reinforcement learning"
+            + " and genetic algorithms for entertainment purposes",
+        epilog = "For more information and source code, visit github.com/kimiosti/ArtieLife"
+    )
 
-    game_controller: "GameController" = GameController()
-    game_controller.create_world()
+    parser.add_argument(
+        "-n", "--number",
+        default=1,
+        type=int,
+        help="indicates how many instances of the game world are instantiated and executed"
+            + " in parallel. If omitted, it defaults to 1."
+    )
 
-    view: "GameView" = GameView()
+    parser.add_argument(
+        "--gui",
+        action="store_false",
+        help="true/false argument indicating whether a graphical rendering of the game world"
+            + " is requested. To be used carefully when n != 1, since unexpected behavior"
+            + " might occur. If omitted, it defaults to false."
+    )
 
-    click_controller: "ClickController" = ClickController(game_controller.world, view)
-    text_controller: "TextController" = TextController(game_controller.world, view)
+    parser.add_argument(
+        "-l", "--learning",
+        action="store_true",
+        help="true/false argument indicating if the game agents must learn their behavior, or"
+            + " if they should act randomly. If omitted, it defaults to true"
+    )
 
-    clock: "Clock" = Clock()
+    parser.add_argument(
+        "-g", "--genetic-algo",
+        default="none",
+        choices=["none", "params"],
+        help="indicates what type of genetic algorithm has to be applied to the game agents'"
+            + " population. Accepted values are 'none' to generate random genomes for all"
+            + " agents, and 'params' to apply a parameter optimization genetic algorithm."
+            + " If omitted, it defaults to 'none'."
+    )
 
-    view.show_screen()
-
-    dt: "int" = 0
-    running: "bool" = True
-    while running:
-        events = get_all_events()
-        for event in events:
-            if event.type == QUIT:
-                running = False
-
-        if click_controller.is_spawn_requested(events):
-            game_controller.spawn_random_living()
-
-        game_controller.update_world(dt / 1000)
-        view.render(game_controller.get_map_elems())
-
-        click_controller.handle_living_selection(events)
-        if game_controller.is_living_selected():
-            text_controller.update(events)
-            view.render_bottom_bar(
-                game_controller.get_selected_info(),
-                game_controller.get_focus_object()
-            )
-            click_controller.handle_user_reward(events)
-        else:
-            text_controller.clear()
-
-        view.show_frame()
-
-        dt = clock.tick(30)
-
-    game_controller.dump_current_state()
-    quit_game()
+    arguments = parser.parse_args()
