@@ -2,6 +2,13 @@
 
 if __name__ == '__main__':
     from argparse import ArgumentParser
+    from typing import TYPE_CHECKING
+    from pygame import init, QUIT, quit
+    from pygame.event import get as get_events
+    from world_engine import WorldEngine
+
+    if TYPE_CHECKING:
+        from typing import List
 
     parser = ArgumentParser(
         description = "Artificial Life simulator combining reinforcement learning"
@@ -45,3 +52,24 @@ if __name__ == '__main__':
     )
 
     arguments = parser.parse_args()
+
+    engines: "List[WorldEngine]" = [WorldEngine(
+        i+1,
+        arguments.gui,
+        arguments.learning,
+        arguments.genetic_algo
+    ) for i in range(arguments.number)]
+    for engine in engines:
+        engine.start()
+
+    init()
+    running = True
+    while running:
+        for event in get_events():
+            if event.type == QUIT:
+                running = False
+
+    for engine in engines:
+        engine.kill()
+
+    quit()
