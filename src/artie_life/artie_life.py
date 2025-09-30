@@ -63,8 +63,12 @@ if __name__ == '__main__':
     engines: "List[WorldEngine]" = [
         WorldEngine(i+1, arguments.population, arguments.learning, arguments.genetic_algo)
             if arguments.gui == "false"
-            else GuiWorldEngine(i+1, arguments.population, arguments.learning, arguments.genetic_algo)
-            for i in range(arguments.number)
+            else GuiWorldEngine(
+                i+1,
+                arguments.population,
+                arguments.learning,
+                arguments.genetic_algo
+            ) for i in range(arguments.number)
     ]
     for engine in engines:
         engine.start()

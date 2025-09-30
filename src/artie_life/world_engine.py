@@ -1,6 +1,6 @@
 """Module containing the single world's execution engine."""
 from multiprocessing import Process
-from pygame import init, QUIT, quit
+from pygame import init, QUIT, quit as quit_game
 from pygame.event import get as get_events
 from pygame.key import set_repeat as set_key_repeat
 from pygame.time import Clock
@@ -33,7 +33,10 @@ class WorldEngine(Process):
         """Main method of the world engine."""
         init()
         game_controller = GameController(self.genetic_algorithm)
-        game_controller.create_world(self.population, True if self.learning_enable == "true" else False)
+        game_controller.create_world(
+            self.population,
+            self.learning_enable == "true"
+        )
         clock = Clock()
         dt: "int" = 0
         while self.running:
@@ -41,7 +44,7 @@ class WorldEngine(Process):
             dt = clock.tick()
 
         game_controller.dump_current_state()
-        quit()
+        quit_game()
 
 
 class GuiWorldEngine(WorldEngine):
@@ -53,7 +56,10 @@ class GuiWorldEngine(WorldEngine):
         set_key_repeat(200, 75)
 
         game_controller = GameController(self.genetic_algorithm)
-        game_controller.create_world(self.population, True if self.learning_enable == "true" else False)
+        game_controller.create_world(
+            self.population,
+            self.learning_enable == "true"
+        )
 
         view = GameView()
         click_controller= ClickController(game_controller.world, view)
@@ -68,7 +74,7 @@ class GuiWorldEngine(WorldEngine):
             for event in events:
                 if event.type == QUIT:
                     self.running = False
-            
+
             if click_controller.is_spawn_requested(events):
                 game_controller.spawn_random_living()
 
@@ -91,4 +97,4 @@ class GuiWorldEngine(WorldEngine):
             dt = clock.tick()
 
         game_controller.dump_current_state()
-        quit()
+        quit_game()
