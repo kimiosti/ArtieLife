@@ -14,20 +14,27 @@ class LivingBeing(Entity):
     """Living being implementation, for characters."""
     def __init__(self, hitbox: "Rect", action_controller: "ActionsController",
                  genome: "Dict[Gene, float]", distance_controller: "DistanceController",
-                 living_id: "int") -> "None":
+                 living_id: "int", learning_enable: "bool") -> "None":
         """Instantiates a living being.
         
-        Arguments:  
+        Positional arguments:  
         `hitbox`: the initial hitbox for the living being.  
         `action_controller`: the `ActionsController` for the living being's actions actuation.  
         `genome`: the living being's genome.
         `distance_controller`: the controller regulating the living being's perception of its
         position relative to other game entities.
-        `id`: the in-game living being identifier."""
+        `living_id`: the in-game living being identifier.  
+        `learning_enable`: a `bool` representing if the living being should learn or act  
+        randomly."""
         super().__init__(hitbox)
         self.controller = action_controller
         self.genome = genome
-        self.brain: "Brain" = Brain(distance_controller, living_id, self.genome)
+        self.brain: "Brain" = Brain(
+            distance_controller,
+            living_id,
+            self.genome,
+            learning_enable
+        )
         self.selected: "bool" = False
         self.game_id = living_id
 
