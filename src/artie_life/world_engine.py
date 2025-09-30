@@ -32,11 +32,11 @@ class WorldEngine(Process):
     def run(self) -> "None":
         """Main method of the world engine."""
         init()
-        game_controller = GameController(self.genetic_algorithm)
-        game_controller.create_world(
-            self.population,
+        game_controller = GameController(
+            self.genetic_algorithm,
             self.learning_enable == "true"
         )
+        game_controller.create_world(self.population)
         clock = Clock()
         dt: "int" = 0
         while self.running:
@@ -55,11 +55,11 @@ class GuiWorldEngine(WorldEngine):
         init()
         set_key_repeat(200, 75)
 
-        game_controller = GameController(self.genetic_algorithm)
-        game_controller.create_world(
-            self.population,
+        game_controller = GameController(
+            self.genetic_algorithm,
             self.learning_enable == "true"
         )
+        game_controller.create_world(self.population)
 
         view = GameView()
         click_controller= ClickController(game_controller.world, view)
