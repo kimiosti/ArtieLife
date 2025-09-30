@@ -16,20 +16,22 @@ if TYPE_CHECKING:
 class Brain:
     """Generic implementation for the living beings' brain."""
     def __init__(self, distance_controller: "DistanceController", living_id: "int",
-                 genome: "Dict[Gene, float]") -> "None":
+                 genome: "Dict[Gene, float]", learning_enable: "bool") -> "None":
         """Instantiates the living being's brain.
         
-        Arguments:  
+        Positional arguments:  
         `distance_controller`: the `DistanceController` tracking the living being's
         perception of the world's space.
         `living_id`: the living being's in-game ID.
-        `genome`: the living being's genome."""
+        `genome`: the living being's genome.  
+        `learning_enable`: a `bool` representing if the living being should learn  
+        or act randomly."""
+        # TODO - implement learning enable actuation in brain lobes instantiation.
+        log_genome(living_id, genome)
         self.perception_tracker = PerceptionTracker(distance_controller)
-        self.genome = genome
-        log_genome(living_id, self.genome)
-        self.needs_tracker = NeedsTracker(self.genome)
-        self.reason: "Reason" = Reason(self.genome, living_id)
-        self.attention: "Attention" = Attention(self.genome, living_id)
+        self.needs_tracker = NeedsTracker(genome)
+        self.reason: "Reason" = Reason(genome, living_id)
+        self.attention: "Attention" = Attention(genome, living_id)
 
     def update(self, elapsed_time: "float", hitbox: "Rect") -> "bool":
         """Updates the brain, decaying vital parameters.
