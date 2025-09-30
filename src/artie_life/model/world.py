@@ -17,7 +17,10 @@ if TYPE_CHECKING:
 class World:
     """Implementation for the game world."""
     def __init__(self, controller: "GameController") -> "None":
-        """Instantiates the game world."""
+        """Instantiates the game world.
+        
+        Positional arguments:  
+        `controller`: the world's controller."""
         self.controller: "GameController" = controller
         self.playground: "Playground" = init_playground()
         self.interactive_spots: "Dict[EntityType, List[InteractiveSpot]]" = \
@@ -29,13 +32,15 @@ class World:
 
     def spawn_living(self, action_controller: "ActionsController",
                      distance_controller: "DistanceController",
-                     genome: "Dict[Gene, float]") -> "None":
+                     genome: "Dict[Gene, float]", learning_enable: "bool") -> "None":
         """Spawns a living being inside the playground.
         
-        Arguments:  
+        Positional arguments:  
         `action_controller`: the controller monitoring the living being's actions.
         `distance_controller`: the controller monitoring the living being's perception of space.  
-        `genome`: the living being's desired genome."""
+        `genome`: the living being's desired genome.  
+        `learning_enable`: a `bool` representing if the living being should learn or
+        act randomly."""
         colliding: "bool" = True
         rect: "Rect"
         while colliding:
@@ -47,7 +52,14 @@ class World:
                     colliding = True
         self.next_id += 1
         self.living.append(
-            LivingBeing(rect, action_controller, genome, distance_controller, self.next_id)
+            LivingBeing(
+                rect,
+                action_controller,
+                genome,
+                distance_controller,
+                self.next_id,
+                learning_enable
+            )
         )
         if len(self.living) > self.population_size:
             self.population_size += 1
