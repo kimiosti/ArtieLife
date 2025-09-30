@@ -3,9 +3,7 @@
 if __name__ == '__main__':
     from argparse import ArgumentParser
     from typing import TYPE_CHECKING
-    from pygame import init, QUIT, quit
-    from pygame.event import get as get_events
-    from world_engine import WorldEngine
+    from world_engine import WorldEngine, GuiWorldEngine
 
     if TYPE_CHECKING:
         from typing import List
@@ -34,6 +32,15 @@ if __name__ == '__main__':
     )
 
     parser.add_argument(
+        "--population",
+        default=0,
+        type=int,
+        help="indicates how many individuals are to be spawned in the initial population of"
+            + " each world. If omitted, it defaults to 0. If the GUI option is enabled, more"
+            + " individuals can be spawned at any time."
+    )
+
+    parser.add_argument(
         "-l", "--learning",
         choices=["true", "false"],
         default="true",
@@ -53,23 +60,11 @@ if __name__ == '__main__':
 
     arguments = parser.parse_args()
 
-    engines: "List[WorldEngine]" = [WorldEngine(
-        i+1,
-        arguments.gui,
-        arguments.learning,
-        arguments.genetic_algo
-    ) for i in range(arguments.number)]
+    engines: "List[WorldEngine]" = [
+        WorldEngine(i+1, arguments.population, arguments.learning, arguments.genetic_algo)
+            if arguments.gui == "false"
+            else GuiWorldEngine(i+1, arguments.population, arguments.learning, arguments.genetic_algo)
+            for i in range(arguments.number)
+    ]
     for engine in engines:
         engine.start()
-
-    init()
-    running = True
-    while running:
-        for event in get_events():
-            if event.type == QUIT:
-                running = False
-
-    for engine in engines:
-        engine.kill()
-
-    quit()
