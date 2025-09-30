@@ -9,17 +9,29 @@ if TYPE_CHECKING:
     from typing import List, Tuple, Dict
     from pygame.rect import Rect
     from model.entities.non_living import Entity
-    from model.entities.living.living import LivingBeing
 
 class GameController:
     """Implementation of the game controller."""
-    def __init__(self) -> "None":
-        """Instantiates a game controller."""
+    def __init__(self, genetic_algorithm: "str") -> "None":
+        """Instantiates a game controller.  
+        
+        Positional arguments:  
+        `genetic_algorithm`: a `str` indicating what genetic algorithm should be  
+        applied to the world's population."""
         self.world: "World"
+        self.genetic_algorithm = genetic_algorithm
 
-    def create_world(self) -> "None":
-        """Creates a new game world."""
+    def create_world(self, population: "int", learning_enable: "bool") -> "None":
+        """Creates a new game world.
+        
+        Positional arguments:  
+        `population`: the initial world population size.  
+        `learning_enable`: a `bool` flag indicating if the living beings should learn  
+        or act randomly."""
         self.world = World(self)
+        for _ in range(population):
+            self.spawn_random_living()
+        # TODO - implement usage of learning_enable parameter.
 
     def spawn_random_living(self) -> "None":
         """Spawns a new living being in the current game world with a random genome."""
@@ -41,9 +53,9 @@ class GameController:
     def spawn_living(self) -> "None":
         """Spawns a living being in the current game world, applying the genetic
         algorithm if possible or computing a random genome otherwise."""
-        if len(self.world.living) < 2:
+        if len(self.world.living) < 2 or self.genetic_algorithm == "none":
             self.spawn_random_living()
-        else:
+        elif self.genetic_algorithm == "params":
             self.spawn_evolutionary_living()
 
     def get_all_entities(self) -> "List[Tuple[EntityType, Entity]]":
