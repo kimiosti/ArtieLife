@@ -12,33 +12,34 @@ if TYPE_CHECKING:
 
 class GameController:
     """Implementation of the game controller."""
-    def __init__(self, genetic_algorithm: "str") -> "None":
+    def __init__(self, genetic_algorithm: "str", learning_enable: "bool") -> "None":
         """Instantiates a game controller.  
         
         Positional arguments:  
         `genetic_algorithm`: a `str` indicating what genetic algorithm should be  
-        applied to the world's population."""
+        applied to the world's population.  
+        `learning_enable`: a `bool` representing if the living beings should learn  
+        or act randomly."""
         self.world: "World"
         self.genetic_algorithm = genetic_algorithm
+        self.learning_enable = learning_enable
 
-    def create_world(self, population: "int", learning_enable: "bool") -> "None":
+    def create_world(self, population: "int") -> "None":
         """Creates a new game world.
         
         Positional arguments:  
-        `population`: the initial world population size.  
-        `learning_enable`: a `bool` flag indicating if the living beings should learn  
-        or act randomly."""
+        `population`: the initial world population size."""
         self.world = World(self)
         for _ in range(population):
             self.spawn_random_living()
-        # TODO - implement usage of learning_enable parameter.
 
     def spawn_random_living(self) -> "None":
         """Spawns a new living being in the current game world with a random genome."""
         self.world.spawn_living(
             ActionsController(self),
             DistanceController(self),
-            create_random_genome()
+            create_random_genome(),
+            self.learning_enable
         )
 
     def spawn_evolutionary_living(self) -> "None":
@@ -47,7 +48,8 @@ class GameController:
         self.world.spawn_living(
             ActionsController(self),
             DistanceController(self),
-            compute_evolutionary_genome(self.world.living)
+            compute_evolutionary_genome(self.world.living),
+            self.learning_enable
         )
 
     def spawn_living(self) -> "None":
