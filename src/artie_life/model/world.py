@@ -30,14 +30,12 @@ class World:
         self.next_id: "int" = 0
         self.logger: "WorldLogger" = WorldLogger()
 
-    def spawn_living(self, action_controller: "ActionsController",
-                     distance_controller: "DistanceController",
+    def spawn_living(self, controller: "GameController",
                      genome: "Dict[Gene, float]", learning_enable: "bool") -> "None":
         """Spawns a living being inside the playground.
         
         Positional arguments:  
-        `action_controller`: the controller monitoring the living being's actions.
-        `distance_controller`: the controller monitoring the living being's perception of space.  
+        `controller`: the game's world controller.  
         `genome`: the living being's desired genome.  
         `learning_enable`: a `bool` representing if the living being should learn or
         act randomly."""
@@ -54,9 +52,8 @@ class World:
         self.living.append(
             LivingBeing(
                 rect,
-                action_controller,
                 genome,
-                distance_controller,
+                controller,
                 self.next_id,
                 learning_enable
             )

@@ -36,8 +36,7 @@ class GameController:
     def spawn_random_living(self) -> "None":
         """Spawns a new living being in the current game world with a random genome."""
         self.world.spawn_living(
-            ActionsController(self),
-            DistanceController(self),
+            self,
             create_random_genome(),
             self.learning_enable
         )
@@ -46,8 +45,7 @@ class GameController:
         """Spawns a new living being in the current game world, applying the genetic
         algorithm."""
         self.world.spawn_living(
-            ActionsController(self),
-            DistanceController(self),
+            self,
             compute_evolutionary_genome(self.world.living),
             self.learning_enable
         )
