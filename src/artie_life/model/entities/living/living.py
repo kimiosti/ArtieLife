@@ -1,5 +1,6 @@
 """Module containing living being's implementation."""
 from typing import TYPE_CHECKING
+from controller.world.world_controllers import ActionsController, DistanceController
 from model.entities.non_living import Entity
 from model.entities.living.brain.central import Brain
 from utils.living.actions import Action, InteractionType
@@ -8,29 +9,27 @@ from utils.living.genome import Gene
 if TYPE_CHECKING:
     from typing import Dict
     from pygame.rect import Rect
-    from controller.world.world_controllers import ActionsController, DistanceController
+    from controller.game_controller import GameController
 
 class LivingBeing(Entity):
     """Living being implementation, for characters."""
-    def __init__(self, hitbox: "Rect", action_controller: "ActionsController",
-                 genome: "Dict[Gene, float]", distance_controller: "DistanceController",
-                 living_id: "int", learning_enable: "bool") -> "None":
+    def __init__(self, hitbox: "Rect", genome: "Dict[Gene, float]",
+                 game_controller: "GameController", living_id: "int",
+                 learning_enable: "bool") -> "None":
         """Instantiates a living being.
         
         Positional arguments:  
         `hitbox`: the initial hitbox for the living being.  
-        `action_controller`: the `ActionsController` for the living being's actions actuation.  
-        `genome`: the living being's genome.
-        `distance_controller`: the controller regulating the living being's perception of its
-        position relative to other game entities.
+        `genome`: the living being's genome.  
+        `game_controller`: the game world controller.  
         `living_id`: the in-game living being identifier.  
         `learning_enable`: a `bool` representing if the living being should learn or act  
         randomly."""
         super().__init__(hitbox)
-        self.controller = action_controller
+        self.controller = ActionsController(game_controller)
         self.genome = genome
         self.brain: "Brain" = Brain(
-            distance_controller,
+            DistanceController(game_controller),
             living_id,
             self.genome,
             learning_enable
