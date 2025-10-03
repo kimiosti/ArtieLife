@@ -31,11 +31,11 @@ class NeedsTracker:
     def decay(self, elapsed_time: "float") -> "bool":
         """Actuates a single decay step in all needs.
         
-        Arguments:  
-        `elapsed_time`: the amount of time elapsed since last step, in seconds.
+        Positional arguments:  
+         - `elapsed_time`: the amount of time elapsed since last step, in seconds.
         
-        Returns:  
-        A `bool` representing if the living being is still alive."""
+        Return:  
+        `True` if the living being is still alive after the decay step, `False` otherwise."""
         for need, value in self.needs.items():
             if (
                 need != Need.LIFE
@@ -60,15 +60,16 @@ class NeedsTracker:
         """Actuates a given action on the living being's needs.
         
         Arguments:  
-        `need`: the need fulfilled by the action to actuate."""
+         - `need`: the `Need` fulfilled by the desired action."""
         if need != Need.NONE:
             self.needs[need] = need.get_base_value()
 
     def get_needs(self) -> "Dict[str, float]":
-        """Getter for the current needs measure.
+        """Returns the needs' current values in a representable way.
         
-        Returns:  
-        A `Dict` containing `float` values for each need, described by a `str` label."""
+        Return:  
+        A `Dict` associating to each `Need` name (as a `str`) its current
+        value as a `float`."""
         return {
             need.name.lower(): value for need, value in self.needs.items()
         }
@@ -80,8 +81,8 @@ class PerceptionTracker:
         """Instantiates a perception tracker.
         
         Arguments:  
-        `controller`: the distance controller, responsible of calculating the
-        perceived values."""
+         - `controller`: the distance controller, responsible of calculating the \
+        living being's perceived values."""
         self.perception: "Dict[EntityType, Tuple[float, float]]"
         self.perception_avg: "Dict[EntityType, Tuple[float, float]]" = { }
         for entity_type in EntityType:
@@ -93,8 +94,8 @@ class PerceptionTracker:
     def record(self, hitbox: "Rect") -> "None":
         """Records an observation of the environment.
         
-        Arguments:  
-        `hitbox`: the living being's hitbox."""
+        Positional arguments:  
+         - `hitbox`: the living being's current hitbox."""
         self.perception = self.controller.get_distance_by_type(hitbox)
         for entity_type, values in self.perception.items():
             self.perception_avg[entity_type] = (

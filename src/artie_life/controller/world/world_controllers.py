@@ -15,17 +15,20 @@ class ActionsController:
     def __init__(self, controller: "GameController") -> "None":
         """Instantiates a movement controller.
         
-        Arguments:  
-        `controller`: the `GameController` handling the world."""
+        Positional arguments:  
+         - `controller`: the `GameController` handling the world."""
         self.controller: "GameController" = controller
         self.map: "Rect" = Rect(0, 0, MAP_WIDTH, MAP_HEIGHT)
 
     def can_move(self, hitbox: "Rect", entity_id: "int") -> "bool":
         """Checks if a given living being can move.
         
-        Arguments:  
-        `hitbox`: the new position of the living being, to be checked for obstruction.  
-        `entity_id`: the moving living being's object ID, to avoid self-checking."""
+        Positional arguments:  
+         - `hitbox`: the new position of the living being, to be checked for obstruction.  
+         - `entity_id`: the moving living being's object ID, to avoid self-checking.
+        
+        Return:  
+        `True` if the indicated hitbox's position is valid, `False` otherwise."""
         if self.map.contains(hitbox):
             for entity_type, entity in self.controller.get_all_entities():
                 if id(entity) != entity_id \
@@ -38,9 +41,13 @@ class ActionsController:
     def interact(self, hitbox: "Rect", entity_id: "int") -> "InteractionType":
         """Checks if a given living being can interact.
         
-        Arguments:  
-        `hitbox`: the hitbox of the living being requesting the interaction.  
-        `entity_id`: the living being's object ID, to avoid self-checking."""
+        Positional arguments:  
+         - `hitbox`: the hitbox of the living being requesting the interaction.
+         - `entity_id`: the living being's object ID, to avoid self-checking.
+        
+        Return:  
+        If the living being can interact, the corresponding `InteractionType`.  
+        Otherwise, `InteractionType.NONE` is returned."""
         for entity_type, entity in self.controller.get_all_entities():
             if id(entity) != entity_id \
                     and entity.is_colliding(hitbox):
@@ -51,18 +58,23 @@ class ActionsController:
 class DistanceController:
     """Implementation for the distance controller."""
     def __init__(self, controller: "GameController") -> "None":
-        """Instantiates a distance controller."""
+        """Instantiates a distance controller.
+        
+        Positional arguments:  
+         - `controller`: the current game world's controller."""
         self.controller = controller
 
     def get_distance_by_type(self, hitbox: "Rect") -> "Dict[EntityType, Tuple[float, float]]":
-        """Computes the distance of a given hitbox to the closest instance of
-        each type of entity on map.
+        """Computes the distance of a given hitbox from the closest instances of all
+        game entity types, grouping the result by type.
         
         Arguments:  
-        `hitbox`: the hitbox used to compute the distances.
+        `hitbox`: the living being's current hitbox.
         
         Returns:  
-        A `Dict` containing `float` values described by `str` as identifiers."""
+        Given a living being's hitbox, it computes the distance to the closest instance
+        of each `EntityType`. Those distances are then expressed as `Tuple` indicating
+        the two dimensions' distance."""
         distances: "Dict[EntityType, Tuple[float, float]]" = { }
         for cur_entity_type in EntityType:
             if cur_entity_type != EntityType.PLAYGROUND:

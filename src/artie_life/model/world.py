@@ -12,7 +12,6 @@ from utils.living.genome import Gene
 if TYPE_CHECKING:
     from typing import Dict, List
     from controller.game_controller import GameController
-    from controller.world.world_controllers import ActionsController, DistanceController
 
 class World:
     """Implementation for the game world."""
@@ -20,7 +19,7 @@ class World:
         """Instantiates the game world.
         
         Positional arguments:  
-        `controller`: the world's controller."""
+         - `controller`: the world's controller."""
         self.controller: "GameController" = controller
         self.playground: "Playground" = init_playground()
         self.interactive_spots: "Dict[EntityType, List[InteractiveSpot]]" = \
@@ -35,9 +34,9 @@ class World:
         """Spawns a living being inside the playground.
         
         Positional arguments:  
-        `controller`: the game's world controller.  
-        `genome`: the living being's desired genome.  
-        `learning_enable`: a `bool` representing if the living being should learn or
+         - `controller`: the game's world controller.
+         - `genome`: the living being's desired genome.
+         - `learning_enable`: a `bool` representing if the living being should learn or \
         act randomly."""
         colliding: "bool" = True
         rect: "Rect"
@@ -65,8 +64,8 @@ class World:
     def update(self, elapsed_time: "float") -> "None":
         """Updates the game world.
         
-        Arguments:  
-        `elapsed_time`: the amount of time elapsed since the last model update, in seconds."""
+        Positional arguments:  
+         - `elapsed_time`: the amount of time elapsed since the last model update, in seconds."""
         for living_being in self.living:
             alive = living_being.update(elapsed_time)
             if not alive:
@@ -87,15 +86,15 @@ class World:
         """Selects a certain living being to inspect its state and to provide it with  
         input.
         
-        Arguments:  
-        `living_being`: the living being to be selected."""
+        Positional arguments:  
+         - `living_being`: the living being to be selected."""
         living_being.selected = True
 
     def send_input(self, text: "str") -> "None":
         """Sends user input to the selected living being.
         
-        Arguments:  
-        `text`: the user input text."""
+        Positional arguments:  
+         - `text`: the user input text."""
         for living_being in self.living:
             if living_being.selected:
                 living_being.brain.attention.input = text
@@ -103,8 +102,8 @@ class World:
     def apply_user_reward(self, reward: "float") -> "None":
         """Applies the user-defined reward to the selected living being.
         
-        Arguments:  
-        `reward`: the reward to be applied to the living being."""
+        Positional arguments:  
+         - `reward`: the reward to be applied to the living being."""
         for living_being in self.living:
             if living_being.selected:
                 living_being.brain.attention.apply_user_reward(reward)

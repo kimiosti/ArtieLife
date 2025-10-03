@@ -17,18 +17,24 @@ class ResourceLoader:
     def load_font(self, font_size: "int" = 24) -> "Font":
         """Loads the game's font
         
-        Arguments:  
-        `font_size`: the desired font size."""
+        Positional arguments:  
+         - `font_size`: the desired font size.
+
+        Return:  
+        A `Font` object representing the game font at the desired size."""
         return Font(FONT_PATH, font_size)
 
     def load_text_surface(self, color: "Color", text: "str",
                           font_size: "int" = 24) -> "Surface":
-        """Loads a surface showing the desired text in the game color.
+        """Loads a surface showing the desired text in the desired color.
         
-        Argumetns:  
-        `color`: the desired text color.  
-        `text`: the text to be rendered.
-        `size`: the desired font size."""
+        Positional arguments:  
+         - `color`: the desired text color.
+         - `text`: the text to be rendered.
+         - `size`: the desired font size.
+
+        Return:  
+        A `Surface` containing the desired text."""
         font: "Font" = self.load_font(font_size)
         return font.render(text, False, color)
 
@@ -36,13 +42,13 @@ class ResourceLoader:
                       width: "float", height: "float") -> "Surface":
         """Loads the asset corresponding to the requested level bar.
         
-        Arguments:  
-        `label`: the `str` representing the level bar type.  
-        `percentage`: the current level of the bar.  
-        `width`: the desired maximum width of the bar on screen.  
-        `height`: the desired height of the bar on screen.
+        Positional arguments:  
+         - `label`: the `str` representing the level bar type.
+         - `percentage`: the current level of the bar.
+         - `width`: the desired maximum width of the bar on screen.
+         - `height`: the desired height of the bar on screen.
         
-        Returns:  
+        Return:  
         A `Surface` representing the desired asset."""
         bar_width: "float" = width * (100 - percentage) / 100 \
                 if label == "life" else width * percentage / 100
@@ -54,10 +60,13 @@ class ResourceLoader:
                     height: "float") -> "Surface":
         """Loads the sprite corresponding to a given entity type.
         
-        Arguments:  
-        `entity_type`: the type of the entity to be loaded.  
-        `width:  the desired resulting width.  
-        `height`: the desired resulting height."""
+        Positional arguments:  
+         - `entity_type`: the type of the entity to be loaded.
+         - `width:  the desired resulting width.
+         - `height`: the desired resulting height.
+
+        Return:  
+        A `Surface` representing the desired entity."""
         path = join_path(
             SPRITES_PATH,
             entity_type.name.lower() + SPRITES_EXTENSION
@@ -68,9 +77,12 @@ class ResourceLoader:
     def load_background(self, width: "float", height: "float") -> "Surface":
         """Loads the background's asset.
         
-        Arguments:  
-        `width`: the desired resulting width.  
-        `height`: the desired resulting height."""
+        Positional arguments:  
+         - `width`: the desired resulting width.
+         - `height`: the desired resulting height.
+        
+        Return:
+        A `Surface` containing the background's representation."""
         path = join_path(
             SPRITES_PATH,
             BACKGROUND_SPRITE_NAME + SPRITES_EXTENSION

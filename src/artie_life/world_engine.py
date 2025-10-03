@@ -16,11 +16,11 @@ class WorldEngine(Process):
         """Constructor for the world's execution engine.
         
         Positional arguments:  
-        `world_id`: the in-game world's ID.  
-        `population`: the initial population size.  
-        `learning_enable`: true/false flag representing if the agents should be  
-        learning or acting randomly.  
-        `genetic_algorithm`: the kind of genetic algorithm applied to the  
+         - `world_id`: the in-game world's ID.
+         - `population`: the initial population size.
+         - `learning_enable`: true/false flag representing if the agents should be \
+        learning or acting randomly.
+         - `genetic_algorithm`: the kind of genetic algorithm applied to the \
         population, or none if all genomes should be randomly generated."""
         self.world_id = world_id
         self.population = population

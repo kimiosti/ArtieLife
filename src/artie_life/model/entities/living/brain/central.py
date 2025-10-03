@@ -13,10 +13,11 @@ if TYPE_CHECKING:
     from utils.living.actions import InteractionType
 
 class Brain:
-    """Generic implementation for the living beings' brain."""
+    """Implementation for the living being's central brain lobe. Its function is to
+    coordinate the behavior of the `Attention` and `Reason` lobes."""
     def __init__(self, distance_controller: "DistanceController", living_id: "int",
                  genome: "Dict[Gene, float]", learning_enable: "bool") -> "None":
-        """Instantiates the living being's brain.
+        """Instantiates the living being's central lobe.
         
         Positional arguments:  
          - `distance_controller`: the `DistanceController` tracking the living being's \
@@ -41,7 +42,7 @@ class Brain:
          - `hitbox`: the current position of the living being.
 
         Return:  
-        A `bool` representing whether the living being is still alive."""
+        `True` if the living being is still alive after the update, `False` otherwise."""
 
         # pylint: disable=locally-disabled, unidiomatic-typecheck
         # Warnings disabled because the behavior of type is the desired behavior, since it allows
@@ -59,8 +60,8 @@ class Brain:
         return self.needs_tracker.decay(elapsed_time)
 
     def actuate(self, interaction: "InteractionType") -> "None":
-        """Actuates a given interaction on the living being's vital parameters.
+        """Actuates the effect of a given interaction on the living being's needs.
         
-        Arguments:  
-        `interaction`: the type of the interaction to be made effective."""
+        Positional arguments:  
+         - `interaction`: the type of the interaction to be made effective."""
         self.needs_tracker.actuate(interaction.get_corresponding_need())

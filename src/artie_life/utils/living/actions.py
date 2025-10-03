@@ -17,7 +17,7 @@ class Action(Enum):
     def get_direction(self) -> "Tuple[float, float]":
         """Computes the action's corresponding movement direction.
         
-        Returns:  
+        Return:  
         A `Tuple` containing two `float` values representing the movement along  
         the two axes."""
         x: "float" = 1 if self == Action.RIGHT else (
@@ -38,8 +38,9 @@ class InteractionType(Enum):
     def get_corresponding_need(self) -> "Need":
         """Translates an interaction type in the need that it fulfills.
         
-        Returns:  
-        The desired `Need`."""
+        Return:  
+        The desired `Need`. If no `Need` is fulfilled by the input action,
+        a fictitious value of `NONE` is returned."""
         for need in Need:
             if self.value == need.value:
                 return need
@@ -55,14 +56,16 @@ class EntityType(Enum):
     PLAYGROUND = 4
 
     def walkable(self) -> "bool":
-        """Checks if a living being can walk on the entity type."""
+        """Checks if a living being can walk on this entity type."""
         return self != EntityType.LIVING
 
     def get_interaction(self) -> "InteractionType":
-        """Translates an entity type into the corresponding interaction type.
+        """Translates itself to the corresponding `InteractionType`, from which
+        the affected `Need` can be accessed.
         
-        Returns:  
-        The desired `InteractionType`."""
+        Return:  
+        The desired `InteractionType`. If not interactive, it returns a fictitious
+        value of `NONE`."""
         for interaction_type in InteractionType:
             if self.value == interaction_type.value:
                 return interaction_type

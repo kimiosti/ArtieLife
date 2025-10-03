@@ -18,11 +18,11 @@ class Attention:
     """Implementation of a random-behaving attention lobe."""
 
     def __init__(self, genome: "Dict[Gene, float]") -> "None":
-        """Instantiates the desired attention lobe.
+        """Instantiates the attention lobe.
         
         Positional arguments:  
-        `genome`: the livign being's genome.  
-        `living_id`: the in-game living being's ID."""
+         - `genome`: the livign being's genome.  
+         - `living_id`: the in-game living being's ID."""
         self.genome = genome
         self.focus = pick_random_focus()
 
@@ -32,6 +32,6 @@ class Attention:
 
 
 class LearningAttention(Attention):
-    """Implementation for a learning attention lobe."""
+    """Implementation of a learning attention lobe."""
     def update(self) -> "None":
         pass

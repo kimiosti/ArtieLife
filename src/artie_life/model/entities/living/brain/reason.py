@@ -11,10 +11,10 @@ class Reason:
     """Implementation of a random-acting reason lobe."""
 
     def __init__(self, genome: "Dict[Gene, float]") -> "None":
-        """Instantiates a random-acting reason lobe.
+        """Instantiates the reason lobe.
         
         Positional arguments:  
-        `genome`: the living being's genome."""
+         - `genome`: the living being's genome."""
         self.genome = genome
         self.action: "Action" = choice(list(Action))
 

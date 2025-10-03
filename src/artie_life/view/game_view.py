@@ -30,11 +30,12 @@ class GameView:
     def game_to_view_coordinates(self, rect: "Rect") -> "Rect":
         """Converts a set of game coordinates into a set of graphic coordinates.
         
-        Arguments:  
-        `rect`: the rectangle representing the game coordinates.
+        Positional arguments:  
+         - `rect`: the rectangle representing the game coordinates.
         
-        Returns:  
-        a `Rect` instance representing the new set of coordinates and dimensions."""
+        Return:  
+        A `Rect` instance representing the new set of coordinates and dimensions in the
+        view space."""
         new_x = self.map.left + (rect.left / MAP_WIDTH * self.map.width)
         new_y = self.map.top + (rect.top / MAP_HEIGHT * self.map.height)
         new_width = rect.width / MAP_WIDTH * self.map.width
@@ -44,8 +45,8 @@ class GameView:
     def render(self, sprites: "List[Tuple[EntityType, Rect]]") -> "None":
         """Renders a game scene.
         
-        Arguments:  
-        `sprites`: a `List` of `Tuple` objects associating to each sprite type
+        Positional arguments:  
+         - `sprites`: a `List` of `Tuple` objects associating to each sprite type \
         its position in game coordinates."""
         self.screen.fill(BACKGROUND_COLOR)
         screen_height: "int" = self.screen.get_height()
@@ -84,9 +85,11 @@ class GameView:
         """Renders the bottom part of the screen, to show a living being's
         vital parameters when selected.
         
-        Arguments:  
-        `params`: a dictionary of all the living being's vital parameters, with their name.
-        `attention`: a string representing the object of the selected living being's attention."""
+        Positional arguments:  
+         - `params`: a `Dict` that associates every need's name to its current value for the \
+        selected living being.
+         - `attention`: a string representing the type of the object on which the living being \
+        is currently focused."""
         surf = self.bottom_bar.render(
             Rect(
                 self.map.left,
@@ -100,5 +103,7 @@ class GameView:
         self.screen.blit(surf, (self.map.left, self.map.bottom))
 
     def show_frame(self) -> "None":
-        """Displays the next frame, already rendered."""
+        """Displays the next frame.
+        
+        To work properly, all assets must already be rendered and ready to be put on screen."""
         flip()

@@ -10,11 +10,11 @@ if TYPE_CHECKING:
     from model.entities.living.brain.central import Brain
 
 def create_random_genome() -> "Dict[Gene, float]":
-    """Creates a random genome, pulling from each gene's possbile
-    values with a uniform distribution.
+    """Creates a random genome, generating each gene's
+    value with a uniform distribution within its acceptable range.
     
-    Returns:  
-    a genome in the form of a dictionary associating to each `Gene` its value."""
+    Return:  
+    a genome in the form of a `Dict` associating to each `Gene` its `float` value."""
     genome: "Dict[Gene, float]" = { }
     for gene in Gene:
         genome[gene] = uniform(gene.min(), gene.max())
@@ -22,9 +22,13 @@ def create_random_genome() -> "Dict[Gene, float]":
 
 def compute_fitness(needs_avg: "Dict[Need, float]") -> "float":
     """Computes the fitness function of a given living being.
+
+    Positional arguments:  
+     - `needs_avg`: a `Dict` associating to each `Need` its average value during the
+    living being's lifetime.
     
-    Returns:  
-    the fitness value of the living being, as a `float`."""
+    Return:  
+    The fitness value of the living being, as a `float`."""
     needs_avg_sum: "float" = 0
     for need in Need:
         if need not in [Need.LIFE, Need.NONE]:
@@ -35,21 +39,21 @@ def compute_fitness(needs_avg: "Dict[Need, float]") -> "float":
 def compute_whole_fitness(brain: "Brain") -> "float":
     """Computes the whole fitness of a living being, wheighted by its lifetime.
     
-    Arguments:  
-    `living`: the living being whose fitness is to be computed.
+    Positional arguments:  
+     - `brain`: the brain of the living being whose fitness is being computed.
     
-    Returns:  
-    a `float` representing the whole fitness of the living being."""
+    Return:  
+    The fitness value of the living being weighted by its lifetime."""
     return brain.needs_tracker.lifetime * compute_fitness(brain.needs_tracker.needs_avg)
 
 def select_parents(population: "List[LivingBeing]") -> "Tuple[LivingBeing, LivingBeing]":
-    """Selects two parents from a given population, applying the genetic algorithm.
+    """Picks two parents from a given population, according to their fitness value.
     
-    Arguments:  
-    `population`: the population from which the two parents are selected.
+    Positional arguments:  
+     - `population`: all living beings currently alive.
     
-    Returns:  
-    a tuple of two `LivingBeing` instances, the two parents."""
+    Return:  
+    a `Tuple` containing the two parents."""
     fitnesses = [compute_whole_fitness(living.brain) for living in population]
     max_fitness = max(fitnesses)
     selected_indices: "List[int]" = []
@@ -66,21 +70,25 @@ def select_parents(population: "List[LivingBeing]") -> "Tuple[LivingBeing, Livin
     )
 
 def mutation(range: "float") -> "float":
-    """Computes the mutation to be applied to a gene, knowing the width of the range of
+    """Computes the mutation to be applied to a gene, knowing the range of
     its admissible values.
     
-    Arguments:  
-    `range`: the width of the range of admissible values."""
+    Positional arguments:  
+     - `range`: the width of the range of admissible values.
+    
+    Return:  
+    The magnitude of the gene mutation."""
     return normal(loc=0.0, scale=range) if uniform(0, 1) <= MUTATION_RATE else 0.0
 
 def compute_evolutionary_genome(population: "List[LivingBeing]") -> "Dict[Gene, float]":
-    """Computes the resulting genome from a population.
+    """Computes the new offspring genome, applying the genetic algorithm to the desired
+    parent population.
     
-    Arguments:  
-    `population`: the parent population.
+    Positional arguments:  
+     - `population`: the parent population.
     
-    Returns:  
-    a resulting genome, obtained via recomposition and mutations."""
+    Return:  
+    A `Dict` associating to each `Gene` its value."""
     parents = select_parents(population)
     genome: "Dict[Gene, float]" = { }
     for gene in Gene:

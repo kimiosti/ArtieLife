@@ -17,10 +17,10 @@ class Need(Enum):
     NONE = 3
 
     def get_base_value(self) -> "float":
-        """Getter for the need's base value.
+        """Getter for the need's starting value.
         
-        Returns:  
-        The need's base value as a `float`"""
+        Return:  
+        The need's starting value as a `float`"""
         match self:
             case Need.LIFE:
                 return BASE_LIFE
@@ -34,8 +34,8 @@ class Need(Enum):
     def get_corresponding_gene(self) -> "Gene":
         """Translates a need in the gene representing the corresponding decay rate.
         
-        Returns:  
-        The gene representing the need's decay rate."""
+        Return:  
+        The `Gene` representing the need's decay rate."""
         match self:
             case Need.LIFE:
                 return Gene.LIFE_DECAY
@@ -48,8 +48,12 @@ class Need(Enum):
 
     def get_threshold(self) -> "float":
         """Getter for a need's limit value.
+
+        When `HUNGER` or `TIREDNESS` reach this value, they are considered to be saturated,  
+        meaning that the individual starts hurting.  
+        When `LIFE` reaches this value, the individual dies.
         
-        Returns:  
+        Return:  
         The need's limit value as a `float`."""
         match self:
             case Need.LIFE:

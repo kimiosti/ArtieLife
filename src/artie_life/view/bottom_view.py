@@ -19,16 +19,15 @@ class BottomBar:
         self.neg_reward: "Rect"
 
     def render(self, area: "Rect", params: "Dict[str, float]", attention: "str") -> "Surface":
-        """
-        Renders a single frame for the bottom bar.
+        """Renders a single frame for the bottom bar.
 
-        Arguments:  
-        `area`: the area containing the bottom bar on screen.
-        `params`: the living being's vital parameters.
-        `attention`: a string representing the living being's object of attention.
+        Positional arguments:  
+         - `area`: the area containing the bottom bar on screen.
+         - `params`: the living being's vital parameters.
+         - `attention`: a string representing the living being's object of attention.
 
-        Returns:  
-        the `Surface` representing the bottom bar to be rendered on screen.
+        Return:  
+        The `Surface` representing the bottom bar to be rendered on screen.
         """
         surf = Surface((area.width, area.height))
         top_padding = area.height // 10

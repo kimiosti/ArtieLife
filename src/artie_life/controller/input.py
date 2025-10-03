@@ -14,18 +14,22 @@ if TYPE_CHECKING:
 class ClickController:
     """Implementation for the mouse click input controller."""
     def __init__(self, world: "World", view: "GameView") -> "None":
-        """Instantiates a click controller."""
+        """Instantiates a click controller.
+        
+        Positional arguments:  
+         - `world`: the corresponding game world.
+         - `view`: the GUI representing the desired game world to the user."""
         self.world: "World" = world
         self.view: "GameView" = view
 
     def is_spawn_requested(self, events: "List[Event]") -> "bool":
         """Checks if the user requested a new living being spawn.
 
-        Arguments:  
-        `events`: the `List` of `Event` objects recorded since last frame.
+        Positional arguments:  
+         - `events`: the `List` of `Event` objects recorded since last frame.
         
         Returns:  
-        A `bool` representing if the user has requested the spawn action."""
+        `True` if the user has requested a living being spawn, `False` otherwise."""
         for event in events:
             if event.type == MOUSEBUTTONDOWN \
                     and self.view.spawn_button.collidepoint(get_mouse_pos()):
@@ -33,10 +37,11 @@ class ClickController:
         return False
 
     def handle_living_selection(self, events: "List[Event]") -> "None":
-        """Checks and handles the living being selection process.
+        """Checks if the user has selected a certain living being, and actuates the
+        selection on the game world.
         
-        Arguments:  
-        `events`: the `List` of `Event` objects recorded since last frame."""
+        Positional arguments:  
+         - `events`: the `List` of `Event` objects recorded since last frame."""
         if self.view.map.collidepoint(get_mouse_pos()):
             for event in events:
                 if event.type == MOUSEBUTTONDOWN:
@@ -47,11 +52,11 @@ class ClickController:
                             self.world.select(living_being)
 
     def handle_user_reward(self, events: "List[Event]") -> "None":
-        """
-        Checks and handles user-driven rewards.
+        """Checks if the user has requested a reward for a certain living being, and
+        eventually applies it to the corresponding living being.
         
-        Arguments:  
-        `events`: the list of events recorded since last frame."""
+        Positional arguments:  
+        `events`: the `List` of `Events` recorded since last frame."""
         for event in events:
             if event.type == MOUSEBUTTONDOWN:
                 if self.view.bottom_bar.pos_reward.collidepoint(get_mouse_pos()):
@@ -61,12 +66,12 @@ class ClickController:
 
 class TextController:
     """Implementation for the text input controller."""
-    def __init__(self, world: "World", view: "GameView"):
+    def __init__(self, world: "World", view: "GameView") -> "None":
         """Instantiates a text controller.
         
-        Arguments:  
-        `world`: the game world.  
-        `view`: the game's view."""
+        Positional arguments:  
+         - `world`: the game world.
+         - `view`: the GUI representing the game world to the user."""
         self.world = world
         self.view = view
 
@@ -77,8 +82,8 @@ class TextController:
     def update(self, events: "List[Event]") -> "None":
         """Checks for user keyboard input and updates the recorded text.
         
-        Arguments:  
-        `events`: the list of all events since last update."""
+        Positional arguments:  
+        `events`: the `List` of all `Event` recorded since last frame."""
         for event in events:
             if event.type == KEYDOWN:
                 if event.key == K_BACKSPACE:

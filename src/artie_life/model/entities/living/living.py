@@ -12,19 +12,19 @@ if TYPE_CHECKING:
     from controller.game_controller import GameController
 
 class LivingBeing(Entity):
-    """Living being implementation, for characters."""
+    """Implementation of the game's living beings."""
     def __init__(self, hitbox: "Rect", genome: "Dict[Gene, float]",
                  game_controller: "GameController", living_id: "int",
                  learning_enable: "bool") -> "None":
         """Instantiates a living being.
         
         Positional arguments:  
-        `hitbox`: the initial hitbox for the living being.  
-        `genome`: the living being's genome.  
-        `game_controller`: the game world controller.  
-        `living_id`: the in-game living being identifier.  
-        `learning_enable`: a `bool` representing if the living being should learn or act  
-        randomly."""
+         - `hitbox`: the initial hitbox for the living being.
+         - `genome`: the living being's genome.
+         - `game_controller`: the game world controller.
+         - `living_id`: the in-game living being identifier.
+         - `learning_enable`: a `bool` representing if the living being should learn or \
+        act randomly."""
         super().__init__(hitbox)
         self.controller = ActionsController(game_controller)
         self.genome = genome
@@ -41,19 +41,24 @@ class LivingBeing(Entity):
         """Computes the living being direction along one axis, given a movement and
         the living being's speed multiplier.
         
-        Arguments:  
-        `movement`: the base value of the desired movement along the axis.  
-        `elapsed_time`: the amount of time elapsed since last update."""
+        Positional arguments:  
+         - `movement`: the base value of the desired movement along the axis.
+         - `elapsed_time`: the amount of time elapsed since last update.
+        
+        Return:  
+        A `float` representing how much has the living being moved along the desired axis.
+        The sign of the returned value is consistent with the game world coordinates, and
+        dictates the direction of the movement."""
         return self.genome[Gene.SPEED] * elapsed_time * movement
 
     def update(self, elapsed_time: "float") -> "bool":
-        """Updates the living being, performing the desired action.
+        """Performs a single update step for the living being, actuating its eventual action.
         
-        Arguments:  
-        `elapsed_time`: the amount of time elapsed since last update, in seconds.
+        Positional arguments:  
+         - `elapsed_time`: the amount of time elapsed since last update, in seconds.
         
-        Returns:  
-        A `bool` representing whether the living being is still alive."""
+        Return:  
+        `True` if the living being is still alive after the update step, `False` otherwise."""
         action: "Action" = self.brain.reason.action
 
         if action != Action.INTERACT:
