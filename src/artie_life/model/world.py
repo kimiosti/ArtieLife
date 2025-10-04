@@ -97,7 +97,7 @@ class World:
          - `text`: the user input text."""
         for living_being in self.living:
             if living_being.selected:
-                living_being.brain.attention.input = text
+                living_being.brain.record_input(text)
 
     def apply_user_reward(self, reward: "float") -> "None":
         """Applies the user-defined reward to the selected living being.
@@ -106,8 +106,7 @@ class World:
          - `reward`: the reward to be applied to the living being."""
         for living_being in self.living:
             if living_being.selected:
-                living_being.brain.attention.apply_user_reward(reward)
-                living_being.brain.reason.apply_user_reward(reward)
+                living_being.brain.apply_user_reward(reward)
 
     def dump_current_state(self) -> "None":
         """Dumps the current state of the world."""
