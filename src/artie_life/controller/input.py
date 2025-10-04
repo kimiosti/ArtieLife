@@ -2,8 +2,8 @@
 from typing import TYPE_CHECKING
 from pygame import MOUSEBUTTONDOWN, KEYDOWN, K_RETURN, K_BACKSPACE
 from pygame.mouse import get_pos as get_mouse_pos
-from utils.living.learning.attention import MAX_INPUT_LENGTH, POSITIVE_USER_REWARD, \
-        NEGATIVE_USER_REWARD
+from utils.living.learning.commons import POSITIVE_USER_REWARD, NEGATIVE_USER_REWARD
+from utils.living.learning.attention import MAX_INPUT_LENGTH
 
 if TYPE_CHECKING:
     from typing import List
