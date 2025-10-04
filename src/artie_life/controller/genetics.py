@@ -78,7 +78,7 @@ def mutation(range: "float") -> "float":
     
     Return:  
     The magnitude of the gene mutation."""
-    return normal(loc=0.0, scale=range) if uniform(0, 1) <= MUTATION_RATE else 0.0
+    return normal(loc=0.0, scale=range) if uniform() <= MUTATION_RATE else 0.0
 
 def compute_evolutionary_genome(population: "List[LivingBeing]") -> "Dict[Gene, float]":
     """Computes the new offspring genome, applying the genetic algorithm to the desired
