@@ -79,14 +79,13 @@ class LearningAttention(Attention):
         self.elapsed_time_target += elapsed_time
 
         q_values = self.model(state.reshape(1, len(state)), training=False)
-        print(q_values)
         if self.epsilon > uniform():
             self.focus = pick_random_focus()
         else:
             for entity_type in EntityType:
                 if entity_type.value == keras_argmax(q_values, axis=1):
                     self.focus = entity_type
-        self.epsilon = min(
+        self.epsilon = max(
             self.genome[Gene.ATTENTION_MIN_EPSILON],
             self.epsilon * self.genome[Gene.ATTENTION_EPSILON_DECAY]
         )
