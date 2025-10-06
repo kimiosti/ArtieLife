@@ -3,11 +3,11 @@ from typing import TYPE_CHECKING
 from pygame.rect import Rect
 from model.entities.non_living import Playground, InteractiveSpot
 from model.entities.living.living import LivingBeing
-from controller.log import WorldLogger
 from utils.living.actions import EntityType
 from utils.map.generation import init_playground, init_interactive_spots
 from utils.map.constants import LIVING_WIDTH, LIVING_HEIGHT
 from utils.living.genome import Gene
+from utils.logs import start_world_log, log_living_being_stats
 
 if TYPE_CHECKING:
     from typing import Dict, List
@@ -15,19 +15,21 @@ if TYPE_CHECKING:
 
 class World:
     """Implementation for the game world."""
-    def __init__(self, controller: "GameController") -> "None":
+    def __init__(self, controller: "GameController", world_id: "int") -> "None":
         """Instantiates the game world.
         
         Positional arguments:  
-         - `controller`: the world's controller."""
+         - `controller`: the world's controller.  
+         - `world_id`: the world's in-game ID."""
         self.controller: "GameController" = controller
         self.playground: "Playground" = init_playground()
         self.interactive_spots: "Dict[EntityType, List[InteractiveSpot]]" = \
                 init_interactive_spots()
         self.living: "List[LivingBeing]" = []
         self.population_size: "int" = 0
+        self.world_id = world_id
         self.next_id: "int" = 0
-        self.logger: "WorldLogger" = WorldLogger()
+        start_world_log(self.world_id)
 
     def spawn_living(self, controller: "GameController",
                      genome: "Dict[Gene, float]", learning_enable: "bool") -> "None":
@@ -59,7 +61,6 @@ class World:
         )
         if len(self.living) > self.population_size:
             self.population_size += 1
-        self.logger.record_spawn(self.next_id, self.population_size)
 
     def update(self, elapsed_time: "float") -> "None":
         """Updates the game world.
@@ -70,10 +71,7 @@ class World:
             alive = living_being.update(elapsed_time)
             if not alive:
                 self.living.remove(living_being)
-                self.logger.record_death(
-                    living_being.game_id,
-                    living_being.brain.needs_tracker.lifetime
-                )
+                log_living_being_stats(self.world_id, living_being)
                 if len(self.living) < self.population_size:
                     self.controller.spawn_living()
 
@@ -111,7 +109,4 @@ class World:
     def dump_current_state(self) -> "None":
         """Dumps the current state of the world."""
         for living_being in self.living:
-            self.logger.dump_lifetime(
-                living_being.game_id,
-                living_being.brain.needs_tracker.lifetime
-            )
+            log_living_being_stats(self.world_id, living_being)
