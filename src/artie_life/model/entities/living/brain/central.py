@@ -9,7 +9,6 @@ from utils.living.learning.reason import compute_reward as compute_reason_reward
 from model.entities.living.needs import NeedsTracker, PerceptionTracker
 from model.entities.living.brain.attention import Attention, LearningAttention
 from model.entities.living.brain.reason import Reason, LearningReason
-from controller.log import log_genome
 
 if TYPE_CHECKING:
     from typing import Dict
@@ -43,18 +42,16 @@ class Brain:
     # Warning disabled since all attributes are needed, and are used to avoid
     # larger issues in the single learning lobes.
 
-    def __init__(self, distance_controller: "DistanceController", living_id: "int",
+    def __init__(self, distance_controller: "DistanceController",
                  genome: "Dict[Gene, float]", learning_enable: "bool") -> "None":
         """Instantiates the living being's central lobe.
         
         Positional arguments:  
          - `distance_controller`: the `DistanceController` tracking the living being's \
         perception of the world's space.
-         - `living_id`: the living being's in-game ID.
          - `genome`: the living being's genome.
          - `learning_enable`: a `bool` representing if the living being should learn \
         or act randomly."""
-        log_genome(living_id, genome)
         self.perception_tracker = PerceptionTracker(distance_controller)
         self.needs_tracker = NeedsTracker(genome)
         self.attention: "Attention" = \
