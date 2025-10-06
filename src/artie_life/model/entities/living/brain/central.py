@@ -4,6 +4,8 @@ from utils.living.learning.commons import USER_INTERACTION_PERIOD, \
     POSITIVE_NEEDS_REWARD, NEGATIVE_NEEDS_REWARD
 from utils.living.learning.attention import compute_reward as compute_attention_reward, \
     assemble_state as assemble_attention_state
+from utils.living.learning.reason import compute_reward as compute_reason_reward, \
+    assemble_state as assemble_reason_state
 from model.entities.living.needs import NeedsTracker, PerceptionTracker
 from model.entities.living.brain.attention import Attention, LearningAttention
 from model.entities.living.brain.reason import Reason, LearningReason
@@ -102,6 +104,7 @@ class Brain:
 
         if isinstance(self.attention, LearningAttention) \
                 and isinstance(self.reason, LearningReason):
+            last_focus = self.attention.focus
             self.attention.update_and_learn(
                 assemble_attention_state(
                     self.user_input,
@@ -113,6 +116,19 @@ class Brain:
                     needs_reward,
                     last_perception,
                     self.perception_tracker.perception
+                ),
+                elapsed_time
+            )
+            self.reason.update_and_learn(
+                assemble_reason_state(
+                    self.attention.focus,
+                    self.perception_tracker.perception
+                ),
+                compute_reason_reward(
+                    self.user_reward,
+                    needs_reward,
+                    last_perception,
+                    last_focus
                 ),
                 elapsed_time
             )
