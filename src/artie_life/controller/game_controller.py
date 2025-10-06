@@ -23,12 +23,13 @@ class GameController:
         self.genetic_algorithm = genetic_algorithm
         self.learning_enable = learning_enable
 
-    def create_world(self, population: "int") -> "None":
+    def create_world(self, population: "int", world_id: "int") -> "None":
         """Creates a new game world.
         
         Positional arguments:  
-         - `population`: the starting population size."""
-        self.world = World(self)
+         - `population`: the starting population size.  
+         - `world_id`: the world's in-game ID."""
+        self.world = World(self, world_id)
         for _ in range(population):
             self.spawn_random_living()
 
