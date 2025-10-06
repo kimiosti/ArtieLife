@@ -4,6 +4,7 @@ if __name__ == '__main__':
     from argparse import ArgumentParser
     from typing import TYPE_CHECKING
     from world_engine import WorldEngine, GuiWorldEngine
+    from utils.logs import reset_logs_folder, log_game_settings
 
     if TYPE_CHECKING:
         from typing import List
@@ -59,6 +60,9 @@ if __name__ == '__main__':
     )
 
     arguments = parser.parse_args()
+
+    reset_logs_folder()
+    log_game_settings(arguments.learning, arguments.genetic_algo)
 
     engines: "List[WorldEngine]" = [
         WorldEngine(i+1, arguments.population, arguments.learning, arguments.genetic_algo)
