@@ -5,7 +5,7 @@ from enum import Enum, auto
 if TYPE_CHECKING:
     from typing import Dict, Tuple
 
-MUTATION_RATE: "float" = 0.05
+MUTATION_RATE: "float" = 0.1
 
 class Gene(Enum):
     """Enumerative class listing all genes."""
@@ -13,19 +13,20 @@ class Gene(Enum):
     HUNGER_DECAY = auto()
     TIREDNESS_DECAY = auto()
     SPEED = auto()
-    ATTENTION_ALPHA = auto()
-    ATTENTION_DECISION_PERIOD = auto()
-    ATTENTION_USER_REWARD_MULTIPLIER = auto()
-    ATTENTION_NEEDS_REWARD_MULTIPLIER = auto()
-    ATTENTION_POSITIONAL_REWARD_MULTIPLIER = auto()
-    REASON_ALPHA = auto()
-    REASON_DECISION_PERIOD = auto()
-    REASON_USER_REWARD_MULTIPLIER = auto()
-    REASON_FITNESS_REWARD_MULTIPLIER = auto()
-    REASON_POSITIONAL_REWARD_MULTIPLIER = auto()
+    ATTENTION_GAMMA = auto()
+    ATTENTION_LEARNING_RATE = auto()
+    ATTENTION_STARTING_EPSILON = auto()
+    ATTENTION_EPSILON_DECAY = auto()
+    ATTENTION_MIN_EPSILON = auto()
+    ATTENTION_UPDATE_PERIOD = auto()
+    ATTENTION_TARGET_UPDATE_PERIOD = auto()
+    REASON_GAMMA = auto()
+    REASON_LEARNING_RATE = auto()
     REASON_STARTING_EPSILON = auto()
-    REASON_MIN_EPSILON = auto()
     REASON_EPSILON_DECAY = auto()
+    REASON_MIN_EPSILON = auto()
+    REASON_UPDATE_PERIOD = auto()
+    REASON_TARGET_UPDATE_PERIOD = auto()
 
     def min(self) -> "float":
         """Returns the minimum possible value for a given gene."""
@@ -41,17 +42,18 @@ THRESHOLDS: "Dict[Gene, Tuple[float, float]]" = {
     Gene.HUNGER_DECAY: (0.8, 4),
     Gene.TIREDNESS_DECAY: (0.8, 4),
     Gene.SPEED: (45, 80),
-    Gene.ATTENTION_ALPHA: (1e-4, 0.3),
-    Gene.ATTENTION_DECISION_PERIOD: (1, 2),
-    Gene.ATTENTION_USER_REWARD_MULTIPLIER: (0.8, 3),
-    Gene.ATTENTION_NEEDS_REWARD_MULTIPLIER: (0.2, 0.6),
-    Gene.ATTENTION_POSITIONAL_REWARD_MULTIPLIER: (0.2, 0.8),
-    Gene.REASON_ALPHA: (1e-4, 0.3),
-    Gene.REASON_DECISION_PERIOD: (0.01, 0.2),
-    Gene.REASON_USER_REWARD_MULTIPLIER: (0.3, 0.6),
-    Gene.REASON_FITNESS_REWARD_MULTIPLIER: (0.8, 10),
-    Gene.REASON_POSITIONAL_REWARD_MULTIPLIER: (0.1, 1),
-    Gene.REASON_STARTING_EPSILON: (0.1, 1),
-    Gene.REASON_MIN_EPSILON: (1e-4, 1e-2),
-    Gene.REASON_EPSILON_DECAY: (0.25, 0.99)
+    Gene.ATTENTION_GAMMA: (0.8, 0.99),
+    Gene.ATTENTION_LEARNING_RATE: (1e-5, 0.1),
+    Gene.ATTENTION_STARTING_EPSILON: (0.95, 1),
+    Gene.ATTENTION_EPSILON_DECAY: (0.75, 0.99),
+    Gene.ATTENTION_MIN_EPSILON: (0.01, 0.1),
+    Gene.ATTENTION_UPDATE_PERIOD: (0.8, 2),
+    Gene.ATTENTION_TARGET_UPDATE_PERIOD: (2, 5),
+    Gene.REASON_GAMMA: (0.8, 0.99),
+    Gene.REASON_LEARNING_RATE: (1e-5, 0.1),
+    Gene.REASON_STARTING_EPSILON: (0.95, 1),
+    Gene.REASON_EPSILON_DECAY: (0.75, 0.99),
+    Gene.REASON_MIN_EPSILON: (0.01, 0.1),
+    Gene.REASON_UPDATE_PERIOD: (0.8, 2),
+    Gene.REASON_TARGET_UPDATE_PERIOD: (2, 5)
 }
