@@ -1,6 +1,10 @@
 """Module containing utilities for living being's needs."""
+from typing import TYPE_CHECKING
 from enum import Enum
 from utils.living.genome import Gene
+
+if TYPE_CHECKING:
+    from typing import Dict
 
 BASE_HUNGER: "float" = 0
 BASE_LIFE: "float" = 0
@@ -8,6 +12,27 @@ BASE_TIREDNESS: "float" = 0
 MAX_HUNGER: "float" = 100
 MAX_TIREDNESS: "float" = 100
 MAX_LIFE: "float" = 100
+
+def compute_expected_lifetime(genome: "Dict[Gene, float]") -> "float":
+    """Computes the expected lifetime of a given living being, knowing its genome.
+    
+    Positional arguments:  
+     - `genome`: the living being's genome.
+    
+    Return:  
+    A `float` value representing the amount of time the living being is expected to
+    live if it took no actions at all."""
+    lifetime: "float" = 0
+    for need in Need:
+        if need not in [Need.LIFE, Need.NONE]:
+            lifetime = max(
+                lifetime,
+                (need.get_threshold() - need.get_base_value())
+                    / genome[need.get_corresponding_gene()]
+            )
+    lifetime += (Need.LIFE.get_threshold() - Need.LIFE.get_base_value()) \
+        / genome[Need.LIFE.get_corresponding_gene()]
+    return lifetime
 
 class Need(Enum):
     """Enumerative class listing all living being needs."""
