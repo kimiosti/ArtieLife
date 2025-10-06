@@ -36,7 +36,7 @@ class WorldEngine(Process):
             self.genetic_algorithm,
             self.learning_enable == "true"
         )
-        game_controller.create_world(self.population)
+        game_controller.create_world(self.population, self.world_id)
         clock = Clock()
         dt: "int" = 0
         while self.running:
@@ -59,7 +59,7 @@ class GuiWorldEngine(WorldEngine):
             self.genetic_algorithm,
             self.learning_enable == "true"
         )
-        game_controller.create_world(self.population)
+        game_controller.create_world(self.population, self.world_id)
 
         view = GameView()
         click_controller= ClickController(game_controller.world, view)
