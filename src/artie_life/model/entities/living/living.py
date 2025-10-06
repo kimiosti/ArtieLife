@@ -30,7 +30,6 @@ class LivingBeing(Entity):
         self.genome = genome
         self.brain: "Brain" = Brain(
             DistanceController(game_controller),
-            living_id,
             self.genome,
             learning_enable
         )
