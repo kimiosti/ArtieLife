@@ -118,7 +118,6 @@ class LearningAttention(Attention):
             self.target_model.set_weights(self.model.get_weights())
 
         if len(self.reward_hist) > REPLAY_BUFFER_SIZE:
-            print("resetto")
             self.state_hist.clear()
             self.reward_hist.clear()
             self.next_state_hist.clear()
