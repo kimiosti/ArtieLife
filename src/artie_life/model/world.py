@@ -7,7 +7,8 @@ from utils.living.actions import EntityType
 from utils.map.generation import init_playground, init_interactive_spots
 from utils.map.constants import LIVING_WIDTH, LIVING_HEIGHT
 from utils.living.genome import Gene
-from utils.logs import start_world_log, log_living_being_stats
+from utils.logs import start_world_log, log_living_being_stats, \
+    start_performance_log, log_frame_performance
 
 if TYPE_CHECKING:
     from typing import Dict, List
@@ -30,6 +31,7 @@ class World:
         self.world_id = world_id
         self.next_id: "int" = 0
         start_world_log(self.world_id)
+        start_performance_log(self.world_id)
 
     def spawn_living(self, controller: "GameController",
                      genome: "Dict[Gene, float]", learning_enable: "bool") -> "None":
@@ -67,6 +69,7 @@ class World:
         
         Positional arguments:  
          - `elapsed_time`: the amount of time elapsed since the last model update, in seconds."""
+        log_frame_performance(self.world_id, elapsed_time)
         for living_being in self.living:
             alive = living_being.update(elapsed_time)
             if not alive:
