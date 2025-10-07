@@ -45,8 +45,8 @@ def log_game_settings(learning: "str", genetics: "str") -> "None":
     enabling.
      - `genetics`: the kind of genetic algorithm requested via the command line option."""
     with open(GAME_SETTINGS_LOG, "a") as file:
-        file.write("learning_enable, genetic_algorithm\n")
-        file.write(learning + ", " + genetics + "\n")
+        file.write("learning_enable,genetic_algorithm\n")
+        file.write(learning + "," + genetics + "\n")
 
 def start_world_log(world_id: "int") -> "None":
     """Starts a world's log, recording the log's header.
@@ -56,11 +56,11 @@ def start_world_log(world_id: "int") -> "None":
     log = WORLD_LOG(world_id)
     log.parent.mkdir(parents=True, exist_ok=True)
     with open(log, "w") as file:
-        file.write("id, ")
+        file.write("id,")
         for gene in Gene:
-            file.write(gene.name.lower() + ", ")
-        file.write("fitness, whole_fitness, ")
-        file.write("expected_lifetime, lifetime, alive\n")
+            file.write(gene.name.lower() + ",")
+        file.write("fitness,whole_fitness,")
+        file.write("expected_lifetime,lifetime,alive\n")
 
 def log_living_being_stats(world_id: "int", living_being: "LivingBeing") -> "None":
     """Logs all relevant data about a given living being.
@@ -70,13 +70,13 @@ def log_living_being_stats(world_id: "int", living_being: "LivingBeing") -> "Non
      - `living_being`: the living being whose information has to be logged."""
     log = WORLD_LOG(world_id)
     with open(log, "a") as file:
-        file.write(str(living_being.game_id) + ", ")
+        file.write(str(living_being.game_id) + ",")
         for gene in Gene:
-            file.write(str(living_being.genome[gene]) + ", ")
-        file.write(str(compute_fitness(living_being.brain.needs_tracker.needs_avg)) + ", ")
-        file.write(str(compute_whole_fitness(living_being.brain)) + ", ")
-        file.write(str(compute_expected_lifetime(living_being.genome)) + ", ")
-        file.write(str(living_being.brain.needs_tracker.lifetime) + ", ")
+            file.write(str(living_being.genome[gene]) + ",")
+        file.write(str(compute_fitness(living_being.brain.needs_tracker.needs_avg)) + ",")
+        file.write(str(compute_whole_fitness(living_being.brain)) + ",")
+        file.write(str(compute_expected_lifetime(living_being.genome)) + ",")
+        file.write(str(living_being.brain.needs_tracker.lifetime) + ",")
         file.write(str(
             living_being.brain.needs_tracker.needs[Need.LIFE] < Need.LIFE.get_threshold()
         ))
@@ -89,7 +89,7 @@ def start_performance_log(world_id: "int") -> "None":
      - `world_id`: the world's in-game ID."""
     log = WORLD_PERFORMANCE_LOG(world_id)
     with open(log, "w") as file:
-        file.write("frame_duration, framerate\n")
+        file.write("frame_duration,framerate\n")
 
 def log_frame_performance(world_id: "int", elapsed_time: "float") -> "None":
     """Logs a single frame performance.
@@ -101,5 +101,5 @@ def log_frame_performance(world_id: "int", elapsed_time: "float") -> "None":
     if elapsed_time != 0:
         log = WORLD_PERFORMANCE_LOG(world_id)
         with open(log, "a") as file:
-            file.write(str(elapsed_time) + ", ")
+            file.write(str(elapsed_time) + ",")
             file.write(str(1 / elapsed_time) + "\n")
