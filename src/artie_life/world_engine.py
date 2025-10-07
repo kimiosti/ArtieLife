@@ -31,20 +31,21 @@ class WorldEngine(Process):
 
     def run(self) -> "None":
         """Main method of the world engine."""
-        init()
-        game_controller = GameController(
-            self.genetic_algorithm,
-            self.learning_enable == "true"
-        )
-        game_controller.create_world(self.population, self.world_id)
-        clock = Clock()
-        dt: "int" = 0
-        while self.running:
-            game_controller.update_world(dt / 1000)
-            dt = clock.tick()
-
-        game_controller.dump_current_state()
-        quit_game()
+        try:
+            init()
+            game_controller = GameController(
+                self.genetic_algorithm,
+                self.learning_enable == "true"
+            )
+            game_controller.create_world(self.population, self.world_id)
+            clock = Clock()
+            dt: "int" = 0
+            while self.running:
+                game_controller.update_world(dt / 1000)
+                dt = clock.tick()
+        finally:
+            game_controller.dump_current_state()
+            quit_game()
 
 
 class GuiWorldEngine(WorldEngine):
@@ -52,49 +53,50 @@ class GuiWorldEngine(WorldEngine):
 
     def run(self) -> "None":
         """Main method of the GUI world engine."""
-        init()
-        set_key_repeat(200, 75)
+        try:
+            init()
+            set_key_repeat(200, 75)
 
-        game_controller = GameController(
-            self.genetic_algorithm,
-            self.learning_enable == "true"
-        )
-        game_controller.create_world(self.population, self.world_id)
+            game_controller = GameController(
+                self.genetic_algorithm,
+                self.learning_enable == "true"
+            )
+            game_controller.create_world(self.population, self.world_id)
 
-        view = GameView()
-        click_controller= ClickController(game_controller.world, view)
-        text_controller= TextController(game_controller.world, view)
+            view = GameView()
+            click_controller= ClickController(game_controller.world, view)
+            text_controller= TextController(game_controller.world, view)
 
-        view.show_screen()
+            view.show_screen()
 
-        clock = Clock()
-        dt: "int" = 0
-        while self.running:
-            events = get_events()
-            for event in events:
-                if event.type == QUIT:
-                    self.running = False
+            clock = Clock()
+            dt: "int" = 0
+            while self.running:
+                events = get_events()
+                for event in events:
+                    if event.type == QUIT:
+                        self.running = False
 
-            if click_controller.is_spawn_requested(events):
-                game_controller.spawn_random_living()
+                if click_controller.is_spawn_requested(events):
+                    game_controller.spawn_random_living()
 
-            game_controller.update_world(dt / 1000)
-            view.render(game_controller.get_map_elems())
+                game_controller.update_world(dt / 1000)
+                view.render(game_controller.get_map_elems())
 
-            click_controller.handle_living_selection(events)
-            if game_controller.is_living_selected():
-                text_controller.update(events)
-                view.render_bottom_bar(
-                    game_controller.get_selected_info(),
-                    game_controller.get_focus_object()
-                )
-                click_controller.handle_user_reward(events)
-            else:
-                text_controller.clear()
+                click_controller.handle_living_selection(events)
+                if game_controller.is_living_selected():
+                    text_controller.update(events)
+                    view.render_bottom_bar(
+                        game_controller.get_selected_info(),
+                        game_controller.get_focus_object()
+                    )
+                    click_controller.handle_user_reward(events)
+                else:
+                    text_controller.clear()
 
-            view.show_frame()
+                view.show_frame()
 
-            dt = clock.tick()
-
-        game_controller.dump_current_state()
-        quit_game()
+                dt = clock.tick()
+        finally:
+            game_controller.dump_current_state()
+            quit_game()
