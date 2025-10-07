@@ -20,6 +20,15 @@ def WORLD_LOG(world_id: "int") -> "Path":
     Return:  
     A `Path` object pointing to the desired file."""
     return Path(join_path(LOGS_FOLDER, str(world_id), "world.csv"))
+def WORLD_PERFORMANCE_LOG(world_id: "int") -> "Path":
+    """Returns the desired world performance log, to track runtime framerate.
+    
+    Positional arguments:  
+     - `world_id`: the world's in-game ID.
+    
+    Return:  
+    A `Path object pointing to the desired file."""
+    return Path(join_path(LOGS_FOLDER, str(world_id), "performance.csv"))
 
 def reset_logs_folder() -> "None":
     """Cleans up previous logs. Necessary at startup to avoid conflicts."""
@@ -72,3 +81,25 @@ def log_living_being_stats(world_id: "int", living_being: "LivingBeing") -> "Non
             living_being.brain.needs_tracker.needs[Need.LIFE] < Need.LIFE.get_threshold()
         ))
         file.write("\n")
+
+def start_performance_log(world_id: "int") -> "None":
+    """Creates and adds the proper header to the world's performance log.
+    
+    Positional arguments:  
+     - `world_id`: the world's in-game ID."""
+    log = WORLD_PERFORMANCE_LOG(world_id)
+    with open(log, "w") as file:
+        file.write("frame_duration, framerate\n")
+
+def log_frame_performance(world_id: "int", elapsed_time: "float") -> "None":
+    """Logs a single frame performance.
+    
+    Positional arguments:  
+     - `world_id`: the world's in-game ID.  
+     - `elapsed_time`: the frame's duration, in seconds.
+    """
+    if elapsed_time != 0:
+        log = WORLD_PERFORMANCE_LOG(world_id)
+        with open(log, "a") as file:
+            file.write(str(elapsed_time) + ", ")
+            file.write(str(1 / elapsed_time) + "\n")
