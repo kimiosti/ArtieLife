@@ -9,6 +9,7 @@ from utils.living.learning.reason import compute_reward as compute_reason_reward
 from model.entities.living.needs import NeedsTracker, PerceptionTracker
 from model.entities.living.brain.attention import Attention, LearningAttention
 from model.entities.living.brain.reason import Reason, LearningReason
+from utils.living.actions import Need
 
 if TYPE_CHECKING:
     from typing import Dict
@@ -16,7 +17,6 @@ if TYPE_CHECKING:
     from controller.world.world_controllers import DistanceController
     from utils.living.genome import Gene
     from utils.living.actions import InteractionType
-    from utils.living.actions import Need
 
 def compute_needs_reward(last_needs: "Dict[Need, float]",
                          cur_needs: "Dict[Need, float]") -> "float":
@@ -29,6 +29,8 @@ def compute_needs_reward(last_needs: "Dict[Need, float]",
     
     Return:  
     The computed reward value."""
+    if cur_needs[Need.LIFE] > last_needs[Need.LIFE]:
+        return NEGATIVE_NEEDS_REWARD
     for need, value in cur_needs.items():
         if value <= last_needs[need] and value < need.get_threshold():
             return POSITIVE_NEEDS_REWARD
