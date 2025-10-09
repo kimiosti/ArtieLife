@@ -1,6 +1,7 @@
 """Main application module."""
 
 if __name__ == '__main__':
+    from multiprocessing import freeze_support
     from argparse import ArgumentParser
     from typing import TYPE_CHECKING
     from world_engine import WorldEngine, GuiWorldEngine
@@ -8,6 +9,8 @@ if __name__ == '__main__':
 
     if TYPE_CHECKING:
         from typing import List
+    
+    freeze_support()
 
     parser = ArgumentParser(
         description = "Artificial Life simulator combining reinforcement learning"
