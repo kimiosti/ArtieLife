@@ -1,6 +1,7 @@
 """Module containing utilities for living being's needs."""
 from typing import TYPE_CHECKING
 from enum import Enum
+from numpy import inf
 from utils.living.genome import Gene
 
 if TYPE_CHECKING:
@@ -22,10 +23,10 @@ def compute_expected_lifetime(genome: "Dict[Gene, float]") -> "float":
     Return:  
     A `float` value representing the amount of time the living being is expected to
     live if it took no actions at all."""
-    lifetime: "float" = 0
+    lifetime: "float" = inf
     for need in Need:
         if need not in [Need.LIFE, Need.NONE]:
-            lifetime = max(
+            lifetime = min(
                 lifetime,
                 (need.get_threshold() - need.get_base_value())
                     / genome[need.get_corresponding_gene()]
