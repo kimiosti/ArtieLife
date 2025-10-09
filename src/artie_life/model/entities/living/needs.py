@@ -39,10 +39,8 @@ class NeedsTracker:
         for need, value in self.needs.items():
             if (
                 need != Need.LIFE
-                or (
-                    self.needs[Need.HUNGER] >= Need.HUNGER.get_threshold()
-                    and self.needs[Need.TIREDNESS] >= Need.TIREDNESS.get_threshold()
-                )
+                or self.needs[Need.HUNGER] >= Need.HUNGER.get_threshold()
+                or self.needs[Need.TIREDNESS] >= Need.TIREDNESS.get_threshold()
             ):
                 new_value = value + (self.genome[need.get_corresponding_gene()] * elapsed_time)
                 self.needs[need] = \
