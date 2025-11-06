@@ -42,7 +42,7 @@ class WorldEngine(Process):
             dt: "int" = 0
             while self.running:
                 game_controller.update_world(dt / 1000)
-                dt = clock.tick()
+                dt = clock.tick(30)
         finally:
             game_controller.dump_current_state()
             quit_game()
@@ -96,7 +96,7 @@ class GuiWorldEngine(WorldEngine):
 
                 view.show_frame()
 
-                dt = clock.tick()
+                dt = clock.tick(30)
         finally:
             game_controller.dump_current_state()
             quit_game()
